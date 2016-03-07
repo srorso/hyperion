@@ -401,6 +401,7 @@ typedef struct DEVINITTAB               /* Initialization values     */
     U32         sctlfeat;               /* Storage control features  */
     BYTE        devclass;               /* Device class code         */
     BYTE        devtcode;               /* Device type code          */
+    BYTE        selchanforce;           /* 1=dev forces sel chan mode*/
     BYTE        MDR;                    /* Misc. Data Record ID      */
     BYTE        OBR;                    /* Outboard Recorder ID      */
     int         numdevid;               /* #of SNSID bytes (see NOTE)*/
@@ -427,15 +428,15 @@ DEVINITTAB      DevInitTab[]  =         /* Initialization table      */
 //            3410/3411/3420/3422/3430/8809/9347/9348
 //--------------------------------------------------------------------
 //
-// devtype/mod  cutype/mod    sctlfeat  cls typ MDR OBR sid sns rdc dsp
- { 0x3410,0x01, 0x3115,0x01, 0x00000000, 0,  0,  0,  0,  0,  9,  0,  0 },
- { 0x3411,0x01, 0x3115,0x01, 0x00000000, 0,  0,  0,  0,  0,  9,  0,  0 },
- { 0x3420,0x06, 0x3803,0x02, 0x00000000, 0,  0,  0,  0,  0, 24,  0,  0 }, // (DEFAULT: 3420)
- { 0x3422,0x01, 0x3422,0x01, 0x00000000, 0,  0,  0,  0,  7, 32,  0,  0 },
- { 0x3430,0x01, 0x3422,0x01, 0x00000000, 0,  0,  0,  0,  7, 32,  0,  0 },
- { 0x8809,0x01, 0x8809,0x01, 0x00000000, 0,  0,  0,  0,  0, 32,  0,  0 },
- { 0x9347,0x01, 0x9347,0x01, 0x00000000, 0,  0,  0,  0,  7, 32,  0,  0 },
- { 0x9348,0x01, 0x9348,0x01, 0x00000000, 0,  0,  0,  0,  7, 32,  0,  0 },
+// devtype/mod  cutype/mod    sctlfeat  cls typ selch MDR OBR sid sns rdc dsp
+ { 0x3410,0x01, 0x3115,0x01, 0x00000000, 0,  0, 0x01,  0,  0,  0,  9,  0,  0 },
+ { 0x3411,0x01, 0x3115,0x01, 0x00000000, 0,  0, 0x01,  0,  0,  0,  9,  0,  0 },
+ { 0x3420,0x06, 0x3803,0x02, 0x00000000, 0,  0, 0x01,  0,  0,  0, 24,  0,  0 }, // (DEFAULT: 3420)
+ { 0x3422,0x01, 0x3422,0x01, 0x00000000, 0,  0, 0x01,  0,  0,  7, 32,  0,  0 },
+ { 0x3430,0x01, 0x3422,0x01, 0x00000000, 0,  0, 0x01,  0,  0,  7, 32,  0,  0 },
+ { 0x8809,0x01, 0x8809,0x01, 0x00000000, 0,  0, 0x00,  0,  0,  0, 32,  0,  0 },
+ { 0x9347,0x01, 0x9347,0x01, 0x00000000, 0,  0, 0x00,  0,  0,  7, 32,  0,  0 },
+ { 0x9348,0x01, 0x9348,0x01, 0x00000000, 0,  0, 0x00,  0,  0,  7, 32,  0,  0 },
 
 //--------------------------------------------------------------------
 //                          3480/3490/3590
@@ -491,12 +492,12 @@ DEVINITTAB      DevInitTab[]  =         /* Initialization table      */
 // PROGRAMMING NOTE: the below "0x00004EC4" value for the 'sctlfeat'
 // field for Model 3590 was determined empirically on a real machine.
 //
-// devtype/mod  cutype/mod    sctlfeat   cls  typ   MDR  OBR  sid sns  rdc dsp
- { 0x3480,0x31, 0x3480,0x31, 0x000002C0, 0x80,0x80, 0x41,0x80,  7, 24,  1,  1 },  // 0x31 = D31
- { 0x3490,0x50, 0x3490,0x50, 0x000002C0, 0x80,0x80, 0x42,0x81,  7, 32,  1,  1 },  // 0x50 = C10
- { 0x3590,0x10, 0x3590,0x50, 0x00004EC4, 0x80,0x80, 0x46,0x83,  7, 32,  1,  1 },  // 0x10 = B1A, 0x50 = A50
- { 0xFFFF,0xFF, 0xFFFF,0xFF, 0xFFFFFFFF, 0xFF,0xFF, 0xFF,0xFF, -1, -1, -1, -1 },  //**** END OF TABLE ****
- { 0x3420,0x06, 0x3803,0x02, 0x00000000,   0,   0,    0,   0,   0, 24,  0,  0 },  // (DEFAULT: 3420)
+// devtype/mod  cutype/mod    sctlfeat   cls  typ   selch MDR OBR sid sns rdc dsp
+ { 0x3480,0x31, 0x3480,0x31, 0x000002C0, 0x80,0x80, 0x00, 0x41,0x80,  7, 24,  1,  1 },  // 0x31 = D31
+ { 0x3490,0x50, 0x3490,0x50, 0x000002C0, 0x80,0x80, 0x00, 0x42,0x81,  7, 32,  1,  1 },  // 0x50 = C10
+ { 0x3590,0x10, 0x3590,0x50, 0x00004EC4, 0x80,0x80, 0x00, 0x46,0x83,  7, 32,  1,  1 },  // 0x10 = B1A, 0x50 = A50
+ { 0xFFFF,0xFF, 0xFFFF,0xFF, 0xFFFFFFFF, 0xFF,0xFF, 0x00, 0xFF,0xFF, -1, -1, -1, -1 },  //**** END OF TABLE ****
+ { 0x3420,0x06, 0x3803,0x02, 0x00000000,    0,   0, 0x00,    0,   0,   0, 24,  0,  0 },  // (DEFAULT: 3420)
 };
 
 /*-------------------------------------------------------------------*/
@@ -808,6 +809,8 @@ int             attn = 0;
 //  dev->numdevid            = pDevInitTab->numdevid;   // (handled above)
     dev->numsense            = pDevInitTab->numsense;
     dev->tdparms.displayfeat = pDevInitTab->displayfeat;
+    dev->selchanio           = pDevInitTab->selchanforce;
+
 
     dev->fenced              = 0;   // (always, initially)
     dev->SIC_active          = 0;   // (always, initially)

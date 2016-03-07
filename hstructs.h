@@ -1184,7 +1184,9 @@ struct DEVBLK {                         /* Device configuration block*/
                 ccwstep:1,              /* 1=CCW single step         */
                 cdwmerge:1,             /* 1=Channel will merge data
                                              chained write CCWs      */
-                debug:1;                /* 1=generic debug flag      */
+                debug:1,                /* 1=generic debug flag      */
+                selchanio:1;            /* device ops force channel  */
+                                        /*   into selector mode      */
 
         unsigned int                    /* Device state - serialized
                                             by dev->lock             */

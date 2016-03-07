@@ -63,6 +63,7 @@ DLL_EXPORT  void*   device_thread (void *arg);
 static int          schedule_ioq (const REGS* regs, DEVBLK* dev);
 static INLINE void  subchannel_interrupt_queue_cleanup (DEVBLK*);
 int                 test_subchan_locked (REGS*, DEVBLK*, IRB*, IOINT**, SCSW**);
+int                 test_busy_selector_channel(REGS* regs, DEVBLK* dev, char* instname);
 
 #ifndef CHANNEL_INLINES
 #define CHANNEL_INLINES
@@ -723,7 +724,7 @@ char    msgbuf[133];                    /* Message buffer            */
 /* DISPLAY CHANNEL COMMAND WORD AND DATA                             */
 /*-------------------------------------------------------------------*/
 static void
-display_ccw ( const DEVBLK *dev, const BYTE ccw[], const U32 addr,
+display_ccw ( const DEVBLK *dev, const U32 ccwaddr, const BYTE ccw[], const U32 addr,
               const U32 count, const U8 flags )
 {
 BYTE    area[64];                       /* Data display area         */
@@ -738,7 +739,7 @@ BYTE    area[64];                       /* Data display area         */
     else
         format_iobuf_data (addr, area, dev, count);
 
-    WRMSG (HHC01315, "I", SSID_TO_LCSS(dev->ssid), dev->devnum,
+    WRMSG (HHC01315, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, ccwaddr,
             ccw[0], ccw[1], ccw[2], ccw[3],
             ccw[4], ccw[5], ccw[6], ccw[7], area);
 
@@ -971,6 +972,9 @@ testch (REGS *regs, U16 chan)
 DEVBLK *dev;                            /* -> Device control block   */
 int     devcount = 0;                   /* Number of devices found   */
 int     cc = 0;                         /* Returned condition code   */
+int     blockmuxok = 1;                 /* CR0.0 value, 1=block multiplexing enabled */
+
+blockmuxok = (sysblk.arch_mode != ARCH_370) || (regs->CR(0) >> 31) & 0x01;
 
     /* Scan devices on the channel */
     for (dev = sysblk.firstdev; dev != NULL; dev = dev->nextdev)
@@ -990,6 +994,21 @@ int     cc = 0;                         /* Returned condition code   */
 
         /* Increment device count on this channel */
         devcount++;
+
+        /* Test for busy device and selector channel mode */
+        if (((dev->busy )
+#if defined( OPTION_SHARED_DEVICES )
+           && (dev->shioactive == DEV_SYS_LOCAL)
+#endif // defined( OPTION_SHARED_DEVICES )
+               ) || dev->startpending)
+          if (dev->selchanio || !blockmuxok)  
+          {   /* selector channel device or block mux off in cr0.0  */
+            cc = 2;
+            if (dev->ccwstep || dev->ccwtrace)  
+                    WRMSG(HHC01336, "I", SSID_TO_LCSS(dev->ssid), chan, "TCH", 
+                                     SSID_TO_LCSS(dev->ssid), dev->devnum, dev->selchanio, blockmuxok, cc);
+            break;
+          }
 
         /* Test for pending interrupt */
         if (IOPENDING(dev))
@@ -1063,7 +1082,12 @@ testio (REGS *regs, DEVBLK *dev, BYTE ibyte)
         }
     }
     else
+    {
         cc = 0;         /* Available */
+        /* if 370 mode and operation is on a block multiplexor channel, handle possibility of selector channel mode */
+        if ((sysblk.arch_mode == ARCH_370) && ((dev->devnum & 0x0ff00) > 0))
+            cc = test_busy_selector_channel(regs, dev, "TIO");   /* returns 2 if selector channel busy, else 0  */
+    }
 
     if (dev->ccwtrace || dev->ccwstep)
         WRMSG (HHC01318, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, cc);
@@ -1138,12 +1162,21 @@ PSA_3XX *psa;                           /* -> Prefixed storage area  */
     }
     else if (!IOPENDING(dev) && dev->ctctype != CTC_LCS)
     {
-        /* Set condition code 1 */
-        cc = 1;
+        /* if 370 mode and operation is on a block multiplexor channel, handle possibility of selector channel mode */
 
-        /* Store the channel status word at PSA+X'40' */
-        store_scsw_as_csw(regs, &dev->scsw);
+        int selchanbusy = 0;
+        if ((sysblk.arch_mode == ARCH_370) && ((dev->devnum & 0x0ff00) > 0))
+            selchanbusy = test_busy_selector_channel(regs, dev, "HIO");
 
+        if (selchanbusy)
+            cc = 2;
+        else
+        {
+            /* Set condition code 1 and store the channel status word at PSA+X'40' */
+            cc = 1;
+            store_scsw_as_csw(regs, &dev->scsw);
+        }
+        
         if (dev->ccwtrace || dev->ccwstep)
         {
             psa = (PSA_3XX*)(regs->mainstor + regs->PX);
@@ -1152,12 +1185,23 @@ PSA_3XX *psa;                           /* -> Prefixed storage area  */
     }
     else if (dev->ctctype == CTC_LCS)
     {
-        /* Set cc 1 if interrupt is not pending and LCS CTC */
-        cc = 1;
+        /* if 370 mode and operation is on a block multiplexor channel, handle possibility of selector channel mode */
 
-        /* Store the channel status word at PSA+X'40' */
-        store_scsw_as_csw(regs, &dev->scsw);
+        int selchanbusy = 0;
+        if ((sysblk.arch_mode == ARCH_370) && ((dev->devnum & 0x0ff00) > 0))
+            selchanbusy = test_busy_selector_channel(regs, dev, "HIO-CTC");
 
+        if (selchanbusy)
+            cc = 2;
+        else
+        {
+            /* Set cc 1 if interrupt is not pending and LCS CTC */
+            cc = 1;
+
+            /* Store the channel status word at PSA+X'40' */
+            store_scsw_as_csw(regs, &dev->scsw);
+        }
+        
         if (dev->ccwtrace)
         {
             psa = (PSA_3XX*)(regs->mainstor + regs->PX);
@@ -1285,6 +1329,81 @@ int     cc;                             /* Condition code            */
     return cc;
 
 } /* end function cancel_subchan */
+
+
+/*-------------------------------------------------------------------*/
+/* TEST FOR BUSY SELECTOR CHANNEL MODE DEVICES ON A CHANNEL          */
+/*                                                                   */
+/* Input: pointer to cpu regs owning the channel to be tested        */
+/*        pointer to devblk of device on channel to be tested        */
+/*        String naming calling instruction for HHC01336I tracing    */
+/*                                                                   */
+/* Output: int PSW condition code,                                   */
+/*          0=available,                                             */
+/*          2= channel busy with selector mode op on another device  */
+/*                                                                   */
+/* External References:                                              */
+/*         CR0.0, block multiplexing bit,                            */
+/*            1=block mux enabled                                    */
+/*            0=all block mux channels operate as selector chanels   */
+/*           sysblk, to test arch_mode and access the devblk chain   */
+/*                                                                   */
+/* Source:                                                           */
+/* GA22-7000-10 (Sep 1975) IBM System 370 Principles of Operation,   */
+/*              page 13-5 and following.                             */
+/*                                                                   */
+/*-------------------------------------------------------------------*/
+
+int test_busy_selector_channel(REGS *regs, DEVBLK *dev, char *instname)
+{
+    U16 chan = dev->devnum & 0xFF00;
+    int blockmuxok = (regs->CR(0) >> 31 & 0x01); /* cr0.0=0 means selector mode on all block mux channels */
+
+                                                 /* if in 370 mode and operation is to a block mux, continue, else exit 0    */
+    if ( (sysblk.arch_mode != ARCH_370) || (chan == 0) )
+        return 0;
+
+    if (!blockmuxok || dev->selchanio)   /* if block mux disabled or a selector-only device, look for other busy devices */
+    {
+        DEVBLK *odev;
+
+        for (odev = sysblk.firstdev; odev != NULL; odev = odev->nextdev)
+        {
+            /* Skip "devices" that don't actually exist */
+            if (!IS_DEV(odev))
+                continue;
+
+            /* Skip the device if not on specified channel */
+            if ((odev->devnum & 0xFF00) != chan
+                || (odev->pmcw.flag5 & PMCW5_V) == 0
+#if defined(FEATURE_CHANNEL_SWITCHING)
+                || regs->chanset != odev->chanset
+#endif /*defined(FEATURE_CHANNEL_SWITCHING)*/
+                )
+                continue;
+
+            /* if device is not busy nor start pending, or is not a selector device, skip it */
+            if ( !(odev->busy || odev->startpending) || (!odev->selchanio && blockmuxok) )
+                continue;
+
+#if defined( OPTION_SHARED_DEVICES )
+            if (odev->busy && (odev->shioactive != DEV_SYS_LOCAL))
+                continue;
+#endif // defined( OPTION_SHARED_DEVICES )
+
+            /* Device is busy or start pending.  Device or channel is in selector mode. */
+            /* Trace event if ccw tracing on for requested device or busy device        */
+            if(dev->ccwstep || dev->ccwtrace || odev->ccwstep || odev->ccwtrace)
+                WRMSG(HHC01336, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, instname, 
+                                     SSID_TO_LCSS(odev->ssid), odev->devnum, 
+                                     odev->selchanio, blockmuxok, 2);
+            return 2;
+        }
+    }
+
+    /* no active selector mode operations on the channel  */
+    return 0;
+}
 
 
 /*-------------------------------------------------------------------*/
@@ -3974,6 +4093,17 @@ int     rc;                             /* Return code               */
         release_lock (&dev->lock);
         return 2;
     }
+    /* if 370 mode and operation is on a block multiplexor channel, handle possibility of selector channel mode */
+    if ((sysblk.arch_mode == ARCH_370) && ((dev->devnum & 0x0ff00) > 0))
+    {
+        int cc;
+        cc = test_busy_selector_channel(regs, dev, "SIO");
+        if (cc)
+        {
+            release_lock(&dev->lock);
+            return 2;
+        }
+    }
 
     /* Ensure clean status flag bits */
     dev->suspended          = 0;
@@ -4477,7 +4607,7 @@ execute_halt:
 
             /* Display the CCW */
             if (dev->ccwtrace || dev->ccwstep)
-                display_ccw (dev, ccw, addr, count, flags);
+                display_ccw (dev, ccwaddr, ccw, addr, count, flags);
         }
 
         /* Channel program check if invalid Format-1 CCW             */
@@ -5316,7 +5446,7 @@ breakchain:
             if (!(dev->ccwtrace || dev->ccwstep || tracethis)
               && (CPU_STEPPING_OR_TRACING_ALL || sysblk.pgminttr
                 || dev->ccwtrace || dev->ccwstep) )
-                display_ccw (dev, ccw, addr, count, flags);
+                display_ccw (dev, ccwaddr, ccw, addr, count, flags);
 
             /* Activate tracing for this CCW chain only
                if any trace is already active */
@@ -5362,6 +5492,7 @@ breakchain:
                         {
                             /* Display CCW */
                             display_ccw (dev,
+                                         (prefetch.ccwaddr[ts] - 8),
                                          dev->mainstor +
                                            (prefetch.ccwaddr[ts] - 8),
                                          prefetch.dataaddr[ts],

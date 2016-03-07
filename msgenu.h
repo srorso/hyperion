@@ -872,7 +872,7 @@ Examples:
 #define HHC01312 "%1d:%04X CHAN: stat %2.2X%2.2X, count %4.4X%s"
 #define HHC01313 "%1d:%04X CHAN: sense %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X"
 #define HHC01314 "%1d:%04X CHAN: sense %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"
-#define HHC01315 "%1d:%04X CHAN: ccw %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X%s"
+#define HHC01315 "%1d:%04X CHAN: At %6.6X ccw %2.2X%2.2X%2.2X%2.2X %2.2X%2.2X%2.2X%2.2X%s"
 #define HHC01316 "%1d:%04X CHAN: csw %2.2X, stat %2.2X%2.2X, count %2.2X%2.2X, ccw %2.2X%2.2X%2.2X"
 #define HHC01317 "%1d:%04X CHAN: scsw %2.2X%2.2X%2.2X%2.2X, stat %2.2X%2.2X, count %2.2X%2.2X, ccw %2.2X%2.2X%2.2X%2.2X"
 #define HHC01318 "%1d:%04X CHAN: test I/O: cc=%d"
@@ -885,6 +885,7 @@ Examples:
 #define HHC01333 "%1d:%04X CHAN: resume subchannel: cc=%d"
 #define HHC01334 "%1d:%04X CHAN: asynchronous I/O ccw addr %8.8x"
 #define HHC01335 "%1d:%04X CHAN: synchronous  I/O ccw addr %8.8x"
+#define HHC01336 "%1d:%04X CHAN: busy on %s, active device %1d:%04X seldev=%1d, cr0.0=%1d, cc=%1d"
 
 /* hchan.c */
 #define HHC01350 "%1d:%04X CHAN: missing generic channel method"
