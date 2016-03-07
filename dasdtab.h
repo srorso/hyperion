@@ -54,6 +54,7 @@ typedef struct _CKDDEV {                /* CKD Device table entry    */
         BYTE    model;                  /* Device model              */
         BYTE    devclass;               /* Device class              */
         BYTE    code;                   /* Device code               */
+		BYTE    selchanforce;           /* 1=Dev forces selchan mode */
         U16     cyls;                   /* Number primary cylinders  */
         U16     altcyls;                /* Number alternate cylinders*/
         U16     heads;                  /* Number heads (trks/cyl)   */

@@ -664,6 +664,10 @@ char           *strtok_str = NULL;      /* save last position        */
     /* Set number of sense bytes according to controller specification */
     dev->numsense = dev->ckdcu->senselength;
 
+	/* Set flag if device operations force channel into selector mode   */
+	dev->selchanio = dev->ckdtab->selchanforce;
+	// increment count of selector channel devices configured
+
     /* Set flag bit if 3990 controller */
     if (dev->ckdcu->devt == 0x3990)
         dev->ckd3990 = 1;
