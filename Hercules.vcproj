@@ -1269,14 +1269,6 @@
 							>
 						</File>
 						<File
-							RelativePath=".\SoftFloat-specialise.c"
-							>
-						</File>
-						<File
-							RelativePath=".\SoftFloat.c"
-							>
-						</File>
-						<File
 							RelativePath=".\sr.c"
 							>
 						</File>
@@ -1645,23 +1637,11 @@
 							>
 						</File>
 						<File
-							RelativePath=".\SoftFloat-macros.h"
+							RelativePath=".\softFloat-types.h"
 							>
 						</File>
 						<File
-							RelativePath=".\SoftFloat-milieu.h"
-							>
-						</File>
-						<File
-							RelativePath=".\SoftFloat-specialise.h"
-							>
-						</File>
-						<File
-							RelativePath=".\SoftFloat-types.h"
-							>
-						</File>
-						<File
-							RelativePath=".\SoftFloat.h"
+							RelativePath=".\softFloat.h"
 							>
 						</File>
 						<File
@@ -1693,14 +1673,6 @@
 							>
 						</File>
 					</Filter>
-				</Filter>
-				<Filter
-					Name="Original SoftFloat-2b"
-					>
-					<File
-						RelativePath=".\SoftFloat-2b.zip"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="altcmpsc"
@@ -2456,6 +2428,14 @@
 						</File>
 						<File
 							RelativePath=".\msvc.makefile.includes\CONFIG.msvc"
+							>
+						</File>
+						<File
+							RelativePath=".\msvc.makefile.includes\EXTPKG_DIRS.msvc"
+							>
+						</File>
+						<File
+							RelativePath=".\msvc.makefile.includes\EXTPKG_FLAGS.msvc"
 							>
 						</File>
 						<File

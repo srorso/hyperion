@@ -1,0 +1,22 @@
+# ***************************************************************************
+#     SFLIB_FLAGS.msvc      (!INCLUDE'ed by "makefile-dllmod.msvc")
+# --------------------------------------------------------------------------
+# (c) 2016 Copyright by Stephen R. Orso
+# --------------------------------------------------------------------------
+#
+#  Set include and linkedit libraries for external packages required 
+#  to build Hercules.
+#
+#  At present, only Softfloat 3a is set up as an external package.
+#
+# Note that the packages set up in this file are REQUIRED for a 
+# successful build.
+#
+# ***************************************************************************
+
+!IFDEF SFLIB_DIR
+SFLIB_LIB = $(SFLIB_DIR)/softfloat.lib
+SFLIB_INC = $(SFLIB_DIR)/include
+LIBS     = $(LIBS) "$(SFLIB_LIB)"
+cflags   = $(cflags) /I"$(SFLIB_INC)"
+!ENDIF

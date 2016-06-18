@@ -1,0 +1,60 @@
+# ***************************************************************************
+#     ZLIB_DIR.msvc      (!INCLUDE ed by "makefile-dllmod.msvc")
+# --------------------------------------------------------------------------
+# (c) 2016 Copyright by Stephen R. Orso
+# --------------------------------------------------------------------------
+#
+#  Defines input libraries and paths for the external packages required to 
+#  build Hercules.
+#
+#  Package Libraries in this include file are required for successful builds.
+#
+#  This is different from ZLIB, BZIP2, PCRE, and the two REXX packages, 
+#  which are optional packages.
+#
+#  At present, only Softfloat 3a is set up as an external package.  
+#
+# ***************************************************************************
+
+# ---------------------------------------------------------------------
+# Specify the correct directory for Softfloat 3a
+# ---------------------------------------------------------------------
+
+!IFNDEF SFLIB_DIR
+# Undefined: use default value, if it exists.
+# SFLIB_DIR defaults to winbuild\sflib relative to current directory
+!IF "$(CPU)" == "i386" && EXIST(winbuild\sflib\i386)
+SFLIB_DIR = winbuild\sflib\i386
+!ELSEIF "$(CPU)" == "i386" && EXIST(winbuild\sflib)
+SFLIB_DIR = winbuild\sflib
+!ELSEIF "$(CPU)" == "AMD64" && EXIST(winbuild\sflib\x64)
+SFLIB_DIR = winbuild\sflib\x64
+!ENDIF
+!ELSE
+# Defined: use explicit directory or subdirectory
+# unless "NONE" is specified or it doesn't exist.
+!IF "$(SFLIB_DIR)" == "NONE"
+!UNDEF SFLIB_DIR
+!ELSE
+!IF "$(CPU)" == "i386"
+!IF !EXIST($(SFLIB_DIR))
+!UNDEF SFLIB_DIR
+!ENDIF
+!ELSEIF "$(CPU)" == "AMD64"
+!IF EXIST($(SFLIB_DIR)\x64)
+SFLIB_DIR = $(SFLIB_DIR)\x64
+!ENDIF
+!ENDIF
+!ENDIF
+!ENDIF
+
+!IFDEF SFLIB_DIR
+!IF !EXIST("$(SFLIB_DIR)\include\softfloat.h")
+!ERROR SFLIB_DIR "$(SFLIB_DIR)\include\softfloat.h" does not exist. Check SFLIB_DIR
+!ELSEIF !EXIST("$(SFLIB_DIR)\include\softfloat_types.h")
+!ERROR SFLIB_DIR "$(SFLIB_DIR)\include\softfloat_types.h" does not exist. Check SFLIB_DIR
+!ENDIF
+!MESSAGE Softfloat 3a package will be included from "$(SFLIB_DIR)"
+!ELSE
+!ERROR SFLIB is required to build Hercules 4.0, found "$(SFLIB_DIR)"
+!ENDIF

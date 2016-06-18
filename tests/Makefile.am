@@ -10,6 +10,11 @@ dist_pkgdata_DATA =			\
 	 ieee-mults.core		\
 	 ieee-sqrts.core		\
 	 ieee-subs.core			\
+	 ieee-cvtfrfix.core		\
+	 ieee-cvtfrfix64.core	\
+	 ieee-cvttofix.core		\
+	 ieee-cvttofix64.core	\
+	 ieee-loadfpi.core		\
 	 l.core					\
 	 la.core				\
 	 la2.core				\
@@ -80,14 +85,31 @@ EXTRA_DIST =				\
 	 ieee-comps.asm			\
 	 ieee-comps.list		\
 	 ieee-comps.tst			\
+<<<<<<< HEAD
 	 ieee-div-nans.asm		\
 	 ieee-div-nans.list		\
+=======
+	 ieee-cvtfrfix.asm		\
+	 ieee-cvtfrfix.list		\
+	 ieee-cvtfrfix.tst		\
+	 ieee-cvtfrfix64.asm	\
+	 ieee-cvtfrfix64.list	\
+	 ieee-cvtfrfix64.tst	\
+	 ieee-cvttofix.asm		\
+	 ieee-cvttofix.list		\
+	 ieee-cvttofix.tst		\
+	 ieee-cvttofix64.asm	\
+	 ieee-cvttofix64.list	\
+	 ieee-cvttofix64.tst	\
 	 ieee-div-nans.tst		\
 	 ieee-divs.asm			\
 	 ieee-divs.list			\
 	 ieee-divs.tst			\
 	 ieee-mults.asm			\
 	 ieee-mults.list		\
+	 ieee-loadfpi.asm		\
+	 ieee-loadfpi.list		\
+	 ieee-loadfpi.tst		\
 	 ieee-mults.tst			\
 	 ieee-sqrts.asm			\
 	 ieee-sqrts.list		\
