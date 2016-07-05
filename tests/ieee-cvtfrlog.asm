@@ -1,13 +1,13 @@
 *
-*Testcase IEEE CONVERT FROM FIXED 32
+*Testcase IEEE CONVERT FROM LOGICAL 32
 *  Test case capability includes ieee exceptions trappable and otherwise.
 *  Test result, FPC flags, and DXC saved for all tests.  (Convert From 
 *  Fixed does not set the condition code.)
 *
 * Tests the following three conversion instructions
-*   CONVERT FROM FIXED (32 to short BFP, RRE)
-*   CONVERT FROM FIXED (32 to long BFP, RRE) 
-*   CONVERT FROM FIXED (32 to extended BFP, RRE)  
+*   CONVERT FROM LOGICAL (32 to short BFP, RRF-e)
+*   CONVERT FROM LOGICAL (32 to long BFP, RRF-e) 
+*   CONVERT FROM LOGICAL (32 to extended BFP, RRF-e)  
 *
 * Limited test data is compiled into this program.  The test script that runs
 * this program can provide alternative test data through Hercules R commands.
@@ -18,10 +18,11 @@
 * 3) Int-32 to Long BFP
 * 4) Int-32 to Extended BFP
 *
-* Provided test data is 1, 2, 4, -2, 2 147 483 647, -2 147 483 647.
+* Provided test data is 
+*       1, 2, 4, 9, 4 294 967 294 (0xFFFFFFFE), 2 147 483 648 (0x80000000)
 *   The last two values will trigger inexact exceptions when converted 
 *   to short BFP.  The last two values are also used to test rounding
-*   mode and inexact supression in the CEFBRA instruction.  
+*   mode and inexact supression in the CELFBR instruction.  
 *
 * Also tests the following floating point support instructions
 *   LOAD  (Short)
@@ -72,15 +73,15 @@ START    STCTL R0,R0,CTLR0    Store CR0 to enable AFP
          LCTL  R0,R0,CTLR0    Reload updated CR0
 *
          LA    R10,SHORTS     Point to integer test inputs
-         BAS   R13,CEFBR      Convert values from fixed to short BFP
+         BAS   R13,CELFBR     Convert values from fixed to short BFP
          LA    R10,RMSHORTS   Point to integer inputs for rounding mode tests
-         BAS   R13,CEFBRA     Convert values from fixed to short using rm options
+         BAS   R13,CELFBRA    Convert values from fixed to short using rm options
 *
          LA    R10,LONGS      Point to integer test inputs
-         BAS   R13,CDFBR      Convert values from fixed to long
+         BAS   R13,CDLFBR     Convert values from fixed to long
 *
          LA    R10,EXTDS      Point to integer test inputs
-         BAS   R13,CXFBR      Convert values from fixed to extended
+         BAS   R13,CXLFBR     Convert values from fixed to extended
 *
          LPSWE WAITPSW        All done
 *
@@ -124,7 +125,7 @@ RMSHORTS DC    A(INTRMCT/4)
 * for each input: one with all exceptions non-trappable, and the second 
 * with all exceptions trappable.   The FPCR is stored for each result.
 *
-CEFBR    LM    R2,R3,0(R10)  Get count and address of test input values
+CELFBR   LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -132,12 +133,12 @@ CEFBR    LM    R2,R3,0(R10)  Get count and address of test input values
 *
          L     R1,0(0,R3)    Get integer test value
          LFPC  FPCREGNT      Set all exceptions non-trappable
-         CEFBR R0,R1         Cvt Int in GPR1 to float in FPR0
+         CELFBR R0,0,R1,0    Cvt Int in GPR1 to float in FPR0
          STE   R0,0(0,R7)    Store short BFP result
          STFPC 0(R8)         Store resulting FPC flags and DXC
 *
          LFPC  FPCREGTR      Set all exceptions trappable
-         CEFBR R0,R1         Cvt Int in GPR1 to float in FPR0
+         CELFBR R0,0,R1,0    Cvt Int in GPR1 to float in FPR0
          STE   R0,4(0,R7)    Store short BFP result
          STFPC 4(R8)         Store resulting FPC flags and DXC
          LA    R3,4(0,R3)    point to next input values
@@ -160,7 +161,7 @@ CEFBR    LM    R2,R3,0(R10)  Get count and address of test input values
 * The default rounding mode (0 for RNTE) is not tested in this section; 
 * prior tests used the default rounding mode.  
 *
-CEFBRA   LM    R2,R3,0(R10)  Get count and address of test input values
+CELFBRA  LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -174,55 +175,55 @@ CEFBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          SRNMB 1             SET FPC to RZ, Round towards zero.  
-         CEFBRA R0,0,R1,B'0100'  FPC controlled rounding, inexact masked
+         CELFBR R0,0,R1,B'0100'  FPC controlled rounding, inexact masked
          STE   R0,0*4(0,R7)  Store short BFP result
          STFPC 0(R8)         Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          SRNMB 2             SET FPC to RP, Round to +infinity
-         CEFBRA R0,0,R1,B'0100'  FPC controlled rounding, inexact masked
+         CELFBR R0,0,R1,B'0100'  FPC controlled rounding, inexact masked
          STE   R0,1*4(0,R7)  Store short BFP result
          STFPC 1*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          SRNMB 3             SET FPC to RM, Round to -infinity
-         CEFBRA R0,0,R1,B'0100'  FPC controlled rounding, inexact masked
+         CELFBR R0,0,R1,B'0100'  FPC controlled rounding, inexact masked
          STE   R0,2*4(0,R7)  Store short BFP result
          STFPC 2*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          SRNMB 7             RPS, Round Prepare for Shorter Precision
-         CEFBRA R0,0,R1,B'0100'  FPC controlled rounding, inexact masked
+         CELFBR R0,0,R1,B'0100'  FPC controlled rounding, inexact masked
          STE   R0,3*4(0,R7)  Store short BFP result
          STFPC 3*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         CEFBRA R0,1,R1,B'0000'  RNTA Round to nearest, ties away from zero
+         CELFBR R0,1,R1,B'0000'  RNTA Round to nearest, ties away from zero
          STE   R0,4*4(0,R7)  Store short BFP result
          STFPC 4*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         CEFBRA R0,3,R1,B'0000'  RPS Round to prepare for shorter precision
+         CELFBR R0,3,R1,B'0000'  RPS Round to prepare for shorter precision
          STE   R0,5*4(0,R7)  Store short BFP result
          STFPC 5*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         CEFBRA R0,4,R1,B'0000'  RNTE Round to nearest, ties to even
+         CELFBR R0,4,R1,B'0000'  RNTE Round to nearest, ties to even
          STE   R0,6*4(0,R7)  Store short BFP result
          STFPC 6*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         CEFBRA R0,5,R1,B'0000'  RZ Round toward zero
+         CELFBR R0,5,R1,B'0000'  RZ Round toward zero
          STE   R0,7*4(0,R7)  Store short BFP result
          STFPC 7*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         CEFBRA R0,6,R1,B'0000'  Round to +inf
+         CELFBR R0,6,R1,B'0000'  Round to +inf
          STE   R0,8*4(0,R7)  Store short BFP result
          STFPC 8*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         CEFBRA R0,7,R1,B'0000'  Round to -inf
+         CELFBR R0,7,R1,B'0000'  Round to -inf
          STE   R0,9*4(0,R7)  Store short BFP result
          STFPC 9*4(R8)       Store resulting FPC flags and DXC
 *
@@ -238,7 +239,7 @@ CEFBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Conversion of a 32-bit integer to long is always exact; no exceptions
 * are expected
 *
-CDFBR    LM    R2,R3,0(R10)  Get count and address of test input values
+CDLFBR   LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -246,12 +247,12 @@ CDFBR    LM    R2,R3,0(R10)  Get count and address of test input values
 *
          L     R1,0(0,R3)    Get integer test value
          LFPC  FPCREGNT      Set all exceptions non-trappable
-         CDFBR R0,R1         Cvt Int in GPR1 to float in FPR0
+         CDLFBR R0,0,R1,0    Cvt Int in GPR1 to float in FPR0
          STD   R0,0(0,R7)    Store long BFP result
          STFPC 0(R8)         Store resulting FPC flags and DXC
 *
          LFPC  FPCREGTR      Set all exceptions trappable
-         CDFBR R0,R1         Cvt Int in GPR1 to float in FPR0
+         CDLFBR R0,0,R1,0    Cvt Int in GPR1 to float in FPR0
          STD   R0,8(0,R7)    Store long BFP result
          STFPC 4(R8)         Store resulting FPC flags and DXC
          LA    R3,4(0,R3)    point to next input values
@@ -266,7 +267,7 @@ CDFBR    LM    R2,R3,0(R10)  Get count and address of test input values
 * stored for each result.  Conversion of a 32-bit integer to 
 * extended is always exact; no exceptions are expected
 *
-CXFBR    LM    R2,R3,0(R10)  Get count and address of test input values
+CXLFBR   LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -274,13 +275,13 @@ CXFBR    LM    R2,R3,0(R10)  Get count and address of test input values
 *
          L     R1,0(0,R3)    Get integer test value
          LFPC  FPCREGNT      Set all exceptions non-trappable
-         CXFBR R0,R1         Cvt Int in GPR1 to float in FPR0-FPR2
+         CXLFBR R0,0,R1,0    Cvt Int in GPR1 to float in FPR0-FPR2
          STD   R0,0(0,R7)    Store extended BFP result part 1
          STD   R2,8(0,R7)    Store extended BFP result part 1
          STFPC 0(R8)         Store resulting FPC flags and DXC
 *
          LFPC  FPCREGTR      Set all exceptions trappable
-         CXFBR R0,R1         Cvt Int in GPR1 to float in FPR0-FPR2
+         CXLFBR R0,0,R1,0    Cvt Int in GPR1 to float in FPR0-FPR2
          STD   R0,16(0,R7)   Store extended BFP result
          STD   R2,24(0,R7)   Store extended BFP result
          STFPC 4(R8)         Store resulting FPC flags and DXC
@@ -296,12 +297,12 @@ CXFBR    LM    R2,R3,0(R10)  Get count and address of test input values
 * int-32 to long or extended are always exact.  
 *
 INTIN    DS    0F
-         DC    F'1'
-         DC    F'2'
-         DC    F'4'
-         DC    F'-2'
-INTINRM  DC    F'2147483647'       should compile to X'7FFFFFFF'
-         DC    F'-2147483647'      should compile to X'80000001'
+         DC    F'U1'
+         DC    F'U2'
+         DC    F'U4'
+         DC    F'U9'
+INTINRM  DC    F'U4294967294'      should compile to X'FFFFFFFE'
+         DC    F'U4294967040'      should compile to X'FFFFFF00'  (fits in short bfp)
          DS    0F                  required by asma for following EQU to work.  
 INTCOUNT EQU   *-INTIN             Count of integers in list * 4
 INTRMCT  EQU   *-INTINRM           Count of integers to be used for rounding mode tests

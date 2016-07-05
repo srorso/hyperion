@@ -206,7 +206,7 @@ CGEBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  1             SET FPC to RZ, Round towards zero.  
+         SRNMB 1             SET FPC to RZ, Round towards zero.  
          CGEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,0*8(0,R7)  Store integer-64 result
          STFPC 0(R8)         Store resulting FPC flags and DXC
@@ -215,7 +215,7 @@ CGEBRA   LM    R2,R3,0(R10)  Get count and address of test input values
          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  2             SET FPC to RP, Round to +infinity
+         SRNMB 2             SET FPC to RP, Round to +infinity
          CGEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,1*8(0,R7)  Store integer-64 result
          STFPC 1*4(R8)       Store resulting FPC flags and DXC
@@ -224,22 +224,22 @@ CGEBRA   LM    R2,R3,0(R10)  Get count and address of test input values
          STC   R1,(1*4)+3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  3             SET FPC to RM, Round to -infinity
+         SRNMB 3             SET FPC to RM, Round to -infinity
          CGEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,2*8(0,R7)  Store integer-64 result
          STFPC 2*4(R8)       Store resulting FPC flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
          STC   R1,(2*4)+3(0,R8)    Save condition code as low byte of FPCR
-*  Skipped test
-*         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-*         SRNMB 7             RPS, Round Prepare for Shorter Precision
-*         CGEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-*         STG   R1,3*8(0,R7)  Store integer-64 result
-*         STFPC 3*4(R8)       Store resulting FPC flags and DXC
-*         IPM   R1            Get condition code and program mask
-*         SRL   R1,28         Isolate CC in low order byte
-*         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
+*
+         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+         SRNMB 7             RPS, Round Prepare for Shorter Precision
+         CGEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+         STG   R1,3*8(0,R7)  Store integer-64 result
+         STFPC 3*4(R8)       Store resulting FPC flags and DXC
+         IPM   R1            Get condition code and program mask
+         SRL   R1,28         Isolate CC in low order byte
+         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          CGEBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
@@ -358,7 +358,7 @@ CGDBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  1             SET FPC to RZ, Round towards zero.  
+         SRNMB 1             SET FPC to RZ, Round towards zero.  
          CGDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,0*8(0,R7)  Store integer-64 result
          STFPC 0(R8)         Store resulting FPC flags and DXC
@@ -367,7 +367,7 @@ CGDBRA   LM    R2,R3,0(R10)  Get count and address of test input values
          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  2             SET FPC to RP, Round to +infinity
+         SRNMB 2             SET FPC to RP, Round to +infinity
          CGDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,1*8(0,R7)  Store integer-64 result
          STFPC 1*4(R8)       Store resulting FPC flags and DXC
@@ -376,22 +376,22 @@ CGDBRA   LM    R2,R3,0(R10)  Get count and address of test input values
          STC   R1,(1*4)+3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  3             SET FPC to RM, Round to -infinity
+         SRNMB 3             SET FPC to RM, Round to -infinity
          CGDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,2*8(0,R7)  Store integer-64 result
          STFPC 2*4(R8)       Store resulting FPC flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
          STC   R1,(2*4)+3(0,R8)    Save condition code as low byte of FPCR
-*  Skipped test
-*         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-*         SRNMB 7             RPS, Round Prepare for Shorter Precision
-*         CGDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-*         STG   R1,3*8(0,R7)  Store integer-64 result
-*         STFPC 3*4(R8)       Store resulting FPC flags and DXC
-*         IPM   R1            Get condition code and program mask
-*         SRL   R1,28         Isolate CC in low order byte
-*         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
+*
+         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+         SRNMB 7             RPS, Round Prepare for Shorter Precision
+         CGDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+         STG   R1,3*8(0,R7)  Store integer-64 result
+         STFPC 3*4(R8)       Store resulting FPC flags and DXC
+         IPM   R1            Get condition code and program mask
+         SRL   R1,28         Isolate CC in low order byte
+         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          CGDBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
@@ -512,7 +512,7 @@ CGXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  1             SET FPC to RZ, Round towards zero.  
+         SRNMB 1             SET FPC to RZ, Round towards zero.  
          CGXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,0*8(0,R7)  Store integer-64 result
          STFPC 0(R8)         Store resulting FPC flags and DXC
@@ -521,7 +521,7 @@ CGXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  2             SET FPC to RP, Round to +infinity
+         SRNMB 2             SET FPC to RP, Round to +infinity
          CGXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,1*8(0,R7)  Store integer-64 result
          STFPC 1*4(R8)       Store resulting FPC flags and DXC
@@ -530,22 +530,22 @@ CGXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
          STC   R1,(1*4)+3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  3             SET FPC to RM, Round to -infinity
+         SRNMB 3             SET FPC to RM, Round to -infinity
          CGXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STG   R1,2*8(0,R7)  Store integer-64 result
          STFPC 2*4(R8)       Store resulting FPC flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
          STC   R1,(2*4)+3(0,R8)    Save condition code as low byte of FPCR
-*  Skipped test
-*         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-*         SRNMB 7             RPS, Round Prepare for Shorter Precision
-*         CGXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-*         STG   R1,3*8(0,R7)  Store integer-64 result
-*         STFPC 3*4(R8)       Store resulting FPC flags and DXC
-*         IPM   R1            Get condition code and program mask
-*         SRL   R1,28         Isolate CC in low order byte
-*         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
+*
+         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+         SRNMB 7             RPS, Round Prepare for Shorter Precision
+         CGXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+         STG   R1,3*8(0,R7)  Store integer-64 result
+         STFPC 3*4(R8)       Store resulting FPC flags and DXC
+         IPM   R1            Get condition code and program mask
+         SRL   R1,28         Isolate CC in low order byte
+         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          CGXBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero

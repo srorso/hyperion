@@ -49,20 +49,19 @@ r 10A0.10  # Inputs converted to BFP Short - FPC
 
 *Compare
 r 1100.10  # Rounding Mode Tests positive
-*Compare
-*Want "CEFBRA + result FPC modes 1-3, 7" 4EFFFFFF 4F000000 4EFFFFFF 4F000000
+*Want "CEFBRA + result FPC modes 1-3, 7" 4EFFFFFF 4F000000 4EFFFFFF 4EFFFFFF
 r 1110.10  # Rounding Mode Tests positive
 *Compare
-*Want "CEFBRA + result M3 modes 1, 3-5" 4F000000 4F000000 4F000000 4EFFFFFF
+*Want "CEFBRA + result M3 modes 1, 3-5" 4F000000 4EFFFFFF 4F000000 4EFFFFFF
 *Compare
 r 1120.08  # Rounding Mode Tests
 *Want "CEFBRA + result M3 modes 6, 7" 4F000000 4EFFFFFF
 *Compare
 r 1130.10  # Rounding Mode Tests negative
-*Want "CEFBRA - result FPC modes 1-3, 7" CEFFFFFF CEFFFFFF CF000000 CF000000
+*Want "CEFBRA - result FPC modes 1-3, 7" CEFFFFFF CEFFFFFF CF000000 CEFFFFFF
 *Compare
 r 1140.10  # Rounding Mode Tests negative
-*Want "CEFBRA - result M3 modes 1, 3-5" CF000000 CF000000 CF000000 CEFFFFFF 
+*Want "CEFBRA - result M3 modes 1, 3-5" CF000000 CEFFFFFF CF000000 CEFFFFFF 
 *Compare
 r 1150.08  # Rounding Mode Tests negative
 *Want "CEFBRA - result M3 modes 6, 7" CEFFFFFF CF000000

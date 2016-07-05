@@ -202,28 +202,28 @@ FIEBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  1             SET FPC to RZ, Round towards zero.  
+         SRNMB 1             SET FPC to RZ, Round towards zero.  
          FIEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STE   R1,0*4(0,R7)  Store integer BFP result
          STFPC 0(R8)         Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  2             SET FPC to RP, Round to +infinity
+         SRNMB 2             SET FPC to RP, Round to +infinity
          FIEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STE   R1,1*4(0,R7)  Store integer BFP result
          STFPC 1*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  3             SET FPC to RM, Round to -infinity
+         SRNMB 3             SET FPC to RM, Round to -infinity
          FIEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STE   R1,2*4(0,R7)  Store integer BFP result
          STFPC 2*4(R8)       Store resulting FPC flags and DXC
-*  Skipped test
-*         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-*         SRNMB 7             RPS, Round Prepare for Shorter Precision
-*         FIEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-*         STE   R1,3*4(0,R7)  Store integer BFP result
-*         STFPC 3*4(R8)       Store resulting FPC flags and DXC
+*
+         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+         SRNMB 7             RPS, Round Prepare for Shorter Precision
+         FIEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+         STE   R1,3*4(0,R7)  Store integer BFP result
+         STFPC 3*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          FIEBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
@@ -317,29 +317,28 @@ FIDBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  1             SET FPC to RZ, Round towards zero.  
+         SRNMB 1             SET FPC to RZ, Round towards zero.  
          FIDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STD   R1,0*8(0,R7)  Store integer BFP result
          STFPC 0(R8)         Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  2             SET FPC to RP, Round to +infinity
+         SRNMB 2             SET FPC to RP, Round to +infinity
          FIDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STD   R1,1*8(0,R7)  Store integer BFP result
          STFPC 1*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  3             SET FPC to RM, Round to -infinity
+         SRNMB 3             SET FPC to RM, Round to -infinity
          FIDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STD   R1,2*8(0,R7)  Store integer BFP result
          STFPC 2*4(R8)       Store resulting FPC flags and DXC
 *
-*  Skipped test
-*         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-*         SRNMB 7             RPS, Round Prepare for Shorter Precision
-*         FIDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-*         STD   R1,3*8(0,R7)  Store integer BFP result
-*         STFPC 3*4(R8)       Store resulting FPC flags and DXC
+         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+         SRNMB 7             RPS, Round Prepare for Shorter Precision
+         FIDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+         STD   R1,3*8(0,R7)  Store integer BFP result
+         STFPC 3*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          FIDBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
@@ -437,33 +436,32 @@ FIXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  1             SET FPC to RZ, Round towards zero.  
+         SRNMB 1             SET FPC to RZ, Round towards zero.  
          FIXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STD   R1,0*16(0,R7)     Store integer BFP result part 1
          STD   R3,(0*16)+8(0,R7) Store integer BFP result part 2
          STFPC 0(R8)         Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  2             SET FPC to RP, Round to +infinity
+         SRNMB 2             SET FPC to RP, Round to +infinity
          FIXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STD   R1,1*16(0,R7)     Store integer BFP result part 1
          STD   R3,(1*16)+8(0,R7) Store integer BFP result part 2
          STFPC 1*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-         SRNM  3             SET FPC to RM, Round to -infinity
+         SRNMB 3             SET FPC to RM, Round to -infinity
          FIXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
          STD   R1,2*16(0,R7)     Store integer BFP result part 1
          STD   R3,(2*16)+8(0,R7) Store integer BFP result part 2
          STFPC 2*4(R8)       Store resulting FPC flags and DXC
 *
-*  Skipped test
-*         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-*         SRNMB 7             RPS, Round Prepare for Shorter Precision
-*         FIXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-*         STD   R1,3*16(0,R7)     Store integer BFP result part 1
-*         STD   R3,(3*16)+8(0,R7) Store integer BFP result part 2
-*         STFPC 3*4(R8)       Store resulting FPC flags and DXC
+         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+         SRNMB 7             RPS, Round Prepare for Shorter Precision
+         FIXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+         STD   R1,3*16(0,R7)     Store integer BFP result part 1
+         STD   R3,(3*16)+8(0,R7) Store integer BFP result part 2
+         STFPC 3*4(R8)       Store resulting FPC flags and DXC
 *
          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
          FIXBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero

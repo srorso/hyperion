@@ -80,7 +80,7 @@ r 11B0.08  # Rounding Mode Tests, M3,  RP,      RM
 *Want "CFEBRA -1.5 M3 modes 6, 7"    BF800000 C0000000
 
 r 11C0.10  # Rounding Mode Tests, FPCR, RZ,     RP,      RM,      RFS
-*Want "CFEBRA -0.5 FPC modes 1-3, 7" 00000000 00000000 BF800000 BF800000
+*Want "CFEBRA -0.5 FPC modes 1-3, 7" 80000000 80000000 BF800000 BF800000
 r 11D0.10  # Rounding Mode Tests, M3,  RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA -0.5 M3 modes 1, 3-5"  BF800000 BF800000 80000000 80000000
 r 11E0.08  # Rounding Mode Tests, M3,  RP,      RM
@@ -238,7 +238,7 @@ r 1690.10  # Rounding Mode Tests, M3,   RP,               RM
 r 16A0.10  # Rounding Mode Tests, FPCR, RZ,               RP
 *Want "CFDBRA -2.5 FPC modes 1, 2"   C0000000 00000000 C0000000 00000000
 r 16B0.10  # Rounding Mode Tests, FPCR, RM,               RFS
-*Want "CFDBRA -2.5 FPC modes 3, 7"   C0080000 00000000 C0000000 00000000
+*Want "CFDBRA -2.5 FPC modes 3, 7"   C0080000 00000000 C0080000 00000000
 r 16C0.10  # Rounding Mode Tests, M3,   RNTA,             RFS
 *Want "CFDBRA -2.5 M3 modes 1, 3"    C0080000 00000000 C0080000 00000000
 r 16D0.10  # Rounding Mode Tests, M3,   RNTE,             RZ
@@ -473,7 +473,7 @@ r 1E50.10  # Rounding Mode Tests, FPCR,  RP
 r 1E60.10  # Rounding Mode Tests, FPCR,  RM
 *Want "CFXBRA -2.5 FPC mode 3"         C0008000 00000000 00000000 00000000
 r 1E70.10  # Rounding Mode Tests, FPCR,  RFS
-*Want "CFXBRA -2.5 FPC mode 7"         C0000000 00000000 00000000 00000000
+*Want "CFXBRA -2.5 FPC mode 7"         C0008000 00000000 00000000 00000000
 r 1E80.10  # Rounding Mode Tests, M3,    RNTA
 *Want "CFXBRA -2.5 M3 mode 1"          C0008000 00000000 00000000 00000000
 r 1E90.10  # Rounding Mode Tests, M3,    RFS

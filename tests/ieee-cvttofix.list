@@ -1,4 +1,4 @@
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     1
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     1
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -42,7 +42,7 @@ ASMA Ver. 0.2.0                                                                 
                                                                             38 *   STORE (Short)
                                                                             39 *   STORE (Long)
                                                                             40 *
-                                      0000000000000000  0000000000000977    41 BFPCVTTF START 0
+                                      0000000000000000  00000000000009D7    41 BFPCVTTF START 0
                                       0000000000000000  0000000000000001    42 R0       EQU   0
                                       0000000000000001  0000000000000001    43 R1       EQU   1
                                       0000000000000002  0000000000000001    44 R2       EQU   2
@@ -54,7 +54,7 @@ ASMA Ver. 0.2.0                                                                 
                                       0000000000000008  0000000000000001    50 R8       EQU   8
                                       0000000000000009  0000000000000001    51 R9       EQU   9
                                       000000000000000A  0000000000000001    52 R10      EQU   10
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     2
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     2
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -94,14 +94,14 @@ ASMA Ver. 0.2.0                                                                 
 0000000000000228  4DD0 033E                             000000000000033E    86          BAS   R13,CFEBRA     Convert values from fixed to short using rm options
                                                                             87 *
 000000000000022C  41A0 0290                             0000000000000290    88          LA    R10,LONGS      Point to long BFP test inputs
-0000000000000230  4DD0 0468                             0000000000000468    89          BAS   R13,CFDBR      Convert values to fixed from long BFP
+0000000000000230  4DD0 0488                             0000000000000488    89          BAS   R13,CFDBR      Convert values to fixed from long BFP
 0000000000000234  41A0 02C0                             00000000000002C0    90          LA    R10,RMLONGS    Point to long BFP inputs for rounding mode tests
-0000000000000238  4DD0 04C6                             00000000000004C6    91          BAS   R13,CFDBRA     Convert values to fixed from long using rm options
+0000000000000238  4DD0 04E6                             00000000000004E6    91          BAS   R13,CFDBRA     Convert values to fixed from long using rm options
                                                                             92 *
 000000000000023C  41A0 02A0                             00000000000002A0    93          LA    R10,EXTDS      Point to extended BFP test inputs
-0000000000000240  4DD0 05F0                             00000000000005F0    94          BAS   R13,CFXBR      Convert values to fixed from extended
+0000000000000240  4DD0 0630                             0000000000000630    94          BAS   R13,CFXBR      Convert values to fixed from extended
 0000000000000244  41A0 02D0                             00000000000002D0    95          LA    R10,RMEXTDS    Point to extended BFP inputs for rounding mode tests
-0000000000000248  4DD0 0652                             0000000000000652    96          BAS   R13,CFXBRA     Convert values to fixed from extended using rm options
+0000000000000248  4DD0 0692                             0000000000000692    96          BAS   R13,CFXBRA     Convert values to fixed from extended using rm options
                                                                             97 *
 000000000000024C  B2B2 0250                             0000000000000250    98          LPSWE WAITPSW        All done
                                                                             99 *
@@ -110,7 +110,7 @@ ASMA Ver. 0.2.0                                                                 
 0000000000000260  00000000                                                 102 CTLR0    DS    F
 0000000000000264  00000000                                                 103 FPCREGNT DC    X'00000000'    FPC Reg no IEEE exceptions trappable, flags cleared
 0000000000000268  F8000000                                                 104 FPCREGTR DC    X'F8000000'    FPC Reg all IEEE exceptions trappable, flags cleared
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     3
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     3
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -124,34 +124,34 @@ ASMA Ver. 0.2.0                                                                 
 000000000000026C                      000000000000026C  0000000000000280   112          ORG   BFPCVTTF+X'280'
 0000000000000280                                                           113 SHORTS   DS    0F           Inputs for short BFP testing
 0000000000000280  00000008                                                 114          DC    A(SBFPCT/4)
-0000000000000284  00000780                                                 115          DC    A(SBFPIN)
+0000000000000284  000007E0                                                 115          DC    A(SBFPIN)
 0000000000000288  00001000                                                 116          DC    A(SINTOUT)
 000000000000028C  00001080                                                 117          DC    A(SINTFLGS)
                                                                            118 *
 0000000000000290                                                           119 LONGS    DS    0F           Inputs for long BFP testing
 0000000000000290  00000008                                                 120          DC    A(LBFPCT/8)
-0000000000000294  000007C8                                                 121          DC    A(LBFPIN)
+0000000000000294  00000828                                                 121          DC    A(LBFPIN)
 0000000000000298  00001500                                                 122          DC    A(LINTOUT)
 000000000000029C  00001580                                                 123          DC    A(LINTFLGS)
                                                                            124 *
 00000000000002A0                                                           125 EXTDS    DS    0F           Inputs for Extended BFP testing
 00000000000002A0  00000008                                                 126          DC    A(XBFPCT/16)
-00000000000002A4  00000858                                                 127          DC    A(XBFPIN)
+00000000000002A4  000008B8                                                 127          DC    A(XBFPIN)
 00000000000002A8  00001A00                                                 128          DC    A(XINTOUT)
 00000000000002AC  00001A80                                                 129          DC    A(XINTFLGS)
                                                                            130 *
 00000000000002B0  0000000A                                                 131 RMSHORTS DC    A(SBFPRMCT/4)
-00000000000002B4  000007A0                                                 132          DC    A(SBFPINRM)  table for short BFP rounding mode tests
+00000000000002B4  00000800                                                 132          DC    A(SBFPINRM)  table for short BFP rounding mode tests
 00000000000002B8  00001100                                                 133          DC    A(SINTRMO)   Space for rounding mode test results
 00000000000002BC  00001300                                                 134          DC    A(SINTRMOF)  Space for rounding mode test flags
                                                                            135 *
 00000000000002C0  0000000A                                                 136 RMLONGS  DC    A(LBFPRMCT/8)
-00000000000002C4  00000808                                                 137          DC    A(LBFPINRM)  table for long BFP rounding mode test inputs
+00000000000002C4  00000868                                                 137          DC    A(LBFPINRM)  table for long BFP rounding mode test inputs
 00000000000002C8  00001600                                                 138          DC    A(LINTRMO)   Space for rounding mode tests results
 00000000000002CC  00001800                                                 139          DC    A(LINTRMOF)  Space for rounding mode test flags
                                                                            140 *
 00000000000002D0  0000000A                                                 141 RMEXTDS  DC    A(XBFPRMCT/16)
-00000000000002D4  000008D8                                                 142          DC    A(XBFPINRM)  table for extended BFP rounding mode test inputs
+00000000000002D4  00000938                                                 142          DC    A(XBFPINRM)  table for extended BFP rounding mode test inputs
 00000000000002D8  00001B00                                                 143          DC    A(XINTRMO)   Space for rounding mode results
 00000000000002DC  00001D00                                                 144          DC    A(XINTRMOF)  Space for rounding mode test flags
                                                                            145 *
@@ -166,7 +166,7 @@ ASMA Ver. 0.2.0                                                                 
 00000000000002EA  078D                                                     154          BZR   R13           ..No, return to caller
 00000000000002EC  0DC0                                                     155          BASR  R12,0         Set top of loop
                                                                            156 *
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     4
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     4
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -222,11 +222,11 @@ ASMA Ver. 0.2.0                                                                 
                                                                            206 * Test cases using rounding mode specified in the FPCR
                                                                            207 *
 0000000000000350  B29D 0264                             0000000000000264   208          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     5
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     5
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-0000000000000354  B299 0001                             0000000000000001   209          SRNM  1             SET FPC to RZ, Round towards zero.
+0000000000000354  B2B8 0001                             0000000000000001   209          SRNMB 1             SET FPC to RZ, Round towards zero.
 0000000000000358  B398 0410                                                210          CFEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
 000000000000035C  5010 7000                             0000000000000000   211          ST    R1,0*4(0,R7)  Store integer-32 result
 0000000000000360  B29C 8000                             0000000000000000   212          STFPC 0(R8)         Store resulting FPC flags and DXC
@@ -235,7 +235,7 @@ ASMA Ver. 0.2.0                                                                 
 000000000000036C  4210 8003                             0000000000000003   215          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
                                                                            216 *
 0000000000000370  B29D 0264                             0000000000000264   217          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000374  B299 0002                             0000000000000002   218          SRNM  2             SET FPC to RP, Round to +infinity
+0000000000000374  B2B8 0002                             0000000000000002   218          SRNMB 2             SET FPC to RP, Round to +infinity
 0000000000000378  B398 0410                                                219          CFEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
 000000000000037C  5010 7004                             0000000000000004   220          ST    R1,1*4(0,R7)  Store integer-32 result
 0000000000000380  B29C 8004                             0000000000000004   221          STFPC 1*4(R8)       Store resulting FPC flags and DXC
@@ -244,120 +244,120 @@ ASMA Ver. 0.2.0                                                                 
 000000000000038C  4210 8007                             0000000000000007   224          STC   R1,(1*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            225 *
 0000000000000390  B29D 0264                             0000000000000264   226          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000394  B299 0003                             0000000000000003   227          SRNM  3             SET FPC to RM, Round to -infinity
+0000000000000394  B2B8 0003                             0000000000000003   227          SRNMB 3             SET FPC to RM, Round to -infinity
 0000000000000398  B398 0410                                                228          CFEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
 000000000000039C  5010 7008                             0000000000000008   229          ST    R1,2*4(0,R7)  Store integer-32 result
 00000000000003A0  B29C 8008                             0000000000000008   230          STFPC 2*4(R8)       Store resulting FPC flags and DXC
 00000000000003A4  B222 0010                                                231          IPM   R1            Get condition code and program mask
 00000000000003A8  8810 001C                             000000000000001C   232          SRL   R1,28         Isolate CC in low order byte
 00000000000003AC  4210 800B                             000000000000000B   233          STC   R1,(2*4)+3(0,R8)    Save condition code as low byte of FPCR
-                                                                           234 *  Skipped test
-                                                                           235 *         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-                                                                           236 *         SRNMB 7             RPS, Round Prepare for Shorter Precision
-                                                                           237 *         CFEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-                                                                           238 *         ST    R1,3*4(0,R7)  Store integer-32 result
-                                                                           239 *         STFPC 3*4(R8)       Store resulting FPC flags and DXC
-                                                                           240 *         IPM   R1            Get condition code and program mask
-                                                                           241 *         SRL   R1,28         Isolate CC in low order byte
-                                                                           242 *         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
+                                                                           234 *
+00000000000003B0  B29D 0264                             0000000000000264   235          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000003B4  B2B8 0007                             0000000000000007   236          SRNMB 7             RPS, Round Prepare for Shorter Precision
+00000000000003B8  B398 0410                                                237          CFEBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+00000000000003BC  5010 700C                             000000000000000C   238          ST    R1,3*4(0,R7)  Store integer-32 result
+00000000000003C0  B29C 800C                             000000000000000C   239          STFPC 3*4(R8)       Store resulting FPC flags and DXC
+00000000000003C4  B222 0010                                                240          IPM   R1            Get condition code and program mask
+00000000000003C8  8810 001C                             000000000000001C   241          SRL   R1,28         Isolate CC in low order byte
+00000000000003CC  4210 800F                             000000000000000F   242          STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            243 *
-00000000000003B0  B29D 0264                             0000000000000264   244          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000003B4  B398 1010                                                245          CFEBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
-00000000000003B8  5010 7010                             0000000000000010   246          ST    R1,4*4(0,R7)  Store integer-32 result
-00000000000003BC  B29C 8010                             0000000000000010   247          STFPC 4*4(R8)       Store resulting FPC flags and DXC
-00000000000003C0  B222 0010                                                248          IPM   R1            Get condition code and program mask
-00000000000003C4  8810 001C                             000000000000001C   249          SRL   R1,28         Isolate CC in low order byte
-00000000000003C8  4210 8013                             0000000000000013   250          STC   R1,(4*4)+3(0,R8)    Save condition code as low byte of FPCR
+00000000000003D0  B29D 0264                             0000000000000264   244          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000003D4  B398 1010                                                245          CFEBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
+00000000000003D8  5010 7010                             0000000000000010   246          ST    R1,4*4(0,R7)  Store integer-32 result
+00000000000003DC  B29C 8010                             0000000000000010   247          STFPC 4*4(R8)       Store resulting FPC flags and DXC
+00000000000003E0  B222 0010                                                248          IPM   R1            Get condition code and program mask
+00000000000003E4  8810 001C                             000000000000001C   249          SRL   R1,28         Isolate CC in low order byte
+00000000000003E8  4210 8013                             0000000000000013   250          STC   R1,(4*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            251 *
-00000000000003CC  B29D 0264                             0000000000000264   252          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000003D0  B398 3010                                                253          CFEBRA R1,3,R0,B'0000'  RPS Round to prepare for shorter precision
-00000000000003D4  5010 7014                             0000000000000014   254          ST    R1,5*4(0,R7)  Store integer-32 result
-00000000000003D8  B29C 8014                             0000000000000014   255          STFPC 5*4(R8)       Store resulting FPC flags and DXC
-00000000000003DC  B222 0010                                                256          IPM   R1            Get condition code and program mask
-00000000000003E0  8810 001C                             000000000000001C   257          SRL   R1,28         Isolate CC in low order byte
-00000000000003E4  4210 8017                             0000000000000017   258          STC   R1,(5*4)+3(0,R8)    Save condition code as low byte of FPCR
+00000000000003EC  B29D 0264                             0000000000000264   252          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000003F0  B398 3010                                                253          CFEBRA R1,3,R0,B'0000'  RPS Round to prepare for shorter precision
+00000000000003F4  5010 7014                             0000000000000014   254          ST    R1,5*4(0,R7)  Store integer-32 result
+00000000000003F8  B29C 8014                             0000000000000014   255          STFPC 5*4(R8)       Store resulting FPC flags and DXC
+00000000000003FC  B222 0010                                                256          IPM   R1            Get condition code and program mask
+0000000000000400  8810 001C                             000000000000001C   257          SRL   R1,28         Isolate CC in low order byte
+0000000000000404  4210 8017                             0000000000000017   258          STC   R1,(5*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            259 *
-00000000000003E8  B29D 0264                             0000000000000264   260          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     6
+0000000000000408  B29D 0264                             0000000000000264   260          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     6
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-00000000000003EC  B398 4010                                                261          CFEBRA R1,4,R0,B'0000'  RNTE Round to nearest, ties to even
-00000000000003F0  5010 7018                             0000000000000018   262          ST    R1,6*4(0,R7)  Store integer-32 result
-00000000000003F4  B29C 8018                             0000000000000018   263          STFPC 6*4(R8)       Store resulting FPC flags and DXC
-00000000000003F8  B222 0010                                                264          IPM   R1            Get condition code and program mask
-00000000000003FC  8810 001C                             000000000000001C   265          SRL   R1,28         Isolate CC in low order byte
-0000000000000400  4210 801B                             000000000000001B   266          STC   R1,(6*4)+3(0,R8)    Save condition code as low byte of FPCR
+000000000000040C  B398 4010                                                261          CFEBRA R1,4,R0,B'0000'  RNTE Round to nearest, ties to even
+0000000000000410  5010 7018                             0000000000000018   262          ST    R1,6*4(0,R7)  Store integer-32 result
+0000000000000414  B29C 8018                             0000000000000018   263          STFPC 6*4(R8)       Store resulting FPC flags and DXC
+0000000000000418  B222 0010                                                264          IPM   R1            Get condition code and program mask
+000000000000041C  8810 001C                             000000000000001C   265          SRL   R1,28         Isolate CC in low order byte
+0000000000000420  4210 801B                             000000000000001B   266          STC   R1,(6*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            267 *
-0000000000000404  B29D 0264                             0000000000000264   268          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000408  B398 5010                                                269          CFEBRA R1,5,R0,B'0000'  RZ Round toward zero
-000000000000040C  5010 701C                             000000000000001C   270          ST    R1,7*4(0,R7)  Store integer-32 result
-0000000000000410  B29C 801C                             000000000000001C   271          STFPC 7*4(R8)       Store resulting FPC flags and DXC
-0000000000000414  B222 0010                                                272          IPM   R1            Get condition code and program mask
-0000000000000418  8810 001C                             000000000000001C   273          SRL   R1,28         Isolate CC in low order byte
-000000000000041C  4210 801F                             000000000000001F   274          STC   R1,(7*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000424  B29D 0264                             0000000000000264   268          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+0000000000000428  B398 5010                                                269          CFEBRA R1,5,R0,B'0000'  RZ Round toward zero
+000000000000042C  5010 701C                             000000000000001C   270          ST    R1,7*4(0,R7)  Store integer-32 result
+0000000000000430  B29C 801C                             000000000000001C   271          STFPC 7*4(R8)       Store resulting FPC flags and DXC
+0000000000000434  B222 0010                                                272          IPM   R1            Get condition code and program mask
+0000000000000438  8810 001C                             000000000000001C   273          SRL   R1,28         Isolate CC in low order byte
+000000000000043C  4210 801F                             000000000000001F   274          STC   R1,(7*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            275 *
-0000000000000420  B29D 0264                             0000000000000264   276          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000424  B398 6010                                                277          CFEBRA R1,6,R0,B'0000'  Round to +inf
-0000000000000428  5010 7020                             0000000000000020   278          ST    R1,8*4(0,R7)  Store integer-32 result
-000000000000042C  B29C 8020                             0000000000000020   279          STFPC 8*4(R8)       Store resulting FPC flags and DXC
-0000000000000430  B222 0010                                                280          IPM   R1            Get condition code and program mask
-0000000000000434  8810 001C                             000000000000001C   281          SRL   R1,28         Isolate CC in low order byte
-0000000000000438  4210 8023                             0000000000000023   282          STC   R1,(8*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000440  B29D 0264                             0000000000000264   276          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+0000000000000444  B398 6010                                                277          CFEBRA R1,6,R0,B'0000'  Round to +inf
+0000000000000448  5010 7020                             0000000000000020   278          ST    R1,8*4(0,R7)  Store integer-32 result
+000000000000044C  B29C 8020                             0000000000000020   279          STFPC 8*4(R8)       Store resulting FPC flags and DXC
+0000000000000450  B222 0010                                                280          IPM   R1            Get condition code and program mask
+0000000000000454  8810 001C                             000000000000001C   281          SRL   R1,28         Isolate CC in low order byte
+0000000000000458  4210 8023                             0000000000000023   282          STC   R1,(8*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            283 *
-000000000000043C  B29D 0264                             0000000000000264   284          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000440  B398 7010                                                285          CFEBRA R1,7,R0,B'0000'  Round to -inf
-0000000000000444  5010 7024                             0000000000000024   286          ST    R1,9*4(0,R7)  Store integer-32 result
-0000000000000448  B29C 8024                             0000000000000024   287          STFPC 9*4(R8)       Store resulting FPC flags and DXC
-000000000000044C  B222 0010                                                288          IPM   R1            Get condition code and program mask
-0000000000000450  8810 001C                             000000000000001C   289          SRL   R1,28         Isolate CC in low order byte
-0000000000000454  4210 8027                             0000000000000027   290          STC   R1,(9*4)+3(0,R8)    Save condition code as low byte of FPCR
+000000000000045C  B29D 0264                             0000000000000264   284          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+0000000000000460  B398 7010                                                285          CFEBRA R1,7,R0,B'0000'  Round to -inf
+0000000000000464  5010 7024                             0000000000000024   286          ST    R1,9*4(0,R7)  Store integer-32 result
+0000000000000468  B29C 8024                             0000000000000024   287          STFPC 9*4(R8)       Store resulting FPC flags and DXC
+000000000000046C  B222 0010                                                288          IPM   R1            Get condition code and program mask
+0000000000000470  8810 001C                             000000000000001C   289          SRL   R1,28         Isolate CC in low order byte
+0000000000000474  4210 8027                             0000000000000027   290          STC   R1,(9*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            291 *
-0000000000000458  4130 3004                             0000000000000004   292          LA    R3,4(0,R3)    point to next input values
-000000000000045C  4170 7030                             0000000000000030   293          LA    R7,12*4(0,R7)  Point to next short BFP converted values
-0000000000000460  4180 8030                             0000000000000030   294          LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
-0000000000000464  062C                                                     295          BCTR  R2,R12        Convert next input value.
-0000000000000466  07FD                                                     296          BR    R13           All converted; return.
+0000000000000478  4130 3004                             0000000000000004   292          LA    R3,4(0,R3)    point to next input values
+000000000000047C  4170 7030                             0000000000000030   293          LA    R7,12*4(0,R7)  Point to next short BFP converted values
+0000000000000480  4180 8030                             0000000000000030   294          LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
+0000000000000484  062C                                                     295          BCTR  R2,R12        Convert next input value.
+0000000000000486  07FD                                                     296          BR    R13           All converted; return.
                                                                            297 *
                                                                            298 * Convert long BFP inputs to integer-32.  A pair of results is generated
                                                                            299 * for each input: one with all exceptions non-trappable, and the second
                                                                            300 * with all exceptions trappable.   The FPCR and condition code is stored
                                                                            301 * for each result.
                                                                            302 *
-0000000000000468  9823 A000                             0000000000000000   303 CFDBR    LM    R2,R3,0(R10)  Get count and address of test input values
-000000000000046C  9878 A008                             0000000000000008   304          LM    R7,R8,8(R10)  Get address of result area and flag area.
-0000000000000470  1222                                                     305          LTR   R2,R2         Any test cases?
-0000000000000472  078D                                                     306          BZR   R13           ..No, return to caller
-0000000000000474  0DC0                                                     307          BASR  R12,0         Set top of loop
+0000000000000488  9823 A000                             0000000000000000   303 CFDBR    LM    R2,R3,0(R10)  Get count and address of test input values
+000000000000048C  9878 A008                             0000000000000008   304          LM    R7,R8,8(R10)  Get address of result area and flag area.
+0000000000000490  1222                                                     305          LTR   R2,R2         Any test cases?
+0000000000000492  078D                                                     306          BZR   R13           ..No, return to caller
+0000000000000494  0DC0                                                     307          BASR  R12,0         Set top of loop
                                                                            308 *
-0000000000000476  6800 3000                             0000000000000000   309          LD    R0,0(0,R3)    Get long BFP test value
-000000000000047A  B29D 0264                             0000000000000264   310          LFPC  FPCREGNT      Set all exceptions non-trappable
-000000000000047E  B399 0010                                                311          CFDBR R1,R0         Cvt float in FPR0 to Int in GPR1
-0000000000000482  5010 7000                             0000000000000000   312          ST    R1,0(0,R7)    Store long BFP result
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     7
+0000000000000496  6800 3000                             0000000000000000   309          LD    R0,0(0,R3)    Get long BFP test value
+000000000000049A  B29D 0264                             0000000000000264   310          LFPC  FPCREGNT      Set all exceptions non-trappable
+000000000000049E  B399 0010                                                311          CFDBR R1,R0         Cvt float in FPR0 to Int in GPR1
+00000000000004A2  5010 7000                             0000000000000000   312          ST    R1,0(0,R7)    Store long BFP result
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     7
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-0000000000000486  B29C 8000                             0000000000000000   313          STFPC 0(R8)         Store resulting FPC flags and DXC
-000000000000048A  B222 0010                                                314          IPM   R1            Get condition code and program mask
-000000000000048E  8810 001C                             000000000000001C   315          SRL   R1,28         Isolate CC in low order byte
-0000000000000492  4210 8003                             0000000000000003   316          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
+00000000000004A6  B29C 8000                             0000000000000000   313          STFPC 0(R8)         Store resulting FPC flags and DXC
+00000000000004AA  B222 0010                                                314          IPM   R1            Get condition code and program mask
+00000000000004AE  8810 001C                             000000000000001C   315          SRL   R1,28         Isolate CC in low order byte
+00000000000004B2  4210 8003                             0000000000000003   316          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
                                                                            317 *
-0000000000000496  B29D 0268                             0000000000000268   318          LFPC  FPCREGTR      Set all exceptions trappable
-000000000000049A  1711                                                     319          XR    R1,R1         Clear any residual result in R1
-000000000000049C  0410                                                     320          SPM   R1            Clear out any residual nz condition code
-000000000000049E  B399 0010                                                321          CFDBR R1,R0         Cvt float in FPR0 to Int in GPR1
-00000000000004A2  5010 7004                             0000000000000004   322          ST    R1,4(0,R7)    Store int-32 result
-00000000000004A6  B29C 8004                             0000000000000004   323          STFPC 4(R8)         Store resulting FPC flags and DXC
-00000000000004AA  B222 0010                                                324          IPM   R1            Get condition code and program mask
-00000000000004AE  8810 001C                             000000000000001C   325          SRL   R1,28         Isolate CC in low order byte
-00000000000004B2  4210 8007                             0000000000000007   326          STC   R1,7(0,R8)    Save condition code as low byte of FPCR
+00000000000004B6  B29D 0268                             0000000000000268   318          LFPC  FPCREGTR      Set all exceptions trappable
+00000000000004BA  1711                                                     319          XR    R1,R1         Clear any residual result in R1
+00000000000004BC  0410                                                     320          SPM   R1            Clear out any residual nz condition code
+00000000000004BE  B399 0010                                                321          CFDBR R1,R0         Cvt float in FPR0 to Int in GPR1
+00000000000004C2  5010 7004                             0000000000000004   322          ST    R1,4(0,R7)    Store int-32 result
+00000000000004C6  B29C 8004                             0000000000000004   323          STFPC 4(R8)         Store resulting FPC flags and DXC
+00000000000004CA  B222 0010                                                324          IPM   R1            Get condition code and program mask
+00000000000004CE  8810 001C                             000000000000001C   325          SRL   R1,28         Isolate CC in low order byte
+00000000000004D2  4210 8007                             0000000000000007   326          STC   R1,7(0,R8)    Save condition code as low byte of FPCR
                                                                            327 *
-00000000000004B6  4130 3008                             0000000000000008   328          LA    R3,8(0,R3)    point to next input values
-00000000000004BA  4170 7008                             0000000000000008   329          LA    R7,8(0,R7)    Point to next integer-32 converted value pair
-00000000000004BE  4180 8008                             0000000000000008   330          LA    R8,8(0,R8)    Point to next FPCR/CC result area
-00000000000004C2  062C                                                     331          BCTR  R2,R12        Convert next input value.
-00000000000004C4  07FD                                                     332          BR    R13           All converted; return.
+00000000000004D6  4130 3008                             0000000000000008   328          LA    R3,8(0,R3)    point to next input values
+00000000000004DA  4170 7008                             0000000000000008   329          LA    R7,8(0,R7)    Point to next integer-32 converted value pair
+00000000000004DE  4180 8008                             0000000000000008   330          LA    R8,8(0,R8)    Point to next FPCR/CC result area
+00000000000004E2  062C                                                     331          BCTR  R2,R12        Convert next input value.
+00000000000004E4  07FD                                                     332          BR    R13           All converted; return.
                                                                            333 *
                                                                            334 * Convert long BFP to integers using each possible rounding mode.  Ten
                                                                            335 * test results are generated for each input.  A 48-byte test result
@@ -373,156 +373,156 @@ ASMA Ver. 0.2.0                                                                 
                                                                            345 * The default rounding mode (0 for RNTE) is not tested in this section;
                                                                            346 * prior tests used the default rounding mode.
                                                                            347 *
-00000000000004C6  9823 A000                             0000000000000000   348 CFDBRA   LM    R2,R3,0(R10)  Get count and address of test input values
-00000000000004CA  9878 A008                             0000000000000008   349          LM    R7,R8,8(R10)  Get address of result area and flag area.
-00000000000004CE  1222                                                     350          LTR   R2,R2         Any test cases?
-00000000000004D0  078D                                                     351          BZR   R13           ..No, return to caller
-00000000000004D2  0DC0                                                     352          BASR  R12,0         Set top of loop
+00000000000004E6  9823 A000                             0000000000000000   348 CFDBRA   LM    R2,R3,0(R10)  Get count and address of test input values
+00000000000004EA  9878 A008                             0000000000000008   349          LM    R7,R8,8(R10)  Get address of result area and flag area.
+00000000000004EE  1222                                                     350          LTR   R2,R2         Any test cases?
+00000000000004F0  078D                                                     351          BZR   R13           ..No, return to caller
+00000000000004F2  0DC0                                                     352          BASR  R12,0         Set top of loop
                                                                            353 *
-00000000000004D4  6800 3000                             0000000000000000   354          LD    R0,0(0,R3)    Get long BFP test value
+00000000000004F4  6800 3000                             0000000000000000   354          LD    R0,0(0,R3)    Get long BFP test value
                                                                            355 *
                                                                            356 *  Cvt float in FPR0 to integer-32
                                                                            357 *
                                                                            358 * Test cases using rounding mode specified in the FPCR
                                                                            359 *
-00000000000004D8  B29D 0264                             0000000000000264   360          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000004DC  B299 0001                             0000000000000001   361          SRNM  1             SET FPC to RZ, Round towards zero.
-00000000000004E0  B399 0410                                                362          CFDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-00000000000004E4  5010 7000                             0000000000000000   363          ST    R1,0*4(0,R7)  Store integer-32 result
-00000000000004E8  B29C 8000                             0000000000000000   364          STFPC 0(R8)         Store resulting FPC flags and DXC
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     8
+00000000000004F8  B29D 0264                             0000000000000264   360          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000004FC  B2B8 0001                             0000000000000001   361          SRNMB 1             SET FPC to RZ, Round towards zero.
+0000000000000500  B399 0410                                                362          CFDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+0000000000000504  5010 7000                             0000000000000000   363          ST    R1,0*4(0,R7)  Store integer-32 result
+0000000000000508  B29C 8000                             0000000000000000   364          STFPC 0(R8)         Store resulting FPC flags and DXC
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     8
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-00000000000004EC  B222 0010                                                365          IPM   R1            Get condition code and program mask
-00000000000004F0  8810 001C                             000000000000001C   366          SRL   R1,28         Isolate CC in low order byte
-00000000000004F4  4210 8003                             0000000000000003   367          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
+000000000000050C  B222 0010                                                365          IPM   R1            Get condition code and program mask
+0000000000000510  8810 001C                             000000000000001C   366          SRL   R1,28         Isolate CC in low order byte
+0000000000000514  4210 8003                             0000000000000003   367          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
                                                                            368 *
-00000000000004F8  B29D 0264                             0000000000000264   369          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000004FC  B299 0002                             0000000000000002   370          SRNM  2             SET FPC to RP, Round to +infinity
-0000000000000500  B399 0410                                                371          CFDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-0000000000000504  5010 7004                             0000000000000004   372          ST    R1,1*4(0,R7)  Store integer-32 result
-0000000000000508  B29C 8004                             0000000000000004   373          STFPC 1*4(R8)       Store resulting FPC flags and DXC
-000000000000050C  B222 0010                                                374          IPM   R1            Get condition code and program mask
-0000000000000510  8810 001C                             000000000000001C   375          SRL   R1,28         Isolate CC in low order byte
-0000000000000514  4210 8007                             0000000000000007   376          STC   R1,(1*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000518  B29D 0264                             0000000000000264   369          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+000000000000051C  B2B8 0002                             0000000000000002   370          SRNMB 2             SET FPC to RP, Round to +infinity
+0000000000000520  B399 0410                                                371          CFDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+0000000000000524  5010 7004                             0000000000000004   372          ST    R1,1*4(0,R7)  Store integer-32 result
+0000000000000528  B29C 8004                             0000000000000004   373          STFPC 1*4(R8)       Store resulting FPC flags and DXC
+000000000000052C  B222 0010                                                374          IPM   R1            Get condition code and program mask
+0000000000000530  8810 001C                             000000000000001C   375          SRL   R1,28         Isolate CC in low order byte
+0000000000000534  4210 8007                             0000000000000007   376          STC   R1,(1*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            377 *
-0000000000000518  B29D 0264                             0000000000000264   378          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-000000000000051C  B299 0003                             0000000000000003   379          SRNM  3             SET FPC to RM, Round to -infinity
-0000000000000520  B399 0410                                                380          CFDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-0000000000000524  5010 7008                             0000000000000008   381          ST    R1,2*4(0,R7)  Store integer-32 result
-0000000000000528  B29C 8008                             0000000000000008   382          STFPC 2*4(R8)       Store resulting FPC flags and DXC
-000000000000052C  B222 0010                                                383          IPM   R1            Get condition code and program mask
-0000000000000530  8810 001C                             000000000000001C   384          SRL   R1,28         Isolate CC in low order byte
-0000000000000534  4210 800B                             000000000000000B   385          STC   R1,(2*4)+3(0,R8)    Save condition code as low byte of FPCR
-                                                                           386 *  Skipped test
-                                                                           387 *         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-                                                                           388 *         SRNMB 7             RPS, Round Prepare for Shorter Precision
-                                                                           389 *         CFDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-                                                                           390 *         ST    R1,3*4(0,R7)  Store integer-32 result
-                                                                           391 *         STFPC 3*4(R8)       Store resulting FPC flags and DXC
-                                                                           392 *         IPM   R1            Get condition code and program mask
-                                                                           393 *         SRL   R1,28         Isolate CC in low order byte
-                                                                           394 *         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000538  B29D 0264                             0000000000000264   378          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+000000000000053C  B2B8 0003                             0000000000000003   379          SRNMB 3             SET FPC to RM, Round to -infinity
+0000000000000540  B399 0410                                                380          CFDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+0000000000000544  5010 7008                             0000000000000008   381          ST    R1,2*4(0,R7)  Store integer-32 result
+0000000000000548  B29C 8008                             0000000000000008   382          STFPC 2*4(R8)       Store resulting FPC flags and DXC
+000000000000054C  B222 0010                                                383          IPM   R1            Get condition code and program mask
+0000000000000550  8810 001C                             000000000000001C   384          SRL   R1,28         Isolate CC in low order byte
+0000000000000554  4210 800B                             000000000000000B   385          STC   R1,(2*4)+3(0,R8)    Save condition code as low byte of FPCR
+                                                                           386 *
+0000000000000558  B29D 0264                             0000000000000264   387          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+000000000000055C  B2B8 0007                             0000000000000007   388          SRNMB 7             RPS, Round Prepare for Shorter Precision
+0000000000000560  B399 0410                                                389          CFDBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+0000000000000564  5010 700C                             000000000000000C   390          ST    R1,3*4(0,R7)  Store integer-32 result
+0000000000000568  B29C 800C                             000000000000000C   391          STFPC 3*4(R8)       Store resulting FPC flags and DXC
+000000000000056C  B222 0010                                                392          IPM   R1            Get condition code and program mask
+0000000000000570  8810 001C                             000000000000001C   393          SRL   R1,28         Isolate CC in low order byte
+0000000000000574  4210 800F                             000000000000000F   394          STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            395 *
-0000000000000538  B29D 0264                             0000000000000264   396          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-000000000000053C  B399 1010                                                397          CFDBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
-0000000000000540  5010 7010                             0000000000000010   398          ST    R1,4*4(0,R7)  Store integer-32 result
-0000000000000544  B29C 8010                             0000000000000010   399          STFPC 4*4(R8)       Store resulting FPC flags and DXC
-0000000000000548  B222 0010                                                400          IPM   R1            Get condition code and program mask
-000000000000054C  8810 001C                             000000000000001C   401          SRL   R1,28         Isolate CC in low order byte
-0000000000000550  4210 8013                             0000000000000013   402          STC   R1,(4*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000578  B29D 0264                             0000000000000264   396          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+000000000000057C  B399 1010                                                397          CFDBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
+0000000000000580  5010 7010                             0000000000000010   398          ST    R1,4*4(0,R7)  Store integer-32 result
+0000000000000584  B29C 8010                             0000000000000010   399          STFPC 4*4(R8)       Store resulting FPC flags and DXC
+0000000000000588  B222 0010                                                400          IPM   R1            Get condition code and program mask
+000000000000058C  8810 001C                             000000000000001C   401          SRL   R1,28         Isolate CC in low order byte
+0000000000000590  4210 8013                             0000000000000013   402          STC   R1,(4*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            403 *
-0000000000000554  B29D 0264                             0000000000000264   404          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000558  B399 3010                                                405          CFDBRA R1,3,R0,B'0000'  RPS Round to prepare for shorter precision
-000000000000055C  5010 7014                             0000000000000014   406          ST    R1,5*4(0,R7)  Store integer-32 result
-0000000000000560  B29C 8014                             0000000000000014   407          STFPC 5*4(R8)       Store resulting FPC flags and DXC
-0000000000000564  B222 0010                                                408          IPM   R1            Get condition code and program mask
-0000000000000568  8810 001C                             000000000000001C   409          SRL   R1,28         Isolate CC in low order byte
-000000000000056C  4210 8017                             0000000000000017   410          STC   R1,(5*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000594  B29D 0264                             0000000000000264   404          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+0000000000000598  B399 3010                                                405          CFDBRA R1,3,R0,B'0000'  RPS Round to prepare for shorter precision
+000000000000059C  5010 7014                             0000000000000014   406          ST    R1,5*4(0,R7)  Store integer-32 result
+00000000000005A0  B29C 8014                             0000000000000014   407          STFPC 5*4(R8)       Store resulting FPC flags and DXC
+00000000000005A4  B222 0010                                                408          IPM   R1            Get condition code and program mask
+00000000000005A8  8810 001C                             000000000000001C   409          SRL   R1,28         Isolate CC in low order byte
+00000000000005AC  4210 8017                             0000000000000017   410          STC   R1,(5*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            411 *
-0000000000000570  B29D 0264                             0000000000000264   412          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000574  B399 4010                                                413          CFDBRA R1,4,R0,B'0000'  RNTE Round to nearest, ties to even
-0000000000000578  5010 7018                             0000000000000018   414          ST    R1,6*4(0,R7)  Store integer-32 result
-000000000000057C  B29C 8018                             0000000000000018   415          STFPC 6*4(R8)       Store resulting FPC flags and DXC
-0000000000000580  B222 0010                                                416          IPM   R1            Get condition code and program mask
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page     9
+00000000000005B0  B29D 0264                             0000000000000264   412          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000005B4  B399 4010                                                413          CFDBRA R1,4,R0,B'0000'  RNTE Round to nearest, ties to even
+00000000000005B8  5010 7018                             0000000000000018   414          ST    R1,6*4(0,R7)  Store integer-32 result
+00000000000005BC  B29C 8018                             0000000000000018   415          STFPC 6*4(R8)       Store resulting FPC flags and DXC
+00000000000005C0  B222 0010                                                416          IPM   R1            Get condition code and program mask
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page     9
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-0000000000000584  8810 001C                             000000000000001C   417          SRL   R1,28         Isolate CC in low order byte
-0000000000000588  4210 801B                             000000000000001B   418          STC   R1,(6*4)+3(0,R8)    Save condition code as low byte of FPCR
+00000000000005C4  8810 001C                             000000000000001C   417          SRL   R1,28         Isolate CC in low order byte
+00000000000005C8  4210 801B                             000000000000001B   418          STC   R1,(6*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            419 *
-000000000000058C  B29D 0264                             0000000000000264   420          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000590  B399 5010                                                421          CFDBRA R1,5,R0,B'0000'  RZ Round toward zero
-0000000000000594  5010 701C                             000000000000001C   422          ST    R1,7*4(0,R7)  Store integer-32 result
-0000000000000598  B29C 801C                             000000000000001C   423          STFPC 7*4(R8)       Store resulting FPC flags and DXC
-000000000000059C  B222 0010                                                424          IPM   R1            Get condition code and program mask
-00000000000005A0  8810 001C                             000000000000001C   425          SRL   R1,28         Isolate CC in low order byte
-00000000000005A4  4210 801F                             000000000000001F   426          STC   R1,(7*4)+3(0,R8)    Save condition code as low byte of FPCR
+00000000000005CC  B29D 0264                             0000000000000264   420          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000005D0  B399 5010                                                421          CFDBRA R1,5,R0,B'0000'  RZ Round toward zero
+00000000000005D4  5010 701C                             000000000000001C   422          ST    R1,7*4(0,R7)  Store integer-32 result
+00000000000005D8  B29C 801C                             000000000000001C   423          STFPC 7*4(R8)       Store resulting FPC flags and DXC
+00000000000005DC  B222 0010                                                424          IPM   R1            Get condition code and program mask
+00000000000005E0  8810 001C                             000000000000001C   425          SRL   R1,28         Isolate CC in low order byte
+00000000000005E4  4210 801F                             000000000000001F   426          STC   R1,(7*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            427 *
-00000000000005A8  B29D 0264                             0000000000000264   428          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000005AC  B399 6010                                                429          CFDBRA R1,6,R0,B'0000'  Round to +inf
-00000000000005B0  5010 7020                             0000000000000020   430          ST    R1,8*4(0,R7)  Store integer-32 result
-00000000000005B4  B29C 8020                             0000000000000020   431          STFPC 8*4(R8)       Store resulting FPC flags and DXC
-00000000000005B8  B222 0010                                                432          IPM   R1            Get condition code and program mask
-00000000000005BC  8810 001C                             000000000000001C   433          SRL   R1,28         Isolate CC in low order byte
-00000000000005C0  4210 8023                             0000000000000023   434          STC   R1,(8*4)+3(0,R8)    Save condition code as low byte of FPCR
+00000000000005E8  B29D 0264                             0000000000000264   428          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000005EC  B399 6010                                                429          CFDBRA R1,6,R0,B'0000'  Round to +inf
+00000000000005F0  5010 7020                             0000000000000020   430          ST    R1,8*4(0,R7)  Store integer-32 result
+00000000000005F4  B29C 8020                             0000000000000020   431          STFPC 8*4(R8)       Store resulting FPC flags and DXC
+00000000000005F8  B222 0010                                                432          IPM   R1            Get condition code and program mask
+00000000000005FC  8810 001C                             000000000000001C   433          SRL   R1,28         Isolate CC in low order byte
+0000000000000600  4210 8023                             0000000000000023   434          STC   R1,(8*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            435 *
-00000000000005C4  B29D 0264                             0000000000000264   436          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000005C8  B399 7010                                                437          CFDBRA R1,7,R0,B'0000'  Round to -inf
-00000000000005CC  5010 7024                             0000000000000024   438          ST    R1,9*4(0,R7)  Store integer-32 result
-00000000000005D0  B29C 8024                             0000000000000024   439          STFPC 9*4(R8)       Store resulting FPC flags and DXC
-00000000000005D4  B222 0010                                                440          IPM   R1            Get condition code and program mask
-00000000000005D8  8810 001C                             000000000000001C   441          SRL   R1,28         Isolate CC in low order byte
-00000000000005DC  4210 8027                             0000000000000027   442          STC   R1,(9*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000604  B29D 0264                             0000000000000264   436          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+0000000000000608  B399 7010                                                437          CFDBRA R1,7,R0,B'0000'  Round to -inf
+000000000000060C  5010 7024                             0000000000000024   438          ST    R1,9*4(0,R7)  Store integer-32 result
+0000000000000610  B29C 8024                             0000000000000024   439          STFPC 9*4(R8)       Store resulting FPC flags and DXC
+0000000000000614  B222 0010                                                440          IPM   R1            Get condition code and program mask
+0000000000000618  8810 001C                             000000000000001C   441          SRL   R1,28         Isolate CC in low order byte
+000000000000061C  4210 8027                             0000000000000027   442          STC   R1,(9*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            443 *
-00000000000005E0  4130 3008                             0000000000000008   444          LA    R3,8(0,R3)    point to next input values
-00000000000005E4  4170 7030                             0000000000000030   445          LA    R7,12*4(0,R7)  Point to next long BFP converted values
-00000000000005E8  4180 8030                             0000000000000030   446          LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
-00000000000005EC  062C                                                     447          BCTR  R2,R12        Convert next input value.
-00000000000005EE  07FD                                                     448          BR    R13           All converted; return.
+0000000000000620  4130 3008                             0000000000000008   444          LA    R3,8(0,R3)    point to next input values
+0000000000000624  4170 7030                             0000000000000030   445          LA    R7,12*4(0,R7)  Point to next long BFP converted values
+0000000000000628  4180 8030                             0000000000000030   446          LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
+000000000000062C  062C                                                     447          BCTR  R2,R12        Convert next input value.
+000000000000062E  07FD                                                     448          BR    R13           All converted; return.
                                                                            449 *
                                                                            450 * Convert extended BFP to integer-32.  A pair of results is generated
                                                                            451 * for each input: one with all exceptions non-trappable, and the
                                                                            452 * second with all exceptions trappable.   The FPCR and condition code
                                                                            453 * are stored for each result.
                                                                            454 *
-00000000000005F0  9823 A000                             0000000000000000   455 CFXBR    LM    R2,R3,0(R10)  Get count and address of test input values
-00000000000005F4  9878 A008                             0000000000000008   456          LM    R7,R8,8(R10)  Get address of result area and flag area.
-00000000000005F8  1222                                                     457          LTR   R2,R2         Any test cases?
-00000000000005FA  078D                                                     458          BZR   R13           ..No, return to caller
-00000000000005FC  0DC0                                                     459          BASR  R12,0         Set top of loop
+0000000000000630  9823 A000                             0000000000000000   455 CFXBR    LM    R2,R3,0(R10)  Get count and address of test input values
+0000000000000634  9878 A008                             0000000000000008   456          LM    R7,R8,8(R10)  Get address of result area and flag area.
+0000000000000638  1222                                                     457          LTR   R2,R2         Any test cases?
+000000000000063A  078D                                                     458          BZR   R13           ..No, return to caller
+000000000000063C  0DC0                                                     459          BASR  R12,0         Set top of loop
                                                                            460 *
-00000000000005FE  6800 3000                             0000000000000000   461          LD    R0,0(0,R3)    Get extended BFP test value part 1
-0000000000000602  6820 3008                             0000000000000008   462          LD    R2,8(0,R3)    Get extended BFP test value part 1
-0000000000000606  B29D 0264                             0000000000000264   463          LFPC  FPCREGNT      Set all exceptions non-trappable
-000000000000060A  B39A 0010                                                464          CFXBR R1,R0         Cvt float in FPR0-FPR2 to Int-32 in GPR1
-000000000000060E  5010 7000                             0000000000000000   465          ST    R1,0(0,R7)    Store integer-32 result
-0000000000000612  B29C 8000                             0000000000000000   466          STFPC 0(R8)         Store resulting FPC flags and DXC
-0000000000000616  B222 0010                                                467          IPM   R1            Get condition code and program mask
-000000000000061A  8810 001C                             000000000000001C   468          SRL   R1,28         Isolate CC in low order byte
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    10
+000000000000063E  6800 3000                             0000000000000000   461          LD    R0,0(0,R3)    Get extended BFP test value part 1
+0000000000000642  6820 3008                             0000000000000008   462          LD    R2,8(0,R3)    Get extended BFP test value part 1
+0000000000000646  B29D 0264                             0000000000000264   463          LFPC  FPCREGNT      Set all exceptions non-trappable
+000000000000064A  B39A 0010                                                464          CFXBR R1,R0         Cvt float in FPR0-FPR2 to Int-32 in GPR1
+000000000000064E  5010 7000                             0000000000000000   465          ST    R1,0(0,R7)    Store integer-32 result
+0000000000000652  B29C 8000                             0000000000000000   466          STFPC 0(R8)         Store resulting FPC flags and DXC
+0000000000000656  B222 0010                                                467          IPM   R1            Get condition code and program mask
+000000000000065A  8810 001C                             000000000000001C   468          SRL   R1,28         Isolate CC in low order byte
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    10
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-000000000000061E  4210 8003                             0000000000000003   469          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
+000000000000065E  4210 8003                             0000000000000003   469          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
                                                                            470 *
-0000000000000622  B29D 0268                             0000000000000268   471          LFPC  FPCREGTR      Set all exceptions trappable
-0000000000000626  1711                                                     472          XR    R1,R1         Clear any residual result in R1
-0000000000000628  0410                                                     473          SPM   R1            Clear out any residual nz condition code
-000000000000062A  B39A 0010                                                474          CFXBR R1,R0         Cvt float in FPR0-FPR2 to Int-32 in GPR1
-000000000000062E  5010 7004                             0000000000000004   475          ST    R1,4(0,R7)    Store integer-32 result
-0000000000000632  B29C 8004                             0000000000000004   476          STFPC 4(R8)         Store resulting FPC flags and DXC
-0000000000000636  B222 0010                                                477          IPM   R1            Get condition code and program mask
-000000000000063A  8810 001C                             000000000000001C   478          SRL   R1,28         Isolate CC in low order byte
-000000000000063E  4210 8007                             0000000000000007   479          STC   R1,7(0,R8)    Save condition code as low byte of FPCR
+0000000000000662  B29D 0268                             0000000000000268   471          LFPC  FPCREGTR      Set all exceptions trappable
+0000000000000666  1711                                                     472          XR    R1,R1         Clear any residual result in R1
+0000000000000668  0410                                                     473          SPM   R1            Clear out any residual nz condition code
+000000000000066A  B39A 0010                                                474          CFXBR R1,R0         Cvt float in FPR0-FPR2 to Int-32 in GPR1
+000000000000066E  5010 7004                             0000000000000004   475          ST    R1,4(0,R7)    Store integer-32 result
+0000000000000672  B29C 8004                             0000000000000004   476          STFPC 4(R8)         Store resulting FPC flags and DXC
+0000000000000676  B222 0010                                                477          IPM   R1            Get condition code and program mask
+000000000000067A  8810 001C                             000000000000001C   478          SRL   R1,28         Isolate CC in low order byte
+000000000000067E  4210 8007                             0000000000000007   479          STC   R1,7(0,R8)    Save condition code as low byte of FPCR
                                                                            480 *
-0000000000000642  4130 3010                             0000000000000010   481          LA    R3,16(0,R3)   Point to next extended BFP input value
-0000000000000646  4170 7008                             0000000000000008   482          LA    R7,8(0,R7)    Point to next integer-32 converted value pair
-000000000000064A  4180 8008                             0000000000000008   483          LA    R8,8(0,R8)    Point to next FPCR/CC result area
-000000000000064E  062C                                                     484          BCTR  R2,R12        Convert next input value.
-0000000000000650  07FD                                                     485          BR    R13           All converted; return.
+0000000000000682  4130 3010                             0000000000000010   481          LA    R3,16(0,R3)   Point to next extended BFP input value
+0000000000000686  4170 7008                             0000000000000008   482          LA    R7,8(0,R7)    Point to next integer-32 converted value pair
+000000000000068A  4180 8008                             0000000000000008   483          LA    R8,8(0,R8)    Point to next FPCR/CC result area
+000000000000068E  062C                                                     484          BCTR  R2,R12        Convert next input value.
+0000000000000690  07FD                                                     485          BR    R13           All converted; return.
                                                                            486 *
                                                                            487 * Convert extended BFP to integers using each possible rounding mode.
                                                                            488 * Tentest results are generated for each input.  A 48-byte test result
@@ -538,206 +538,206 @@ ASMA Ver. 0.2.0                                                                 
                                                                            498 * The default rounding mode (0 for RNTE) is not tested in this section;
                                                                            499 * prior tests used the default rounding mode.
                                                                            500 *
-0000000000000652  9823 A000                             0000000000000000   501 CFXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
-0000000000000656  9878 A008                             0000000000000008   502          LM    R7,R8,8(R10)  Get address of result area and flag area.
-000000000000065A  1222                                                     503          LTR   R2,R2         Any test cases?
-000000000000065C  078D                                                     504          BZR   R13           ..No, return to caller
-000000000000065E  0DC0                                                     505          BASR  R12,0         Set top of loop
+0000000000000692  9823 A000                             0000000000000000   501 CFXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
+0000000000000696  9878 A008                             0000000000000008   502          LM    R7,R8,8(R10)  Get address of result area and flag area.
+000000000000069A  1222                                                     503          LTR   R2,R2         Any test cases?
+000000000000069C  078D                                                     504          BZR   R13           ..No, return to caller
+000000000000069E  0DC0                                                     505          BASR  R12,0         Set top of loop
                                                                            506 *
-0000000000000660  6800 3000                             0000000000000000   507          LD    R0,0(0,R3)    Get extended BFP test value part 1
-0000000000000664  6820 3008                             0000000000000008   508          LD    R2,8(0,R3)    Get extended BFP test value part 2
+00000000000006A0  6800 3000                             0000000000000000   507          LD    R0,0(0,R3)    Get extended BFP test value part 1
+00000000000006A4  6820 3008                             0000000000000008   508          LD    R2,8(0,R3)    Get extended BFP test value part 2
                                                                            509 *
                                                                            510 *  Cvt float in FPR0 to integer-32
                                                                            511 *
                                                                            512 * Test cases using rounding mode specified in the FPCR
                                                                            513 *
-0000000000000668  B29D 0264                             0000000000000264   514          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-000000000000066C  B299 0001                             0000000000000001   515          SRNM  1             SET FPC to RZ, Round towards zero.
-0000000000000670  B39A 0410                                                516          CFXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-0000000000000674  5010 7000                             0000000000000000   517          ST    R1,0*4(0,R7)  Store integer-32 result
-0000000000000678  B29C 8000                             0000000000000000   518          STFPC 0(R8)         Store resulting FPC flags and DXC
-000000000000067C  B222 0010                                                519          IPM   R1            Get condition code and program mask
-0000000000000680  8810 001C                             000000000000001C   520          SRL   R1,28         Isolate CC in low order byte
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    11
+00000000000006A8  B29D 0264                             0000000000000264   514          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000006AC  B2B8 0001                             0000000000000001   515          SRNMB 1             SET FPC to RZ, Round towards zero.
+00000000000006B0  B39A 0410                                                516          CFXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+00000000000006B4  5010 7000                             0000000000000000   517          ST    R1,0*4(0,R7)  Store integer-32 result
+00000000000006B8  B29C 8000                             0000000000000000   518          STFPC 0(R8)         Store resulting FPC flags and DXC
+00000000000006BC  B222 0010                                                519          IPM   R1            Get condition code and program mask
+00000000000006C0  8810 001C                             000000000000001C   520          SRL   R1,28         Isolate CC in low order byte
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    11
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-0000000000000684  4210 8003                             0000000000000003   521          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
+00000000000006C4  4210 8003                             0000000000000003   521          STC   R1,3(0,R8)    Save condition code as low byte of FPCR
                                                                            522 *
-0000000000000688  B29D 0264                             0000000000000264   523          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-000000000000068C  B299 0002                             0000000000000002   524          SRNM  2             SET FPC to RP, Round to +infinity
-0000000000000690  B39A 0410                                                525          CFXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-0000000000000694  5010 7004                             0000000000000004   526          ST    R1,1*4(0,R7)  Store integer-32 result
-0000000000000698  B29C 8004                             0000000000000004   527          STFPC 1*4(R8)       Store resulting FPC flags and DXC
-000000000000069C  B222 0010                                                528          IPM   R1            Get condition code and program mask
-00000000000006A0  8810 001C                             000000000000001C   529          SRL   R1,28         Isolate CC in low order byte
-00000000000006A4  4210 8007                             0000000000000007   530          STC   R1,(1*4)+3(0,R8)    Save condition code as low byte of FPCR
+00000000000006C8  B29D 0264                             0000000000000264   523          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000006CC  B2B8 0002                             0000000000000002   524          SRNMB 2             SET FPC to RP, Round to +infinity
+00000000000006D0  B39A 0410                                                525          CFXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+00000000000006D4  5010 7004                             0000000000000004   526          ST    R1,1*4(0,R7)  Store integer-32 result
+00000000000006D8  B29C 8004                             0000000000000004   527          STFPC 1*4(R8)       Store resulting FPC flags and DXC
+00000000000006DC  B222 0010                                                528          IPM   R1            Get condition code and program mask
+00000000000006E0  8810 001C                             000000000000001C   529          SRL   R1,28         Isolate CC in low order byte
+00000000000006E4  4210 8007                             0000000000000007   530          STC   R1,(1*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            531 *
-00000000000006A8  B29D 0264                             0000000000000264   532          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000006AC  B299 0003                             0000000000000003   533          SRNM  3             SET FPC to RM, Round to -infinity
-00000000000006B0  B39A 0410                                                534          CFXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-00000000000006B4  5010 7008                             0000000000000008   535          ST    R1,2*4(0,R7)  Store integer-32 result
-00000000000006B8  B29C 8008                             0000000000000008   536          STFPC 2*4(R8)       Store resulting FPC flags and DXC
-00000000000006BC  B222 0010                                                537          IPM   R1            Get condition code and program mask
-00000000000006C0  8810 001C                             000000000000001C   538          SRL   R1,28         Isolate CC in low order byte
-00000000000006C4  4210 800B                             000000000000000B   539          STC   R1,(2*4)+3(0,R8)    Save condition code as low byte of FPCR
-                                                                           540 *  Skipped test
-                                                                           541 *         LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-                                                                           542 *         SRNMB 7             RPS, Round Prepare for Shorter Precision
-                                                                           543 *         CFXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
-                                                                           544 *         ST    R1,3*4(0,R7)  Store integer-32 result
-                                                                           545 *         STFPC 3*4(R8)       Store resulting FPC flags and DXC
-                                                                           546 *         IPM   R1            Get condition code and program mask
-                                                                           547 *         SRL   R1,28         Isolate CC in low order byte
-                                                                           548 *         STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
+00000000000006E8  B29D 0264                             0000000000000264   532          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000006EC  B2B8 0003                             0000000000000003   533          SRNMB 3             SET FPC to RM, Round to -infinity
+00000000000006F0  B39A 0410                                                534          CFXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+00000000000006F4  5010 7008                             0000000000000008   535          ST    R1,2*4(0,R7)  Store integer-32 result
+00000000000006F8  B29C 8008                             0000000000000008   536          STFPC 2*4(R8)       Store resulting FPC flags and DXC
+00000000000006FC  B222 0010                                                537          IPM   R1            Get condition code and program mask
+0000000000000700  8810 001C                             000000000000001C   538          SRL   R1,28         Isolate CC in low order byte
+0000000000000704  4210 800B                             000000000000000B   539          STC   R1,(2*4)+3(0,R8)    Save condition code as low byte of FPCR
+                                                                           540 *
+0000000000000708  B29D 0264                             0000000000000264   541          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+000000000000070C  B2B8 0007                             0000000000000007   542          SRNMB 7             RPS, Round Prepare for Shorter Precision
+0000000000000710  B39A 0410                                                543          CFXBRA R1,0,R0,B'0100'  FPC controlled rounding, inexact masked
+0000000000000714  5010 700C                             000000000000000C   544          ST    R1,3*4(0,R7)  Store integer-32 result
+0000000000000718  B29C 800C                             000000000000000C   545          STFPC 3*4(R8)       Store resulting FPC flags and DXC
+000000000000071C  B222 0010                                                546          IPM   R1            Get condition code and program mask
+0000000000000720  8810 001C                             000000000000001C   547          SRL   R1,28         Isolate CC in low order byte
+0000000000000724  4210 800F                             000000000000000F   548          STC   R1,(3*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            549 *
-00000000000006C8  B29D 0264                             0000000000000264   550          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000006CC  B39A 1010                                                551          CFXBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
-00000000000006D0  5010 7010                             0000000000000010   552          ST    R1,4*4(0,R7)  Store integer-32 result
-00000000000006D4  B29C 8010                             0000000000000010   553          STFPC 4*4(R8)       Store resulting FPC flags and DXC
-00000000000006D8  B222 0010                                                554          IPM   R1            Get condition code and program mask
-00000000000006DC  8810 001C                             000000000000001C   555          SRL   R1,28         Isolate CC in low order byte
-00000000000006E0  4210 8013                             0000000000000013   556          STC   R1,(4*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000728  B29D 0264                             0000000000000264   550          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+000000000000072C  B39A 1010                                                551          CFXBRA R1,1,R0,B'0000'  RNTA Round to nearest, ties away from zero
+0000000000000730  5010 7010                             0000000000000010   552          ST    R1,4*4(0,R7)  Store integer-32 result
+0000000000000734  B29C 8010                             0000000000000010   553          STFPC 4*4(R8)       Store resulting FPC flags and DXC
+0000000000000738  B222 0010                                                554          IPM   R1            Get condition code and program mask
+000000000000073C  8810 001C                             000000000000001C   555          SRL   R1,28         Isolate CC in low order byte
+0000000000000740  4210 8013                             0000000000000013   556          STC   R1,(4*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            557 *
-00000000000006E4  B29D 0264                             0000000000000264   558          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-00000000000006E8  B39A 3010                                                559          CFXBRA R1,3,R0,B'0000'  RPS Round to prepare for shorter precision
-00000000000006EC  5010 7014                             0000000000000014   560          ST    R1,5*4(0,R7)  Store integer-32 result
-00000000000006F0  B29C 8014                             0000000000000014   561          STFPC 5*4(R8)       Store resulting FPC flags and DXC
-00000000000006F4  B222 0010                                                562          IPM   R1            Get condition code and program mask
-00000000000006F8  8810 001C                             000000000000001C   563          SRL   R1,28         Isolate CC in low order byte
-00000000000006FC  4210 8017                             0000000000000017   564          STC   R1,(5*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000744  B29D 0264                             0000000000000264   558          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+0000000000000748  B39A 3010                                                559          CFXBRA R1,3,R0,B'0000'  RPS Round to prepare for shorter precision
+000000000000074C  5010 7014                             0000000000000014   560          ST    R1,5*4(0,R7)  Store integer-32 result
+0000000000000750  B29C 8014                             0000000000000014   561          STFPC 5*4(R8)       Store resulting FPC flags and DXC
+0000000000000754  B222 0010                                                562          IPM   R1            Get condition code and program mask
+0000000000000758  8810 001C                             000000000000001C   563          SRL   R1,28         Isolate CC in low order byte
+000000000000075C  4210 8017                             0000000000000017   564          STC   R1,(5*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            565 *
-0000000000000700  B29D 0264                             0000000000000264   566          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000704  B39A 4010                                                567          CFXBRA R1,4,R0,B'0000'  RNTE Round to nearest, ties to even
-0000000000000708  5010 7018                             0000000000000018   568          ST    R1,6*4(0,R7)  Store integer-32 result
-000000000000070C  B29C 8018                             0000000000000018   569          STFPC 6*4(R8)       Store resulting FPC flags and DXC
-0000000000000710  B222 0010                                                570          IPM   R1            Get condition code and program mask
-0000000000000714  8810 001C                             000000000000001C   571          SRL   R1,28         Isolate CC in low order byte
-0000000000000718  4210 801B                             000000000000001B   572          STC   R1,(6*4)+3(0,R8)    Save condition code as low byte of FPCR
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    12
+0000000000000760  B29D 0264                             0000000000000264   566          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+0000000000000764  B39A 4010                                                567          CFXBRA R1,4,R0,B'0000'  RNTE Round to nearest, ties to even
+0000000000000768  5010 7018                             0000000000000018   568          ST    R1,6*4(0,R7)  Store integer-32 result
+000000000000076C  B29C 8018                             0000000000000018   569          STFPC 6*4(R8)       Store resulting FPC flags and DXC
+0000000000000770  B222 0010                                                570          IPM   R1            Get condition code and program mask
+0000000000000774  8810 001C                             000000000000001C   571          SRL   R1,28         Isolate CC in low order byte
+0000000000000778  4210 801B                             000000000000001B   572          STC   R1,(6*4)+3(0,R8)    Save condition code as low byte of FPCR
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    12
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
                                                                            573 *
-000000000000071C  B29D 0264                             0000000000000264   574          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000720  B39A 5010                                                575          CFXBRA R1,5,R0,B'0000'  RZ Round toward zero
-0000000000000724  5010 701C                             000000000000001C   576          ST    R1,7*4(0,R7)  Store integer-32 result
-0000000000000728  B29C 801C                             000000000000001C   577          STFPC 7*4(R8)       Store resulting FPC flags and DXC
-000000000000072C  B222 0010                                                578          IPM   R1            Get condition code and program mask
-0000000000000730  8810 001C                             000000000000001C   579          SRL   R1,28         Isolate CC in low order byte
-0000000000000734  4210 801F                             000000000000001F   580          STC   R1,(7*4)+3(0,R8)    Save condition code as low byte of FPCR
+000000000000077C  B29D 0264                             0000000000000264   574          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+0000000000000780  B39A 5010                                                575          CFXBRA R1,5,R0,B'0000'  RZ Round toward zero
+0000000000000784  5010 701C                             000000000000001C   576          ST    R1,7*4(0,R7)  Store integer-32 result
+0000000000000788  B29C 801C                             000000000000001C   577          STFPC 7*4(R8)       Store resulting FPC flags and DXC
+000000000000078C  B222 0010                                                578          IPM   R1            Get condition code and program mask
+0000000000000790  8810 001C                             000000000000001C   579          SRL   R1,28         Isolate CC in low order byte
+0000000000000794  4210 801F                             000000000000001F   580          STC   R1,(7*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            581 *
-0000000000000738  B29D 0264                             0000000000000264   582          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-000000000000073C  B39A 6010                                                583          CFXBRA R1,6,R0,B'0000'  Round to +inf
-0000000000000740  5010 7020                             0000000000000020   584          ST    R1,8*4(0,R7)  Store integer-32 result
-0000000000000744  B29C 8020                             0000000000000020   585          STFPC 8*4(R8)       Store resulting FPC flags and DXC
-0000000000000748  B222 0010                                                586          IPM   R1            Get condition code and program mask
-000000000000074C  8810 001C                             000000000000001C   587          SRL   R1,28         Isolate CC in low order byte
-0000000000000750  4210 8023                             0000000000000023   588          STC   R1,(8*4)+3(0,R8)    Save condition code as low byte of FPCR
+0000000000000798  B29D 0264                             0000000000000264   582          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+000000000000079C  B39A 6010                                                583          CFXBRA R1,6,R0,B'0000'  Round to +inf
+00000000000007A0  5010 7020                             0000000000000020   584          ST    R1,8*4(0,R7)  Store integer-32 result
+00000000000007A4  B29C 8020                             0000000000000020   585          STFPC 8*4(R8)       Store resulting FPC flags and DXC
+00000000000007A8  B222 0010                                                586          IPM   R1            Get condition code and program mask
+00000000000007AC  8810 001C                             000000000000001C   587          SRL   R1,28         Isolate CC in low order byte
+00000000000007B0  4210 8023                             0000000000000023   588          STC   R1,(8*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            589 *
-0000000000000754  B29D 0264                             0000000000000264   590          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
-0000000000000758  B39A 7010                                                591          CFXBRA R1,7,R0,B'0000'  Round to -inf
-000000000000075C  5010 7024                             0000000000000024   592          ST    R1,9*4(0,R7)  Store integer-32 result
-0000000000000760  B29C 8024                             0000000000000024   593          STFPC 9*4(R8)       Store resulting FPC flags and DXC
-0000000000000764  B222 0010                                                594          IPM   R1            Get condition code and program mask
-0000000000000768  8810 001C                             000000000000001C   595          SRL   R1,28         Isolate CC in low order byte
-000000000000076C  4210 8027                             0000000000000027   596          STC   R1,(9*4)+3(0,R8)    Save condition code as low byte of FPCR
+00000000000007B4  B29D 0264                             0000000000000264   590          LFPC  FPCREGNT      Set all exceptions non-trappable, clear flags
+00000000000007B8  B39A 7010                                                591          CFXBRA R1,7,R0,B'0000'  Round to -inf
+00000000000007BC  5010 7024                             0000000000000024   592          ST    R1,9*4(0,R7)  Store integer-32 result
+00000000000007C0  B29C 8024                             0000000000000024   593          STFPC 9*4(R8)       Store resulting FPC flags and DXC
+00000000000007C4  B222 0010                                                594          IPM   R1            Get condition code and program mask
+00000000000007C8  8810 001C                             000000000000001C   595          SRL   R1,28         Isolate CC in low order byte
+00000000000007CC  4210 8027                             0000000000000027   596          STC   R1,(9*4)+3(0,R8)    Save condition code as low byte of FPCR
                                                                            597 *
-0000000000000770  4130 3010                             0000000000000010   598          LA    R3,16(0,R3)    point to next input value
-0000000000000774  4170 7030                             0000000000000030   599          LA    R7,12*4(0,R7)  Point to next long BFP converted values
-0000000000000778  4180 8030                             0000000000000030   600          LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
-000000000000077C  062C                                                     601          BCTR  R2,R12        Convert next input value.
-000000000000077E  07FD                                                     602          BR    R13           All converted; return.
+00000000000007D0  4130 3010                             0000000000000010   598          LA    R3,16(0,R3)    point to next input value
+00000000000007D4  4170 7030                             0000000000000030   599          LA    R7,12*4(0,R7)  Point to next long BFP converted values
+00000000000007D8  4180 8030                             0000000000000030   600          LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
+00000000000007DC  062C                                                     601          BCTR  R2,R12        Convert next input value.
+00000000000007DE  07FD                                                     602          BR    R13           All converted; return.
                                                                            603 *
                                                                            604 * Short integer inputs for Convert From Fixed testing.  The same set of
                                                                            605 * inputs are used for short, long, and extended formats.  The last two
                                                                            606 * values are used for rounding mode tests for short only; conversion of
                                                                            607 * int-32 to long or extended are always exact.
                                                                            608 *
-0000000000000780                                                           609 SBFPIN   DS    0F                Inputs for short BFP testing
-0000000000000780  3F800000                                                 610          DC    X'3F800000'         +1.0
-0000000000000784  40000000                                                 611          DC    X'40000000'         +2.0
-0000000000000788  40800000                                                 612          DC    X'40800000'         +4.0
-000000000000078C  C0000000                                                 613          DC    X'C0000000'         -2.0
-0000000000000790  7F810000                                                 614          DC    X'7F810000'         SNaN
-0000000000000794  7FC10000                                                 615          DC    X'7FC10000'         QNaN
-0000000000000798  4F000001                                                 616          DC    X'4F000001'         positive max int-32 value plus 1.  (2147483647 + 1)
-000000000000079C  CF000002                                                 617          DC    X'CF000002'         negative max int-32 value minus 2.  (-2147483647 - 2)
-00000000000007A0                                                           618          DS    0F                  required by asma for following EQU to work.
+00000000000007E0                                                           609 SBFPIN   DS    0F                Inputs for short BFP testing
+00000000000007E0  3F800000                                                 610          DC    X'3F800000'         +1.0
+00000000000007E4  40000000                                                 611          DC    X'40000000'         +2.0
+00000000000007E8  40800000                                                 612          DC    X'40800000'         +4.0
+00000000000007EC  C0000000                                                 613          DC    X'C0000000'         -2.0
+00000000000007F0  7F810000                                                 614          DC    X'7F810000'         SNaN
+00000000000007F4  7FC10000                                                 615          DC    X'7FC10000'         QNaN
+00000000000007F8  4F000001                                                 616          DC    X'4F000001'         positive max int-32 value plus 1.  (2147483647 + 1)
+00000000000007FC  CF000002                                                 617          DC    X'CF000002'         negative max int-32 value minus 2.  (-2147483647 - 2)
+0000000000000800                                                           618          DS    0F                  required by asma for following EQU to work.
                                       0000000000000020  0000000000000001   619 SBFPCT   EQU   *-SBFPIN            Count of short BFP in list * 4
                                                                            620 *
-00000000000007A0                                                           621 SBFPINRM DS    0F
-00000000000007A0  C1180000                                                 622          DC    X'C1180000'         -9.5
-00000000000007A4  C0B00000                                                 623          DC    X'C0B00000'         -5.5
-00000000000007A8  C0200000                                                 624          DC    X'C0200000'         -2.5
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    13
+0000000000000800                                                           621 SBFPINRM DS    0F
+0000000000000800  C1180000                                                 622          DC    X'C1180000'         -9.5
+0000000000000804  C0B00000                                                 623          DC    X'C0B00000'         -5.5
+0000000000000808  C0200000                                                 624          DC    X'C0200000'         -2.5
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    13
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-00000000000007AC  BFC00000                                                 625          DC    X'BFC00000'         -1.5
-00000000000007B0  BF000000                                                 626          DC    X'BF000000'         -0.5
-00000000000007B4  3F000000                                                 627          DC    X'3F000000'         +0.5
-00000000000007B8  3FC00000                                                 628          DC    X'3FC00000'         +1.5
-00000000000007BC  40200000                                                 629          DC    X'40200000'         +2.5
-00000000000007C0  40B00000                                                 630          DC    X'40B00000'         +5.5
-00000000000007C4  41180000                                                 631          DC    X'41180000'         +9.5
-00000000000007C8                                                           632          DS    0F                  required by asma for following EQU to work.
+000000000000080C  BFC00000                                                 625          DC    X'BFC00000'         -1.5
+0000000000000810  BF000000                                                 626          DC    X'BF000000'         -0.5
+0000000000000814  3F000000                                                 627          DC    X'3F000000'         +0.5
+0000000000000818  3FC00000                                                 628          DC    X'3FC00000'         +1.5
+000000000000081C  40200000                                                 629          DC    X'40200000'         +2.5
+0000000000000820  40B00000                                                 630          DC    X'40B00000'         +5.5
+0000000000000824  41180000                                                 631          DC    X'41180000'         +9.5
+0000000000000828                                                           632          DS    0F                  required by asma for following EQU to work.
                                       0000000000000028  0000000000000001   633 SBFPRMCT EQU   *-SBFPINRM          Count of short BFP * 4 to be used for rounding mode tests
                                                                            634 *
-00000000000007C8                                                           635 LBFPIN   DS    0F                Inputs for long BFP testing
-00000000000007C8  3FF00000 00000000                                        636          DC    X'3FF0000000000000'    +1.0
-00000000000007D0  40000000 00000000                                        637          DC    X'4000000000000000'    +2.0
-00000000000007D8  40100000 00000000                                        638          DC    X'4010000000000000'    +4.0
-00000000000007E0  C0000000 00000000                                        639          DC    X'C000000000000000'    -2.0
-00000000000007E8  7FF01000 00000000                                        640          DC    X'7FF0100000000000'    SNaN
-00000000000007F0  7FF81000 00000000                                        641          DC    X'7FF8100000000000'    QNaN
-00000000000007F8  41E00000 00000000                                        642          DC    X'41E0000000000000'   positive max int-32 value plus 1.  (2147483647 + 1)
-0000000000000800  C1E00000 00200000                                        643          DC    X'C1E0000000200000'   negative max int-32 value minus 2.  (-2147483647 - 2)
-0000000000000808                                                           644          DS    0F                  required by asma for following EQU to work.
+0000000000000828                                                           635 LBFPIN   DS    0F                Inputs for long BFP testing
+0000000000000828  3FF00000 00000000                                        636          DC    X'3FF0000000000000'    +1.0
+0000000000000830  40000000 00000000                                        637          DC    X'4000000000000000'    +2.0
+0000000000000838  40100000 00000000                                        638          DC    X'4010000000000000'    +4.0
+0000000000000840  C0000000 00000000                                        639          DC    X'C000000000000000'    -2.0
+0000000000000848  7FF01000 00000000                                        640          DC    X'7FF0100000000000'    SNaN
+0000000000000850  7FF81000 00000000                                        641          DC    X'7FF8100000000000'    QNaN
+0000000000000858  41E00000 00000000                                        642          DC    X'41E0000000000000'   positive max int-32 value plus 1.  (2147483647 + 1)
+0000000000000860  C1E00000 00200000                                        643          DC    X'C1E0000000200000'   negative max int-32 value minus 2.  (-2147483647 - 2)
+0000000000000868                                                           644          DS    0F                  required by asma for following EQU to work.
                                       0000000000000040  0000000000000001   645 LBFPCT   EQU   *-LBFPIN            Count of long BFP in list * 8
                                                                            646 *
-0000000000000808                                                           647 LBFPINRM DS    0F
-0000000000000808  C0230000 00000000                                        648          DC    X'C023000000000000'         -9.5
-0000000000000810  C0160000 00000000                                        649          DC    X'C016000000000000'         -5.5
-0000000000000818  C0040000 00000000                                        650          DC    X'C004000000000000'         -2.5
-0000000000000820  BFF80000 00000000                                        651          DC    X'BFF8000000000000'         -1.5
-0000000000000828  BFE00000 00000000                                        652          DC    X'BFE0000000000000'         -0.5
-0000000000000830  3FE00000 00000000                                        653          DC    X'3FE0000000000000'         +0.5
-0000000000000838  3FF80000 00000000                                        654          DC    X'3FF8000000000000'         +1.5
-0000000000000840  40040000 00000000                                        655          DC    X'4004000000000000'         +2.5
-0000000000000848  40160000 00000000                                        656          DC    X'4016000000000000'         +5.5
-0000000000000850  40230000 00000000                                        657          DC    X'4023000000000000'         +9.5
-0000000000000858                                                           658          DS    0F                  required by asma for following EQU to work.
+0000000000000868                                                           647 LBFPINRM DS    0F
+0000000000000868  C0230000 00000000                                        648          DC    X'C023000000000000'         -9.5
+0000000000000870  C0160000 00000000                                        649          DC    X'C016000000000000'         -5.5
+0000000000000878  C0040000 00000000                                        650          DC    X'C004000000000000'         -2.5
+0000000000000880  BFF80000 00000000                                        651          DC    X'BFF8000000000000'         -1.5
+0000000000000888  BFE00000 00000000                                        652          DC    X'BFE0000000000000'         -0.5
+0000000000000890  3FE00000 00000000                                        653          DC    X'3FE0000000000000'         +0.5
+0000000000000898  3FF80000 00000000                                        654          DC    X'3FF8000000000000'         +1.5
+00000000000008A0  40040000 00000000                                        655          DC    X'4004000000000000'         +2.5
+00000000000008A8  40160000 00000000                                        656          DC    X'4016000000000000'         +5.5
+00000000000008B0  40230000 00000000                                        657          DC    X'4023000000000000'         +9.5
+00000000000008B8                                                           658          DS    0F                  required by asma for following EQU to work.
                                       0000000000000050  0000000000000001   659 LBFPRMCT EQU   *-LBFPINRM          Count of long BFP * 8 to be used for rounding mode tests
                                                                            660 *
-0000000000000858                                                           661 XBFPIN   DS    0D                Inputs for long BFP testing
-0000000000000858  3FFF0000 00000000                                        662          DC    X'3FFF0000000000000000000000000000'    +1.0
-0000000000000868  40000000 00000000                                        663          DC    X'40000000000000000000000000000000'    +2.0
-0000000000000878  40010000 00000000                                        664          DC    X'40010000000000000000000000000000'    +4.0
-0000000000000888  C0000000 00000000                                        665          DC    X'C0000000000000000000000000000000'    -2.0
-0000000000000898  7FFF0100 00000000                                        666          DC    X'7FFF0100000000000000000000000000'    SNaN
-00000000000008A8  7FFF8100 00000000                                        667          DC    X'7FFF8100000000000000000000000000'    QNaN
-00000000000008B8  401E0000 00000000                                        668          DC    X'401E0000000000000000000000000000'   positive max int-32 value plus 1.  (2147483647 + 1)
-00000000000008C8  C01E0000 00020000                                        669          DC    X'C01E0000000200000000000000000000'   negative max int-32 value minus 2.  (-2147483647 - 2)
-00000000000008D8                                                           670          DS    0D                  required by asma for following EQU to work.
+00000000000008B8                                                           661 XBFPIN   DS    0D                Inputs for long BFP testing
+00000000000008B8  3FFF0000 00000000                                        662          DC    X'3FFF0000000000000000000000000000'    +1.0
+00000000000008C8  40000000 00000000                                        663          DC    X'40000000000000000000000000000000'    +2.0
+00000000000008D8  40010000 00000000                                        664          DC    X'40010000000000000000000000000000'    +4.0
+00000000000008E8  C0000000 00000000                                        665          DC    X'C0000000000000000000000000000000'    -2.0
+00000000000008F8  7FFF0100 00000000                                        666          DC    X'7FFF0100000000000000000000000000'    SNaN
+0000000000000908  7FFF8100 00000000                                        667          DC    X'7FFF8100000000000000000000000000'    QNaN
+0000000000000918  401E0000 00000000                                        668          DC    X'401E0000000000000000000000000000'   positive max int-32 value plus 1.  (2147483647 + 1)
+0000000000000928  C01E0000 00020000                                        669          DC    X'C01E0000000200000000000000000000'   negative max int-32 value minus 2.  (-2147483647 - 2)
+0000000000000938                                                           670          DS    0D                  required by asma for following EQU to work.
                                       0000000000000080  0000000000000001   671 XBFPCT   EQU   *-XBFPIN            Count of extended BFP in list * 16
                                                                            672 *
-00000000000008D8                                                           673 XBFPINRM DS    0D
-00000000000008D8  C0023000 00000000                                        674          DC    X'C0023000000000000000000000000000'         -9.5
-00000000000008E8  C0016000 00000000                                        675          DC    X'C0016000000000000000000000000000'         -5.5
-00000000000008F8  C0004000 00000000                                        676          DC    X'C0004000000000000000000000000000'         -2.5
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    14
+0000000000000938                                                           673 XBFPINRM DS    0D
+0000000000000938  C0023000 00000000                                        674          DC    X'C0023000000000000000000000000000'         -9.5
+0000000000000948  C0016000 00000000                                        675          DC    X'C0016000000000000000000000000000'         -5.5
+0000000000000958  C0004000 00000000                                        676          DC    X'C0004000000000000000000000000000'         -2.5
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    14
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
-0000000000000908  BFFF8000 00000000                                        677          DC    X'BFFF8000000000000000000000000000'         -1.5
-0000000000000918  BFFE0000 00000000                                        678          DC    X'BFFE0000000000000000000000000000'         -0.5
-0000000000000928  3FFE0000 00000000                                        679          DC    X'3FFE0000000000000000000000000000'         +0.5
-0000000000000938  3FFF8000 00000000                                        680          DC    X'3FFF8000000000000000000000000000'         +1.5
-0000000000000948  40004000 00000000                                        681          DC    X'40004000000000000000000000000000'         +2.5
-0000000000000958  40016000 00000000                                        682          DC    X'40016000000000000000000000000000'         +5.5
-0000000000000968  40023000 00000000                                        683          DC    X'40023000000000000000000000000000'         +9.5
-0000000000000978                                                           684          DS    0D                  required by asma for following EQU to work.
+0000000000000968  BFFF8000 00000000                                        677          DC    X'BFFF8000000000000000000000000000'         -1.5
+0000000000000978  BFFE0000 00000000                                        678          DC    X'BFFE0000000000000000000000000000'         -0.5
+0000000000000988  3FFE0000 00000000                                        679          DC    X'3FFE0000000000000000000000000000'         +0.5
+0000000000000998  3FFF8000 00000000                                        680          DC    X'3FFF8000000000000000000000000000'         +1.5
+00000000000009A8  40004000 00000000                                        681          DC    X'40004000000000000000000000000000'         +2.5
+00000000000009B8  40016000 00000000                                        682          DC    X'40016000000000000000000000000000'         +5.5
+00000000000009C8  40023000 00000000                                        683          DC    X'40023000000000000000000000000000'         +9.5
+00000000000009D8                                                           684          DS    0D                  required by asma for following EQU to work.
                                       00000000000000A0  0000000000000001   685 XBFPRMCT EQU   *-XBFPINRM          Count of extended BFP * 16 to be used for rounding mode tests
                                                                            686 *
                                                                            687 *  Locations for results
@@ -758,29 +758,29 @@ ASMA Ver. 0.2.0                                                                 
                                       0000000000001D00  0000000000000000   702 XINTRMOF EQU   BFPCVTTF+X'1D00'    Space for extended rounding mode test flags, room for 10 sets
                                                                            703 *
                                                                            704
-0000000000000978                                                           705          END
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    15
+00000000000009D8                                                           705          END
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    15
 
      SYMBOL        TYPE  VALUE   LENGTH  DEFN  REFERENCES
 
-BFPCVTTF            J    000000    2424    41   59   61   62   64   66  112  689  690  691  692  694  695  696  697  699  700  701
+BFPCVTTF            J    000000    2520    41   59   61   62   64   66  112  689  690  691  692  694  695  696  697  699  700  701
                                                702
-CFDBR               I    000468       4   303   89
-CFDBRA              I    0004C6       4   348   91
+CFDBR               I    000488       4   303   89
+CFDBRA              I    0004E6       4   348   91
 CFEBR               I    0002E0       4   151   84
 CFEBRA              I    00033E       4   196   86
-CFXBR               I    0005F0       4   455   94
-CFXBRA              I    000652       4   501   96
+CFXBR               I    000630       4   455   94
+CFXBRA              I    000692       4   501   96
 CTLR0               F    000260       4   102   79   80   81
 EXTDS               F    0002A0       4   125   93
-FPCREGNT            X    000264       4   103  158  208  217  226  244  252  260  268  276  284  310  360  369  378  396  404  412
-                                               420  428  436  463  514  523  532  550  558  566  574  582  590
+FPCREGNT            X    000264       4   103  158  208  217  226  235  244  252  260  268  276  284  310  360  369  378  387  396
+                                               404  412  420  428  436  463  514  523  532  541  550  558  566  574  582  590
 FPCREGTR            X    000268       4   104  166  318  471
 HARDWAIT            X    0001D0       8    65   75
-IMAGE               1    000000    2424     0
+IMAGE               1    000000    2520     0
 LBFPCT              U    000040       1   645  120
-LBFPIN              F    0007C8       4   635  645  121
-LBFPINRM            F    000808       4   647  659  137
+LBFPIN              F    000828       4   635  645  121
+LBFPINRM            F    000868       4   647  659  137
 LBFPRMCT            U    000050       1   659  136
 LINTFLGS            U    001580       0   695  123
 LINTOUT             U    001500       0   694  122
@@ -791,20 +791,20 @@ PCINTCD             H    00008E       2    60   72
 PCNOTDTA            I    00020C       4    75   73
 PCOLDPSW            U    000150       0    61   74
 PROGCHK             H    000200       2    71   65
-R0                  U    000000       1    42   79   81  157  159  169  202  210  219  228  245  253  261  269  277  285  309  311
-                                               321  354  362  371  380  397  405  413  421  429  437  461  464  474  507  516  525
-                                               534  551  559  567  575  583  591
+R0                  U    000000       1    42   79   81  157  159  169  202  210  219  228  237  245  253  261  269  277  285  309
+                                               311  321  354  362  371  380  389  397  405  413  421  429  437  461  464  474  507
+                                               516  525  534  543  551  559  567  575  583  591
 R1                  U    000001       1    43  159  160  162  163  164  167  168  169  170  172  173  174  210  211  213  214  215
-                                               219  220  222  223  224  228  229  231  232  233  245  246  248  249  250  253  254
-                                               256  257  258  261  262  264  265  266  269  270  272  273  274  277  278  280  281
-                                               282  285  286  288  289  290  311  312  314  315  316  319  320  321  322  324  325
-                                               326  362  363  365  366  367  371  372  374  375  376  380  381  383  384  385  397
-                                               398  400  401  402  405  406  408  409  410  413  414  416  417  418  421  422  424
-                                               425  426  429  430  432  433  434  437  438  440  441  442  464  465  467  468  469
-                                               472  473  474  475  477  478  479  516  517  519  520  521  525  526  528  529  530
-                                               534  535  537  538  539  551  552  554  555  556  559  560  562  563  564  567  568
-                                               570  571  572  575  576  578  579  580  583  584  586  587  588  591  592  594  595
-                                               596
+                                               219  220  222  223  224  228  229  231  232  233  237  238  240  241  242  245  246
+                                               248  249  250  253  254  256  257  258  261  262  264  265  266  269  270  272  273
+                                               274  277  278  280  281  282  285  286  288  289  290  311  312  314  315  316  319
+                                               320  321  322  324  325  326  362  363  365  366  367  371  372  374  375  376  380
+                                               381  383  384  385  389  390  392  393  394  397  398  400  401  402  405  406  408
+                                               409  410  413  414  416  417  418  421  422  424  425  426  429  430  432  433  434
+                                               437  438  440  441  442  464  465  467  468  469  472  473  474  475  477  478  479
+                                               516  517  519  520  521  525  526  528  529  530  534  535  537  538  539  543  544
+                                               546  547  548  551  552  554  555  556  559  560  562  563  564  567  568  570  571
+                                               572  575  576  578  579  580  583  584  586  587  588  591  592  594  595  596
 R10                 U    00000A       1    52   83   85   88   90   93   95  151  152  196  197  303  304  348  349  455  456  501
                                                502
 R11                 U    00000B       1    53
@@ -815,7 +815,7 @@ R14                 U    00000E       1    56
 R15                 U    00000F       1    57
 R2                  U    000002       1    44  151  153  179  196  198  295  303  305  331  348  350  447  455  457  462  484  501
                                                503  508  601
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    16
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    16
 
      SYMBOL        TYPE  VALUE   LENGTH  DEFN  REFERENCES
 
@@ -824,21 +824,21 @@ R3                  U    000003       1    45  151  157  176  196  202  292  303
 R4                  U    000004       1    46
 R5                  U    000005       1    47
 R6                  U    000006       1    48
-R7                  U    000007       1    49  152  160  170  177  197  211  220  229  246  254  262  270  278  286  293  304  312
-                                               322  329  349  363  372  381  398  406  414  422  430  438  445  456  465  475  482
-                                               502  517  526  535  552  560  568  576  584  592  599
-R8                  U    000008       1    50  152  161  164  171  174  178  197  212  215  221  224  230  233  247  250  255  258
-                                               263  266  271  274  279  282  287  290  294  304  313  316  323  326  330  349  364
-                                               367  373  376  382  385  399  402  407  410  415  418  423  426  431  434  439  442
-                                               446  456  466  469  476  479  483  502  518  521  527  530  536  539  553  556  561
-                                               564  569  572  577  580  585  588  593  596  600
+R7                  U    000007       1    49  152  160  170  177  197  211  220  229  238  246  254  262  270  278  286  293  304
+                                               312  322  329  349  363  372  381  390  398  406  414  422  430  438  445  456  465
+                                               475  482  502  517  526  535  544  552  560  568  576  584  592  599
+R8                  U    000008       1    50  152  161  164  171  174  178  197  212  215  221  224  230  233  239  242  247  250
+                                               255  258  263  266  271  274  279  282  287  290  294  304  313  316  323  326  330
+                                               349  364  367  373  376  382  385  391  394  399  402  407  410  415  418  423  426
+                                               431  434  439  442  446  456  466  469  476  479  483  502  518  521  527  530  536
+                                               539  545  548  553  556  561  564  569  572  577  580  585  588  593  596  600
 R9                  U    000009       1    51
 RMEXTDS             A    0002D0       4   141   95
 RMLONGS             A    0002C0       4   136   90
 RMSHORTS            A    0002B0       4   131   85
 SBFPCT              U    000020       1   619  114
-SBFPIN              F    000780       4   609  619  115
-SBFPINRM            F    0007A0       4   621  633  132
+SBFPIN              F    0007E0       4   609  619  115
+SBFPINRM            F    000800       4   621  633  132
 SBFPRMCT            U    000028       1   633  131
 SHORTS              F    000280       4   113   83
 SINTFLGS            U    001080       0   690  117
@@ -848,28 +848,28 @@ SINTRMOF            U    001300       0   692  134
 START               I    000210       4    79   63
 WAITPSW             X    000250      16   101   98
 XBFPCT              U    000080       1   671  126
-XBFPIN              D    000858       8   661  671  127
-XBFPINRM            D    0008D8       8   673  685  142
+XBFPIN              D    0008B8       8   661  671  127
+XBFPINRM            D    000938       8   673  685  142
 XBFPRMCT            U    0000A0       1   685  141
 XINTFLGS            U    001A80       0   700  129
 XINTOUT             U    001A00       0   699  128
 XINTRMO             U    001B00       0   701  143
 XINTRMOF            U    001D00       0   702  144
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    17
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    17
 
 MACRO   DEFN  REFERENCES
 
 No defined macros
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    18
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    18
 
    DESC     SYMBOL   SIZE    POS      ADDR
 
 Entry: 0
 
-Image      IMAGE     2424  000-977  000-977
-  Region             2424  000-977  000-977
-    CSECT  BFPCVTTF  2424  000-977  000-977
-ASMA Ver. 0.2.0                                                                                     03 Jul 2016 10:52:21  Page    19
+Image      IMAGE     2520  000-9D7  000-9D7
+  Region             2520  000-9D7  000-9D7
+    CSECT  BFPCVTTF  2520  000-9D7  000-9D7
+ASMA Ver. 0.2.0                                                                                     04 Jul 2016 22:36:57  Page    19
 
    STMT                              FILE NAME
 

@@ -97,7 +97,6 @@
 #include "hercules.h"
 #include "opcode.h"
 #include "inline.h"
-#define FEATURE_FLOATING_POINT_EXTENSION_FACILITY            /* TEMP - */
 
 #if defined(FEATURE_BINARY_FLOATING_POINT) && !defined(NO_IEEE_SUPPORT)
 
@@ -1999,6 +1998,532 @@ DEF_INST(convert_bfp_short_to_fix64_reg)
 }
 #endif /*defined(FEATURE_ESAME)*/
 
+
+#if defined(FEATURE_FLOATING_POINT_EXTENSION_FACILITY)
+
+/*--------------------------------------------------------------------------*/
+/* CONVERT FROM LOGICAL                                                     */
+/*                                                                          */
+/* Input is a signed integer; Xo, Xu, and Xx are only exceptions possible   */
+/*                                                                          */
+/* If FEATURE_FLOATING_POINT_EXTENSION FACILITY installed (defined)         */
+/*   M3 field controls rounding, 0=Use FPC BRM                              */
+/*   M4 field bit 0x04 XxC (inexact) suppresses inexact exception: no       */
+/*   inexact trap or FPC status flag.                                       */
+/*                                                                          */
+/*--------------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------------*/
+/* B392 CXLFBR - CONVERT FROM LOGICAL (32 to extended BFP)          [RRF-e] */
+/*                                                                          */
+/* Fixed 32-bit always fits in Extended BFP; no exceptions possible         */
+/*--------------------------------------------------------------------------*/
+DEF_INST(convert_u32_to_bfp_ext_reg)
+{
+    int r1, r2;
+    BYTE m3, m4;
+    U32 op2;
+    float128_t op1;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+
+    BFPINST_CHECK(regs);
+    BFPREGPAIR_CHECK(r1, regs);
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction         */
+
+    op2 = regs->GR_L(r2);
+    SET_SF_RM_FROM_M3(m3);            /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+    softfloat_exceptionFlags = 0;
+    op1 = ui32_to_f128(op2);
+
+    /* No flags set by CONVERT FROM LOGICAL (32 to extended BFP); */
+    PUT_FLOAT128_NOCC(op1, r1, regs);
+
+}
+
+/*--------------------------------------------------------------------------*/
+/* B391 CDLFBR - CONVERT FROM LOGICAL (32 to long BFP)              [RRF-e] */
+/*                                                                          */
+/* Fixed 32-bit always fits in long BFP; no exceptions possible             */
+/*--------------------------------------------------------------------------*/
+
+DEF_INST(convert_u32_to_bfp_long_reg)
+{
+    int r1, r2;
+    BYTE m3, m4;
+    U32 op2;
+    float64_t op1;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPRM_CHECK(m3, regs);              /* validate BFP Rounding mode in instruction         */
+
+    op2 = regs->GR_L(r2);
+    SET_SF_RM_FROM_M3(m3);              /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+    softfloat_exceptionFlags = 0;
+    op1 = ui32_to_f64(op2);
+
+    /* No flags set by CONVERT FROM LOGICAL (32 to long BFP); */
+    PUT_FLOAT64_NOCC(op1, r1, regs);
+
+}
+
+/*--------------------------------------------------------------------------*/
+/* B390 CELFBR - CONVERT FROM LOGICAL (32 to short BFP)             [RRF-e] */
+/*                                                                          */
+/* Fixed 32-bit may need to be rounded to fit in the 23+1 bits available    */
+/* in a short BFP, IEEE Inexact may be raised.  If m4 Inexact suppression   */
+/* (XxC) is on, then no inexact exception is recognized (no trap nor flag   */
+/* set).                                                                    */
+/*--------------------------------------------------------------------------*/
+DEF_INST(convert_u32_to_bfp_short_reg)
+{
+    int r1, r2;
+    BYTE m3, m4;
+    U32 op2;
+    float32_t op1;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction         */
+
+    SET_SF_RM_FROM_M3(m3);                          /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+    op2 = regs->GR_L(r2);
+    softfloat_exceptionFlags = 0;
+    op1 = ui32_to_f32(op2);
+    PUT_FLOAT32_NOCC(op1, r1, regs);              /* operation always stores result, inexact only possible exception  */
+
+    if (softfloat_exceptionFlags && !SUPPRESS_INEXACT(m4))        /* inexact occurred and not masked by m4?  */
+    {                                                               /* ..yes, set FPC flags and test for a trap   */
+        ieee_trap_conds = ieee_exception_test_oux(regs);            /* test for overflow, underflow, inexact, save flags  */
+        IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);   /* taxe Xx trap if inexact detected  */
+    };
+
+}
+
+/*--------------------------------------------------------------------------*/
+/* B3A2 CXLGBR - CONVERT FROM LOGICAL (64 to extended BFP)          [RRF-e] */
+/*                                                                          */
+/* Fixed 64-bit always fits in extended BFP; no exceptions possible         */
+/*--------------------------------------------------------------------------*/
+DEF_INST(convert_u64_to_bfp_ext_reg)
+{
+    int r1, r2;
+    BYTE m3, m4;
+    U64 op2;
+    float128_t op1;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPREGPAIR_CHECK(r1, regs);
+    BFPRM_CHECK(m3, regs);              /* validate BFP Rounding mode in instruction         */
+
+    SET_SF_RM_FROM_M3(m3);              /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+    op2 = regs->GR_G(r2);               /* HERE'S THE ERROR    !!!!!!!  should be the whole register*/
+    softfloat_exceptionFlags = 0;
+    op1 = ui64_to_f128(op2);
+    /* No flags set by CONVERT FROM LOGICAL (64 to extended BFP); */
+    PUT_FLOAT128_NOCC(op1, r1, regs);
+
+}
+
+
+/*--------------------------------------------------------------------------*/
+/* B3A1 CDLGBR - CONVERT FROM LOGICAL (64 to long BFP)              [RRF-e] */
+/*                                                                          */
+/* Fixed 64-bit may not fit in the 52+1 bits available in a long BFP, IEEE  */
+/* Inexact exceptions are possible.  If m4 Inexact suppression control      */
+/* (XxC) is on, then no Inexact exceptions recognized (no trap nor flag     */
+/* set).                                                                    */
+/*--------------------------------------------------------------------------*/
+DEF_INST(convert_u64_to_bfp_long_reg)
+{
+    int r1, r2;
+    BYTE m3, m4;
+    U64 op2;
+    float64_t op1;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction         */
+
+    SET_SF_RM_FROM_M3(m3);            /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+    op2 = regs->GR_G(r2);
+    softfloat_exceptionFlags = 0;
+    op1 = ui64_to_f64(op2);
+    PUT_FLOAT64_NOCC(op1, r1, regs);              /* operation always stores result  */
+
+    if (softfloat_exceptionFlags && !SUPPRESS_INEXACT(m4))          /* inexact occurred and not masked by m4?  */
+    {                                                               /* ..yes, set FPC flags and test for a trap   */
+        ieee_trap_conds = ieee_exception_test_oux(regs);            /* test for overflow, underflow, inexact; save flags  */
+        IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);   /* taxe Xx trap if inexact detected  */
+    };
+
+}
+
+
+/*--------------------------------------------------------------------------*/
+/* B3A0 CELGBR - CONVERT FROM LOGICAL (64 to short BFP)             [RRF-e] */
+/*                                                                          */
+/* Fixed 64-bit may need to be rounded to fit in the 23+1 bits available    */
+/* in a short BFP, IEEE Inexact may be raised.  If m4 Inexact suppression   */
+/* (XxC) is on, then no inexact exception is recognized (no trap nor flag   */
+/* set).                                                                    */
+/*--------------------------------------------------------------------------*/
+DEF_INST(convert_u64_to_bfp_short_reg)
+{
+    int r1, r2;
+    BYTE m3, m4;
+    U64 op2;
+    float32_t op1;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction         */
+
+    SET_SF_RM_FROM_M3(m3);            /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+    op2 = regs->GR_G(r2);
+    softfloat_exceptionFlags = 0;
+    op1 = ui64_to_f32(op2);
+    PUT_FLOAT32_NOCC(op1, r1, regs);       /* operation always stores result  */
+
+    if (softfloat_exceptionFlags && !(SUPPRESS_INEXACT(m4)))        /* inexact occurred and not masked by m4?  */
+    {                                                               /* ..yes, set FPC flags and test for a trap   */
+        ieee_trap_conds = ieee_exception_test_oux(regs);            /* test for overflow, underflow, inexact; save flags  */
+        IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);   /* taxe Xx trap if inexact detected  */
+    };
+
+}
+
+/*--------------------------------------------------------------------------*/
+/* CONVERT TO LOGICAL                                                       */
+/*                                                                          */
+/* Input is a floating point value; Xi and Xx are only exceptions possible  */
+/* M3 field controls rounding, 0=Use FPC BRM                                */
+/*                                                                          */
+/* If the input value magnitude is too large to be represented in the       */
+/* target format, an IEEE Invalid exception is raised.  If Invalid is not   */
+/* trappable, the result is a maximum-magnitude integer of matching sign    */
+/* and the IEEE Inexact exception is raised.                                */
+/*                                                                          */
+/* The M4 field bit 0x40 XxC (inexact) suppresses inexact exception: no     */
+/* IEEE Inexact trap or FPC Inexact status flag set.                        */
+/*                                                                          */
+/* Softfloat does not do two things required by SA-22-7832-10 table 19-18   */
+/* on page 19.23:                                                           */
+/* ** If the input is a NaN, return the largest negative number (Softfloat  */
+/*    returns the largest positive number).  We code around this issue.     */
+/* ** If Invalid is returned by Softfloat or due to a NaN and is not        */
+/*    trappable, Inexact must be returned if not masked by M4               */
+/*                                                                          */
+/* We also need some test cases to probe Softfloat behavior when the        */
+/* rounded result fits in an integer but the input is larger than that.     */
+/* PoP requires inexact and maximum magnitude integer result.               */
+/*--------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------*/
+/* B39E CLFXBR - CONVERT TO LOGICAL (extended BFP to 32)            [RRF-e] */
+/*--------------------------------------------------------------------------*/
+DEF_INST(convert_bfp_ext_to_u32_reg)
+{
+    int r1, r2;
+    BYTE m3, m4, newcc;
+    U32 op1;
+    float128_t op2;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPREGPAIR_CHECK(r2, regs);
+    BFPRM_CHECK(m3, regs);
+    GET_FLOAT128_OP(op2, r2, regs);
+
+    softfloat_exceptionFlags = 0;
+    if (FLOAT128_ISNAN(op2))                    /* NaN input always returns maximum negative integer, cc3, and IEEE invalid exception */
+    {
+        op1 = -0x7FFFFFFF - 1;
+        newcc = 3;
+        softfloat_raiseFlags(softfloat_flag_invalid);
+    }
+    else
+    {
+        SET_SF_RM_FROM_M3(m3);                  /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+        op1 = f128_to_ui32(op2, softfloat_roundingMode, !(SUPPRESS_INEXACT(m4)));
+        newcc = op1 ? (op1 < 0 ? 1 : 2) : 0;    /* Set condition code from result value  */
+    }
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+    if (softfloat_exceptionFlags & softfloat_flag_invalid)              /* Non-trappable Invalid exception?             */
+    {
+        newcc = 3;                                                      /* ..yes, set cc=3                              */
+        if (!SUPPRESS_INEXACT(m4))                                       /* Inexact not suppressed?                      */
+            softfloat_exceptionFlags |= softfloat_flag_inexact;         /* ..yes, add Inexact exception to FCPR flags   */
+    }
+
+    regs->GR_L(r1) = op1;                       /* results returned even if exception trapped*/
+    regs->psw.cc = newcc;
+
+    ieee_trap_conds = ieee_exception_test_oux(regs);                    /* test for Xo, Xu, Xx; save flags                      */
+                                                                        /* Test for Xx with trap enabled; Pgm Chk Data Exception and suppress result if any true   */
+    IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);
+
+}
+
+/*--------------------------------------------------------------------------*/
+/* B39D CLFDBR - CONVERT TO LOGICAL (long BFP to 32)                [RRF-e] */
+/*--------------------------------------------------------------------------*/
+
+DEF_INST(convert_bfp_long_to_u32_reg)
+{
+    int r1, r2;
+    BYTE m3, m4, newcc;
+    U32 op1;
+    float64_t op2;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+
+    BFPINST_CHECK(regs);
+    BFPRM_CHECK(m3, regs);
+    GET_FLOAT64_OP(op2, r2, regs);
+
+    softfloat_exceptionFlags = 0;
+    if (FLOAT64_ISNAN(op2))
+    {
+        op1 = -0x7FFFFFFF - 1;
+        newcc = 3;
+        softfloat_raiseFlags(softfloat_flag_invalid);
+    }
+    else
+    {
+        SET_SF_RM_FROM_M3(m3);                  /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+        op1 = f64_to_ui32(op2, softfloat_roundingMode, !SUPPRESS_INEXACT(m4));
+        newcc = op1 ? (op1 < 0 ? 1 : 2) : 0;    /* Set condition code from result value  */
+    }
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+    if (softfloat_exceptionFlags & softfloat_flag_invalid)              /* Non-trappable Invalid exception?             */
+    {
+        newcc = 3;                                                      /* ..yes, set cc=3                              */
+        if (!SUPPRESS_INEXACT(m4))                                       /* Inexact not suppressed?                      */
+            softfloat_exceptionFlags |= softfloat_flag_inexact;         /* ..yes, add Inexact exception to FCPR flags   */
+    }
+
+    regs->GR_L(r1) = op1;
+    regs->psw.cc = newcc;
+
+    ieee_trap_conds = ieee_exception_test_oux(regs);                    /* test for Xo, Xu, Xx; save flags                      */
+                                                                        /* Test for Xx with trap enabled; Pgm Chk Data Exception and suppress result if any true   */
+    IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);
+
+}
+
+/*--------------------------------------------------------------------------*/
+/* B39C CLFEBR - CONVERT TO LOGICAL (short BFP to 32)               [RRF-e] */
+/*--------------------------------------------------------------------------*/
+
+DEF_INST(convert_bfp_short_to_u32_reg)
+{
+    int r1, r2;
+    BYTE m3, m4, newcc;
+    U32 op1;
+    float32_t op2;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPRM_CHECK(m3, regs);
+    GET_FLOAT32_OP(op2, r2, regs);
+
+    softfloat_exceptionFlags = 0;
+    if (FLOAT32_ISNAN(op2))
+    {
+        op1 = -0x7FFFFFFF - 1;
+        newcc = 3;
+        softfloat_raiseFlags(softfloat_flag_invalid);
+    }
+    else
+    {
+        SET_SF_RM_FROM_M3(m3);                  /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+        op1 = f32_to_ui32(op2, softfloat_roundingMode, !SUPPRESS_INEXACT(m4));
+        newcc = op1 ? (op1 < 0 ? 1 : 2) : 0;    /* Set condition code from result value  */
+    }
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+    if (softfloat_exceptionFlags & softfloat_flag_invalid)              /* Non-trappable Invalid exception?             */
+    {
+        newcc = 3;                                                      /* ..yes, set cc=3                              */
+        if (!SUPPRESS_INEXACT(m4))                                       /* Inexact not suppressed?                      */
+            softfloat_exceptionFlags |= softfloat_flag_inexact;         /* ..yes, add Inexact exception to FCPR flags   */
+    }
+
+    regs->GR_L(r1) = op1;
+    regs->psw.cc = newcc;
+
+    ieee_trap_conds = ieee_exception_test_oux(regs);                    /* test for Xo, Xu, Xx; save flags                      */
+                                                                        /* Test for Xx with trap enabled; Pgm Chk Data Exception and suppress result if any true   */
+    IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);
+
+}
+
+/*--------------------------------------------------------------------------*/
+/* B3AE CLGXBR - CONVERT TO LOGICAL (extended BFP to 64)            [RRF-e] */
+/*--------------------------------------------------------------------------*/
+
+DEF_INST(convert_bfp_ext_to_u64_reg)
+{
+    int r1, r2;
+    BYTE m3, m4, newcc;
+    U64 op1;
+    float128_t op2;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPREGPAIR_CHECK(r2, regs);
+    BFPRM_CHECK(m3, regs);
+    GET_FLOAT128_OP(op2, r2, regs);
+
+    softfloat_exceptionFlags = 0;
+    if (FLOAT128_ISNAN(op2))
+    {
+        op1 = -(0x7FFFFFFFFFFFFFFFULL) - 1;
+        newcc = 3;
+        softfloat_raiseFlags(softfloat_flag_invalid);
+    }
+    else
+    {
+        SET_SF_RM_FROM_M3(m3);                  /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+        op1 = f128_to_ui64(op2, softfloat_roundingMode, !SUPPRESS_INEXACT(m4));
+        newcc = op1 ? (op1 < 0 ? 1 : 2) : 0;    /* Set condition code from result value  */
+    }
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+    if (softfloat_exceptionFlags & softfloat_flag_invalid)              /* Non-trappable Invalid exception?             */
+    {
+        newcc = 3;                                                      /* ..yes, set cc=3                              */
+        if (!SUPPRESS_INEXACT(m4))                                       /* Inexact not suppressed?                      */
+            softfloat_exceptionFlags |= softfloat_flag_inexact;         /* ..yes, add Inexact exception to FCPR flags   */
+    }
+
+    regs->GR_G(r1) = op1;
+    regs->psw.cc = newcc;
+
+    ieee_trap_conds = ieee_exception_test_oux(regs);                    /* test for Xo, Xu, Xx; save flags                      */
+                                                                        /* Test for Xx with trap enabled; Pgm Chk Data Exception and suppress result if any true   */
+    IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);
+
+}
+
+
+/*--------------------------------------------------------------------------*/
+/* B3AD CLGDBR - CONVERT TO LOGICAL (long BFP to 64)                [RRF-e] */
+/*--------------------------------------------------------------------------*/
+DEF_INST(convert_bfp_long_to_u64_reg)
+{
+    int r1, r2;
+    BYTE m3, m4, newcc;
+    U64 op1;
+    float64_t op2;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPRM_CHECK(m3, regs);
+    GET_FLOAT64_OP(op2, r2, regs);
+
+    softfloat_exceptionFlags = 0;
+    if (FLOAT64_ISNAN(op2))
+    {
+        op1 = -(0x7FFFFFFFFFFFFFFFULL) - 1;
+        newcc = 3;
+        softfloat_raiseFlags(softfloat_flag_invalid);
+    }
+    else
+    {
+        SET_SF_RM_FROM_M3(m3);                  /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+        op1 = f64_to_ui64(op2, softfloat_roundingMode, !SUPPRESS_INEXACT(m4));
+        newcc = op1 ? (op1 < 0 ? 1 : 2) : 0;    /* Set condition code from result value  */
+    }
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+    if (softfloat_exceptionFlags & softfloat_flag_invalid)          /* Non-trappable Invalid exception?             */
+    {
+        newcc = 3;                                                  /* ..yes, set cc=3                              */
+        if (!SUPPRESS_INEXACT(m4))                                  /* Inexact not suppressed?                      */
+            softfloat_exceptionFlags |= softfloat_flag_inexact;     /* ..yes, add Inexact exception to FCPR flags   */
+    }
+
+    regs->GR_G(r1) = op1;
+    regs->psw.cc = newcc;
+
+    ieee_trap_conds = ieee_exception_test_oux(regs);                    /* test for Xo, Xu, Xx; save flags                      */
+                                                                        /* Test for Xx with trap enabled; Pgm Chk Data Exception and suppress result if any true   */
+    IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);
+
+}
+
+
+/*--------------------------------------------------------------------------*/
+/* B3AC CLGEBR - CONVERT TO LOGICAL (short BFP to 64)               [RRF-e] */
+/*--------------------------------------------------------------------------*/
+DEF_INST(convert_bfp_short_to_u64_reg)
+{
+    int r1, r2;
+    BYTE m3, m4, newcc;
+    U64 op1;
+    float32_t op2;
+    U32 ieee_trap_conds = 0;
+
+    RRF_MM(inst, regs, r1, r2, m3, m4);
+    BFPINST_CHECK(regs);
+    BFPRM_CHECK(m3, regs);
+    GET_FLOAT32_OP(op2, r2, regs);
+
+    softfloat_exceptionFlags = 0;
+    if (FLOAT32_ISNAN(op2))
+    {
+        op1 = -(0x7FFFFFFFFFFFFFFFULL) - 1;
+        newcc = 3;
+        softfloat_raiseFlags(softfloat_flag_invalid);
+    }
+    else
+    {
+        SET_SF_RM_FROM_M3(m3);                  /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+        op1 = f32_to_ui64(op2, softfloat_roundingMode, !SUPPRESS_INEXACT(m4));
+        newcc = op1 ? (op1 < 0 ? 1 : 2) : 0;    /* Set condition code from result value  */
+    }
+
+    IEEE_EXCEPTION_TRAP_XI(regs);
+    if (softfloat_exceptionFlags & softfloat_flag_invalid)          /* Non-trappable Invalid exception?             */
+    {
+        newcc = 3;                                                  /* ..yes, set cc=3                              */
+        if (!SUPPRESS_INEXACT(m4))                                  /* Inexact not suppressed?                      */
+            softfloat_exceptionFlags |= softfloat_flag_inexact;     /* ..yes, add Inexact exception to FCPR flags   */
+    }
+
+    regs->GR_G(r1) = op1;
+    regs->psw.cc = newcc;
+
+    ieee_trap_conds = ieee_exception_test_oux(regs);                    /* test for Xo, Xu, Xx; save flags                      */
+                                                                        /* Test for Xx with trap enabled; Pgm Chk Data Exception and suppress result if any true   */
+    IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMX);
+
+}
+
+
+#endif /*  defined FEATURE_FLOATING_POINT_EXTENSION_FACILITY   */
+
 /*-------------------------------------------------------------------*/
 /* B34D DXBR  - DIVIDE (extended BFP)                          [RRE] */
 /*-------------------------------------------------------------------*/
@@ -2090,6 +2615,7 @@ DEF_INST(divide_bfp_long)
 
     IEEE_EXCEPTION_TRAP(regs, ieee_trap_conds, FPC_MASK_IMO | FPC_MASK_IMU | FPC_MASK_IMX);   /* take any trap detected  */
 }
+
 
 /*-------------------------------------------------------------------*/
 /* B30D DEBR  - DIVIDE (short BFP)                             [RRE] */

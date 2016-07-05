@@ -1,6 +1,6 @@
 *
 *Testcase ieee-cvtfrfix64.tst: IEEE Convert From Fixed (64-bit)
-*Message Testcase ieee-cvtfrfix.tst: IEEE Convert From Fixed (64-bit)
+*Message Testcase ieee-cvtfrfix64.tst: IEEE Convert From Fixed (64-bit)
 *Message ..Includes CONVERT FROM FIXED 64 (6).  Also tests traps and 
 *Message ..exceptions and results from different rounding modes.
 #
@@ -44,15 +44,15 @@ r 10A0.10  # Inputs converted to BFP Short - FPC
 *Want "CEGBR FPC pairs 5-6" 00080000 F8000800 00080000 F8000800
 
 r 1100.10  # Rounding Mode Tests positive
-*Want "CEGBRA + result FPC modes 1-3, 7" 5EFFFFFF 5F000000 5EFFFFFF 5F000000
+*Want "CEGBRA + result FPC modes 1-3, 7" 5EFFFFFF 5F000000 5EFFFFFF 5EFFFFFF
 r 1110.10  # Rounding Mode Tests positive
-*Want "CEGBRA + result M3 modes 1, 3-5" 5F000000 5F000000 5F000000 5EFFFFFF
+*Want "CEGBRA + result M3 modes 1, 3-5" 5F000000 5EFFFFFF 5F000000 5EFFFFFF
 r 1120.08  # Rounding Mode Tests
 *Want "CEGBRA + result M3 modes 6, 7" 5F000000 5EFFFFFF
 r 1130.10  # Rounding Mode Tests negative
-*Want "CEGBRA - result FPC modes 1-3, 7" DEFFFFFF DEFFFFFF DF000000 DF000000
+*Want "CEGBRA - result FPC modes 1-3, 7" DEFFFFFF DEFFFFFF DF000000 DEFFFFFF
 r 1140.10  # Rounding Mode Tests negative
-*Want "CEGBRA - result M3 modes 1, 3-5" DF000000 DF000000 DF000000 DEFFFFFF
+*Want "CEGBRA - result M3 modes 1, 3-5" DF000000 DEFFFFFF DF000000 DEFFFFFF
 r 1150.08  # Rounding Mode Tests negative
 *Want "CEGBRA - result M3 modes 6, 7" DEFFFFFF DF000000
 
@@ -96,9 +96,9 @@ r 1320.10  # Inputs converted to BFP Long - FPC
 r 1380.10  # Rounding Mode Test FPC modes 1, 2
 *Want "CDGBRA + FPC modes 1, 2" 43DFFFFF FFFFFFFF 43E00000 00000000
 r 1390.10  # Rounding Mode Test FPC modes 3, 7
-*Want "CDGBRA + FPC modes 3, 7" 43DFFFFF FFFFFFFF 43DFFFF FFFFFFFFF
+*Want "CDGBRA + FPC modes 3, 7" 43DFFFFF FFFFFFFF 43DFFFFF FFFFFFFF
 r 13A0.10  # Rounding Mode Test M3 modes 1, 3
-*Want "CDGBRA + M3 modes 1, 3"  43E00000 00000000 43E00000 00000000
+*Want "CDGBRA + M3 modes 1, 3"  43E00000 00000000 43DFFFFF FFFFFFFF
 r 13B0.10  # Rounding Mode Test M3 modes 4, 5
 *Want "CDGBRA + M3 modes 4, 5"  43E00000 00000000 43DFFFFF FFFFFFFF
 r 13C0.10  # Rounding Mode Test M3 modes 6, 7
@@ -108,7 +108,7 @@ r 13D0.10  # Rounding Mode Test FPC modes 1, 2
 r 13E0.10  # Rounding Mode Test FPC modes 3, 7
 *Want "CDGBRA - FPC modes 3, 7" C3E00000 00000000 C3DFFFFF FFFFFFFF
 r 13F0.10  # Rounding Mode Test M3 modes 1, 3
-*Want "CDGBRA - M3 modes 1, 3"  C3E00000 00000000 C3E00000 00000000
+*Want "CDGBRA - M3 modes 1, 3"  C3E00000 00000000 C3DFFFFF FFFFFFFF
 r 1400.10  # Rounding Mode Test M3 modes 4, 5
 *Want "CDGBRA - M3 modes 4, 5"  C3E00000 00000000 C3DFFFFF FFFFFFFF
 r 1410.10  # Rounding Mode Test M3 modes 6, 7

@@ -1,5 +1,5 @@
 *Testcase ieee-mults.tst: Load Lengthened and Multiply tests
-*Message Testcase ieee-divs.tst: Load Lengthened and Multiply tests
+*Message Testcase ieee-mults.tst: Load Lengthened and Multiply tests
 *Message ..includes LOAD LENGTHENED (6), MULTIPLY (9), MULTIPLY AND ADD (4)
 *Message ..MULTPLY AND SUBTRACT (4), 23 instr total
 *Message ..Test case values generate only integer results.  
