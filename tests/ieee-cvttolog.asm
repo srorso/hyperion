@@ -1,54 +1,62 @@
-  TITLE 'ieee-cvtfrfix64.asm: Test IEEE Convert To Fixed (int-64)'
+  TITLE 'ieee-cvttolog.asm: Test IEEE Convert To Logical (uint-32)'
 ***********************************************************************
 *
-*Testcase IEEE CONVERT TO FIXED 64
-*  Test case capability includes ieee exceptions trappable and
-*  otherwise.  Test result, FPCR flags, and DXC saved for all tests.  
+*Testcase IEEE CONVERT TO LOGICAL 32
+*  Test case capability includes ieee exceptions trappable and otherwise.
+*  Test result, FPCR flags, DXC, and condition code saved for all tests. 
 *
 ***********************************************************************
           SPACE 2
 ***********************************************************************
 *
-* Tests the following six conversion instructions
-*   CONVERT TO FIXED (short BFP to int-64, RRE)
-*   CONVERT TO FIXED (long BFP to int-64, RRE) 
-*   CONVERT TO FIXED (extended BFP to int-64, RRE)  
-*   CONVERT TO FIXED (short BFP to int-64, RRF-e)
-*   CONVERT TO FIXED (long BFP to int-64, RRF-e)
-*   CONVERT TO FIXED (extended BFP to int-64, RRF-e)  
+* Tests the following three conversion instructions
+*   CONVERT TO LOGICAL (short BFP to uint-32, RRF-e)
+*   CONVERT TO LOGICAL (long BFP to uint-32, RRF-e) 
+*   CONVERT TO LOGICAL (extended BFP to uint-32, RRF-e)  
 *
 * Test data is compiled into this program.  The test script that runs
 * this program can provide alternative test data through Hercules R 
 * commands.
 * 
 * Test Case Order
-* 1) Short BFP to Int-64 
-* 2) Short BFP to Int-64 with all rounding modes
-* 3) Long BFP Int-64
-* 3) Long BFP Int-64 with all rounding modes
-* 4) Extended BFP to Int-64 
-* 4) Extended BFP to Int-64 with all rounding modes
+* 1) Short BFP to uint-32 
+* 2) Short BFP to uint-32 with all rounding modes
+* 3) Long BFP uint-32
+* 3) Long BFP uint-32 with all rounding modes
+* 4) Extended BFP to uint-32 
+* 4) Extended BFP to uint-32 with all rounding modes
 *
-* Provided test data is 1, 2, 4, -2, QNaN, SNaN, 2 147 483 648, -2 147 483 648.
-*   The last two values will trigger inexact exceptions when converted to 
-*   int-64.  ****** Need to addd underflow test cases   **********
-* Provided test data for all rounding tests is taken from SA22-7832-10 table 9-11
-*   on page 9-16.  While the table illustrates LOAD FP INTEGER, the same results
-*   should be generated when creating an int-64 or int-64 integer.  
-*   -9.5, -5.5, -2.5, -1.5, -0.5, +0.5, +1.5, +2.5, +5.5, +9.5
+* Three input test data sets are provided, one each for short, long,
+*   and extended precision BFP.  All are converted to uint-32. 
 *
-*   Note that three input test data sets are provided, one each for short, long,
-*   and extended precision BFP.  All are converted to int-64. 
+* Provided test data is 1, 2, 4, 9, QNaN, SNaN, 4294967295.5.
+*   The last three values will trigger inexact exceptions when 
+*   converted to uint-32.  The last value is present only in the long 
+*   and extended BFP test cases and should overflow a uint-32.  
+* Provided test data for rounding tests is taken from Table 9-11 on 
+*   page 9-16 of SA22-7832-10.  
+*        -1.5, -0.5, +0.5, +1.5, +2.5, +5.5, +9.5.
+*   While the table illustrates LOAD FP INTEGER, the same results 
+*   should be generated when creating a uint-32 or uint-64 from BFP.  
+* For long BFP and extended BFP rounding mode tests, ond additional 
+*   test case is included: 4294967294.5.  This case rounds down to a 
+*   maximum uint-32 and rounds up to overflow; it tests the case where 
+*   the input is greater than a maximum uint-32 but rounds to a maximum
+*   uint-32.  See Table 19-19 on page 19-26 of SA22-7832-10 for details 
+*   on this boundary condition test.
 *
 * Also tests the following floating point support instructions
 *   LOAD  (Short)
 *   LOAD  (Long)
+*   LOAD FPC
+*   SRNMB (Set BFP Rounding Mode 2-bit)
 *   SRNMB (Set BFP Rounding Mode 3-bit)
 *   STORE (Short)
 *   STORE (Long)
+*   STORE FPC
 *
          SPACE 3
-BFPCVTTF START 0
+BFPCVTTL START 0
 R0       EQU   0
 R1       EQU   1
 R2       EQU   2
@@ -66,14 +74,14 @@ R13      EQU   13
 R14      EQU   14
 R15      EQU   15
          USING *,0
-         ORG   BFPCVTTF+X'8E'      
-PCINTCD  DS    H                   Program check interrution code
-PCOLDPSW EQU   BFPCVTTF+X'150'     Program check old PSW
-         ORG   BFPCVTTF+X'1A0' 
+         ORG   BFPCVTTL+X'8E'      Program check interrution code
+PCINTCD  DS    H
+PCOLDPSW EQU   BFPCVTTL+X'150'     Program check old PSW
+         ORG   BFPCVTTL+X'1A0' 
          DC    X'0000000180000000',AD(START)     z/Arch restart PSW
-         ORG   BFPCVTTF+X'1D0' 
+         ORG   BFPCVTTL+X'1D0' 
          DC    X'0000000000000000',AD(PROGCHK)   z/Arch pgm chk
-         ORG   BFPCVTTF+X'200'
+         ORG   BFPCVTTL+X'200'
 * 
 * Program check routine.  If Data Exception, continue execution at
 * the instruction following the program check.  Otherwise, hard wait.  
@@ -93,23 +101,23 @@ START    STCTL R0,R0,CTLR0    Store CR0 to enable AFP
 * Short BFP Input testing
 *
          LA    R10,SHORTS     Point to short BFP test inputs
-         BAS   R13,CGEBR      Convert values to fixed from short BFP
+         BAS   R13,CLFEBR     Convert values to uint-32 from short BFP
          LA    R10,RMSHORTS   Point to inputs for rounding mode tests
-         BAS   R13,CGEBRA     Convert using all rounding mode options
+         BAS   R13,CLFEBRA    Convert using all rounding mode options
 *
 * Short BFP Input testing
 *
          LA    R10,LONGS      Point to long BFP test inputs
-         BAS   R13,CGDBR      Convert values to fixed from long BFP
+         BAS   R13,CLFDBR     Convert values to uint-32 from long BFP
          LA    R10,RMLONGS    Point to inputs for rounding mode tests
-         BAS   R13,CGDBRA     Convert using all rounding mode options
+         BAS   R13,CLFDBRA    Convert using all rounding mode options
 *
 * Short BFP Input testing
 *
          LA    R10,EXTDS      Point to extended BFP test inputs
-         BAS   R13,CGXBR      Convert values to fixed from extended
+         BAS   R13,CLFXBR     Convert values to uint-32 from extended
          LA    R10,RMEXTDS    Point to inputs for rounding mode tests
-         BAS   R13,CGXBRA     Convert using all rounding mode options
+         BAS   R13,CLFXBRA    Convert using all rounding mode options
 *
          LPSWE WAITPSW        All done
 *
@@ -127,7 +135,7 @@ FPCREGTR DC    X'F8000000'  FPCR, trap no IEEE exceptions, zero flags
 *      3) Address to place results, and
 *      4) Address to place DXC/Flags/cc values.  
 *
-         ORG   BFPCVTTF+X'280'
+         ORG   BFPCVTTL+X'280'
 SHORTS   DS    0F           Inputs for short BFP testing
          DC    A(SBFPCT/4)
          DC    A(SBFPIN)
@@ -159,18 +167,18 @@ RMLONGS  DC    A(LBFPRMCT/8)
 RMEXTDS  DC    A(XBFPRMCT/16)
          DC    A(XBFPINRM)  Extended BFP rounding mode test inputs
          DC    A(XINTRMO)   Extended BFP rounding mode test results
-         DC    A(XINTRMOF)  Space for rounding mode test flags
+         DC    A(XINTRMOF)  Extended BFP rounding mode test flags
          EJECT
 ***********************************************************************
 *
-* Convert short BFP to integer-64 format.  A pair of results is 
-* generated for each input: one with all exceptions non-trappable, and 
-* the second with all exceptions trappable.   The FPCR and condition 
-* code is stored for each result.
+* Convert short BFP to uint-32 format.  A pair of results is generated
+* for each input: one with all exceptions non-trappable, and the second 
+* with all exceptions trappable.   The FPCR and condition code is stored 
+* for each result.
 *
 ***********************************************************************
-          SPACE 2
-CGEBR    LM    R2,R3,0(R10)  Get count and address of test input values
+         SPACE 2
+CLFEBR   LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -178,26 +186,26 @@ CGEBR    LM    R2,R3,0(R10)  Get count and address of test input values
 *
          LE    R0,0(0,R3)    Get short BFP test value
          LFPC  FPCREGNT      Set exceptions non-trappable
-         CGEBR R1,R0         Cvt float in FPR0 to Int in GPR1
-         STG   R1,0(0,R7)    Store int-64 result
-         STFPC 0*4(R8)       Store resulting FPCR flags and DXC
+         CLFEBR R1,0,R0,0    Cvt float in FPR0 to uint-32 in GPR1
+         ST    R1,0(0,R7)    Store int-32 result
+         STFPC 0(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(0*4)+3(0,R8)  Save cc as low byte of FPCR
+         STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGTR      Set exceptions trappable
-         XGR   R1,R1         Clear any residual result in R1
+         XR    R1,R1         Clear any residual result in R1
          SPM   R1            Clear out any residual nz condition code
-         CGEBR R1,R0         Cvt float in FPR0 to Int in GPR1
-         STG   R1,8(0,R7)    Store short BFP result
+         CLFEBR R1,0,R0,0    Cvt float in FPR0 to uint-32 in GPR1
+         ST    R1,4(0,R7)    Store short BFP result
          STFPC 4(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(1*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,7(0,R8)    Save condition code as low byte of FPCR
 *
-         LA    R3,4(0,R3)    Point to next input value
-         LA    R7,2*8(0,R7)  Point to next int-64 converted value pair
-         LA    R8,2*4(0,R8)  Point to next FPCR/CC result area
+         LA    R3,4(0,R3)    point to next input values
+         LA    R7,8(0,R7)    Point to next int-32 converted value pair
+         LA    R8,8(0,R8)    Point to next FPCR/CC result area
          BCTR  R2,R12        Convert next input value.  
          BR    R13           All converted; return.
 *
@@ -205,10 +213,10 @@ CGEBR    LM    R2,R3,0(R10)  Get count and address of test input values
 * Ten test results are generated for each input.  A 48-byte test result
 * section is used to keep results sets aligned on a quad-double word.
 *
-* The first four tests use rounding modes specified in the FPC with the 
-* IEEE Inexact exception supressed.  SRNM (2-bit) is used  for the 
-* first two FPCR-controlled tests and SRNMB (3-bit) is used for the 
-* last two To get full coverage of that instruction pair.  
+* The first four tests use rounding modes specified in the FPCR with
+* the IEEE Inexact exception supressed.  SRNM (2-bit) is used  for
+* the first two FPCR-controlled tests and SRNMB (3-bit) is used for
+* the last two To get full coverage of that instruction pair.  
 *
 * The next six results use instruction-specified rounding modes.  
 *
@@ -216,7 +224,7 @@ CGEBR    LM    R2,R3,0(R10)  Get count and address of test input values
 * prior tests used the default rounding mode.  RNTE is tested
 * explicitly as a rounding mode in this section.  
 *
-CGEBRA   LM    R2,R3,0(R10)  Get count and address of test input values
+CLFEBRA  LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -227,143 +235,145 @@ CGEBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 1             SET FPCR to RZ, towards zero.  
-         CGEBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,0*8(0,R7)  Store integer-64 result
+         SRNM  1             SET FPCR to RZ, towards zero.  
+         CLFEBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,0*4(0,R7)  Store uint-32 result
          STFPC 0(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,3(0,R8)    Save cccas low byte of FPCR
+         STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 2             SET FPCR to RP, to +infinity
-         CGEBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,1*8(0,R7)  Store integer-64 result
+         SRNM  2             SET FPCR to RP, to +infinity
+         CLFEBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,1*4(0,R7)  Store uint-32 result
          STFPC 1*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(1*4)+3(0,R8)  Save cccas low byte of FPCR
+         STC   R1,(1*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
          SRNMB 3             SET FPCR to RM, to -infinity
-         CGEBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,2*8(0,R7)  Store integer-64 result
+         CLFEBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,2*4(0,R7)  Store uint-32 result
          STFPC 2*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(2*4)+3(0,R8)  Save cccas low byte of FPCR
+         STC   R1,(2*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 7             RPS, Prepare for Shorter Precision
-         CGEBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,3*8(0,R7)  Store integer-64 result
+         SRNMB 7             RFS, Prepare for Shorter Precision
+         CLFEBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,3*4(0,R7)  Store uint-32 result
          STFPC 3*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(3*4)+3(0,R8)  Save cccas low byte of FPCR
+         STC   R1,(3*4)+3(0,R8)  Save condition code as low byte of FPCR
+*
+* Test cases using rounding mode specified in the instruction M3 field
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGEBRA R1,1,R0,B'0000'  RNTA, to nearest, ties away from zero
-         STG   R1,4*8(0,R7)  Store integer-64 result
+         CLFEBR R1,1,R0,B'0000'  RNTA, to nearest, ties away from zero
+         ST    R1,4*4(0,R7)  Store uint-32 result
          STFPC 4*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(4*4)+3(0,R8)  Save cc as low byte of FPCR
+         STC   R1,(4*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGEBRA R1,3,R0,B'0000'  RFS, to prepare for shorter precision
-         STG   R1,5*8(0,R7)  Store integer-64 result
+         CLFEBR R1,3,R0,B'0000'  RFS, to prepare for shorter precision
+         ST    R1,5*4(0,R7)  Store uint-32 result
          STFPC 5*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(5*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(5*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGEBRA R1,4,R0,B'0000'  RNTE, to nearest, ties to even
-         STG   R1,6*8(0,R7)  Store integer-64 result
+         CLFEBR R1,4,R0,B'0000'  RNTE, to nearest, ties to even
+         ST    R1,6*4(0,R7)  Store uint-32 result
          STFPC 6*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(6*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(6*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGEBRA R1,5,R0,B'0000'  RZ, toward zero
-         STG   R1,7*8(0,R7)  Store integer-64 result
+         CLFEBR R1,5,R0,B'0000'  RZ, toward zero
+         ST    R1,7*4(0,R7)  Store uint-32 result
          STFPC 7*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(7*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(7*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGEBRA R1,6,R0,B'0000'  RP, to +inf
-         STG   R1,8*8(0,R7)  Store integer-64 result
+         CLFEBR R1,6,R0,B'0000'  RP, to +inf
+         ST    R1,8*4(0,R7)  Store uint-32 result
          STFPC 8*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(8*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(8*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGEBRA R1,7,R0,B'0000'  RM, to -inf
-         STG   R1,9*8(0,R7)  Store integer-64 result
+         CLFEBR R1,7,R0,B'0000'  RM, to -inf
+         ST    R1,9*4(0,R7)  Store uint-32 result
          STFPC 9*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(9*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(9*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LA    R3,4(0,R3)    Point to next input value
-         LA    R7,10*8(0,R7)  Point to next short BFP converted values
-         LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
+         LA    R7,12*4(0,R7) Point to next uint-32 result set
+         LA    R8,12*4(0,R8) Point to next FPCR/CC result area
          BCTR  R2,R12        Convert next input value.  
          BR    R13           All converted; return.
          EJECT
 ***********************************************************************
 *
-* Convert long BFP inputs to integer-64.  A pair of results is 
-* generated for each input: one with all exceptions non-trappable, and 
-* the second with all exceptions trappable.   The FPCR and condition 
-* code is stored for each result.  
+* Convert long BFP inputs to uint-32.  A pair of results is generated
+* for each input: one with all exceptions non-trappable, and the second 
+* with all exceptions trappable.   The FPCR and condition code is stored 
+* for each result.  
 *
 ***********************************************************************
-          SPACE 2
-CGDBR    LM    R2,R3,0(R10)  Get count and address of test input values
+         SPACE 2
+CLFDBR   LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
          BASR  R12,0         Set top of loop
 *
          LD    R0,0(0,R3)    Get long BFP test value
-         LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGDBR R1,R0         Cvt float in FPR0 to Int in GPR1
-         STG   R1,0(0,R7)    Store long BFP result
-         STFPC 0*4(R8)       Store resulting FPCR flags and DXC
+         LFPC  FPCREGNT      Set exceptions non-trappable
+         CLFDBR R1,0,R0,0    Cvt float in FPR0 to uint-32 in GPR1
+         ST    R1,0(0,R7)    Store long BFP result
+         STFPC 0(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(0*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
-         LFPC  FPCREGTR      Set exceptions trappable, clear flags
-         XGR   R1,R1         Clear any residual result in R1
+         LFPC  FPCREGTR      Set exceptions trappable
+         XR    R1,R1         Clear any residual result in R1
          SPM   R1            Clear out any residual nz condition code
-         CGDBR R1,R0         Cvt float in FPR0 to Int in GPR1
-         STG   R1,8(0,R7)    Store int-64 result
-         STFPC 1*4(R8)       Store resulting FPCR flags and DXC
+         CLFDBR R1,0,R0,0    Cvt float in FPR0 to uint-32 in GPR1
+         ST    R1,4(0,R7)    Store int-32 result
+         STFPC 4(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(1*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,7(0,R8)    Save condition code as low byte of FPCR
 *
          LA    R3,8(0,R3)    point to next input values
-         LA    R7,16(0,R7)   Point to next int-64 converted value pair
+         LA    R7,8(0,R7)    Point to next uint-32 converted value pair
          LA    R8,8(0,R8)    Point to next FPCR/CC result area
          BCTR  R2,R12        Convert next input value.  
          BR    R13           All converted; return.
 *
-* Convert long BFP to integers using each possible rounding mode.
+* Convert long BFP to integers using each possible rounding mode. 
 * Ten test results are generated for each input.  A 48-byte test result
 * section is used to keep results sets aligned on a quad-double word.
 *
-* The first four tests use rounding modes specified in the FPC with the 
-* IEEE Inexact exception supressed.  SRNM (2-bit) is used  for the 
-* first two FPCR-controlled tests and SRNMB (3-bit) is used for the 
-* last two To get full coverage of that instruction pair.  
+* The first four tests use rounding modes specified in the FPCR with
+* the IEEE Inexact exception supressed.  SRNM (2-bit) is used  for
+* thefirst two FPCR-controlled tests and SRNMB (3-bit) is used for
+* the last two To get full coverage of that instruction pair.  
 *
 * The next six results use instruction-specified rounding modes.  
 *
@@ -371,7 +381,7 @@ CGDBR    LM    R2,R3,0(R10)  Get count and address of test input values
 * prior tests used the default rounding mode.  RNTE is tested
 * explicitly as a rounding mode in this section.  
 *
-CGDBRA   LM    R2,R3,0(R10)  Get count and address of test input values
+CLFDBRA  LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -379,110 +389,110 @@ CGDBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 *
          LD    R0,0(0,R3)    Get long BFP test value
 *
-*  Cvt float in FPR0 to integer-64
-*
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 1             SET FPCR to RZ, towards zero.  
-         CGDBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,0*8(0,R7)  Store integer-64 result
+         SRNM  1             SET FPCR to RZ, towards zero.  
+         CLFDBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,0*4(0,R7)  Store uint-32 result
          STFPC 0(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,3(0,R8)    Save CC as low byte of FPCR
+         STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 2             SET FPCR to RP, to +infinity
-         CGDBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,1*8(0,R7)  Store integer-64 result
+         SRNM  2             SET FPCR to RP, to +infinity
+         CLFDBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,1*4(0,R7)  Store uint-32 result
          STFPC 1*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(1*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(1*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
          SRNMB 3             SET FPCR to RM, to -infinity
-         CGDBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,2*8(0,R7)  Store integer-64 result
+         CLFDBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,2*4(0,R7)  Store uint-32 result
          STFPC 2*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(2*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(2*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 7             RPS, Prepare for Shorter Precision
-         CGDBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,3*8(0,R7)  Store integer-64 result
+         SRNMB 7             RFS, Prepare for Shorter Precision
+         CLFDBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,3*4(0,R7)  Store uint-32 result
          STFPC 3*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(3*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(3*4)+3(0,R8)  Save condition code as low byte of FPCR
+*
+* Test cases using rounding mode specified in the instruction M3 field
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGDBRA R1,1,R0,B'0000'  RNTA, to nearest, ties away from zero
-         STG   R1,4*8(0,R7)  Store integer-64 result
+         CLFDBR R1,1,R0,B'0000'  RNTA, to nearest, ties away from zero
+         ST    R1,4*4(0,R7)  Store uint-32 result
          STFPC 4*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(4*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(4*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGDBRA R1,3,R0,B'0000'  RFS, to prepare for shorter precision
-         STG   R1,5*8(0,R7)  Store integer-64 result
+         CLFDBR R1,3,R0,B'0000'  RFS, to prepare for shorter precision
+         ST    R1,5*4(0,R7)  Store uint-32 result
          STFPC 5*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(5*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(5*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGDBRA R1,4,R0,B'0000'  RNTE, to nearest, ties to even
-         STG   R1,6*8(0,R7)  Store integer-64 result
+         CLFDBR R1,4,R0,B'0000'  RNTE, to nearest, ties to even
+         ST    R1,6*4(0,R7)  Store uint-32 result
          STFPC 6*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(6*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(6*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGDBRA R1,5,R0,B'0000'  RZ, toward zero
-         STG   R1,7*8(0,R7)  Store integer-64 result
+         CLFDBR R1,5,R0,B'0000'  RZ, toward zero
+         ST    R1,7*4(0,R7)  Store uint-32 result
          STFPC 7*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(7*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(7*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGDBRA R1,6,R0,B'0000'  RP, to +inf
-         STG   R1,8*8(0,R7)  Store integer-64 result
+         CLFDBR R1,6,R0,B'0000'  RP, to +inf
+         ST    R1,8*4(0,R7)  Store uint-32 result
          STFPC 8*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(8*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(8*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGDBRA R1,7,R0,B'0000'  RM, to -inf
-         STG   R1,9*8(0,R7)  Store integer-64 result
+         CLFDBR R1,7,R0,B'0000'  RM, to -inf
+         ST    R1,9*4(0,R7)  Store uint-32 result
          STFPC 9*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(9*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(9*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
-         LA    R3,8(0,R3)    point to next input value
-         LA    R7,10*8(0,R7)  Point to next long BFP converted values
+         LA    R3,8(0,R3)    point to next input values
+         LA    R7,12*4(0,R7)  Point to next long BFP converted values
          LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
          BCTR  R2,R12        Convert next input value.  
          BR    R13           All converted; return.
          EJECT
 ***********************************************************************
 *
-* Convert extended BFP to integer-64.  A pair of results is generated
+* Convert extended BFP to uint-32.  A pair of results is generated
 * for each input: one with all exceptions non-trappable, and the 
 * second with all exceptions trappable.   The FPCR and condition code
 * are stored for each result.  
 *
 ***********************************************************************
-          SPACE 2
-CGXBR    LM    R2,R3,0(R10)  Get count and address of test input values
+         SPACE 2
+CLFXBR   LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -490,26 +500,26 @@ CGXBR    LM    R2,R3,0(R10)  Get count and address of test input values
 *
          LD    R0,0(0,R3)    Get extended BFP test value part 1
          LD    R2,8(0,R3)    Get extended BFP test value part 1
-         LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGXBR R1,R0         Cvt float in FPR0-FPR2 to Int-64 in GPR1
-         STG   R1,0(0,R7)    Store integer-64 result
-         STFPC (0*4)(R8)     Store resulting FPCR flags and DXC
+         LFPC  FPCREGNT      Set exceptions non-trappable
+         CLFXBR R1,0,R0,0    Cvt float in FPR0-FPR2 to uint-32 in GPR1
+         ST    R1,0(0,R7)    Store uint-32 result
+         STFPC 0(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(0*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
-         LFPC  FPCREGTR      Set exceptions trappable, clear flags
-         XGR   R1,R1         Clear any residual result in R1
+         LFPC  FPCREGTR      Set exceptions trappable
+         XR    R1,R1         Clear any residual result in R1
          SPM   R1            Clear out any residual nz condition code
-         CGXBR R1,R0         Cvt float in FPR0-FPR2 to Int-64 in GPR1
-         STG   R1,8(0,R7)    Store integer-64 result
-         STFPC (1*4)(R8)     Store resulting FPCR flags and DXC
+         CLFXBR R1,0,R0,0    Cvt float in FPR0-FPR2 to uint-32 in GPR1
+         ST    R1,4(0,R7)    Store uint-32 result
+         STFPC 4(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(1*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,7(0,R8)    Save condition code as low byte of FPCR
 *
          LA    R3,16(0,R3)   Point to next extended BFP input value
-         LA    R7,16(0,R7)   Point to next int-64 converted value pair
+         LA    R7,8(0,R7)    Point to next uint-32 converted value pair
          LA    R8,8(0,R8)    Point to next FPCR/CC result area
          BCTR  R2,R12        Convert next input value.  
          BR    R13           All converted; return.
@@ -518,7 +528,7 @@ CGXBR    LM    R2,R3,0(R10)  Get count and address of test input values
 * Ten test results are generated for each input.  A 48-byte test result
 * section is used to keep results sets aligned on a quad-double word.
 *
-* The first four tests use rounding modes specified in the FPC with the 
+* The first four tests use rounding modes specified in the FPCR with the 
 * IEEE Inexact exception supressed.  SRNM (2-bit) is used  for the 
 * first two FPCR-controlled tests and SRNMB (3-bit) is used for the 
 * last two To get full coverage of that instruction pair.  
@@ -529,7 +539,7 @@ CGXBR    LM    R2,R3,0(R10)  Get count and address of test input values
 * prior tests used the default rounding mode.  RNTE is tested
 * explicitly as a rounding mode in this section.  
 *
-CGXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
+CLFXBRA  LM    R2,R3,0(R10)  Get count and address of test input values
          LM    R7,R8,8(R10)  Get address of result area and flag area.
          LTR   R2,R2         Any test cases?
          BZR   R13           ..No, return to caller
@@ -541,92 +551,94 @@ CGXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * Test cases using rounding mode specified in the FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 1             SET FPCR to RZ,  towards zero.  
-         CGXBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,0*8(0,R7)  Store integer-64 result
+         SRNM  1             SET FPCR to RZ, towards zero.  
+         CLFXBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,0*4(0,R7)  Store uint-32 result
          STFPC 0(R8)         Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,3(0,R8)    Save CC as low byte of FPCR
+         STC   R1,3(0,R8)    Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 2             SET FPCR to RP,  to +infinity
-         CGXBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,1*8(0,R7)  Store integer-64 result
+         SRNM  2             SET FPCR to RP, to +infinity
+         CLFXBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,1*4(0,R7)  Store uint-32 result
          STFPC 1*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(1*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(1*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
          SRNMB 3             SET FPCR to RM, to -infinity
-         CGXBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,2*8(0,R7)  Store integer-64 result
+         CLFXBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,2*4(0,R7)  Store uint-32 result
          STFPC 2*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(2*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(2*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         SRNMB 7             RPS, Prepare for Shorter Precision
-         CGXBRA R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
-         STG   R1,3*8(0,R7)  Store integer-64 result
+         SRNMB 7             RFS, Prepare for Shorter Precision
+         CLFXBR R1,0,R0,B'0100'  FPCR ctl'd rounding, inexact masked
+         ST    R1,3*4(0,R7)  Store uint-32 result
          STFPC 3*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(3*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(3*4)+3(0,R8)  Save condition code as low byte of FPCR
+*
+* Test cases using rounding mode specified in the instruction M3 field
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGXBRA R1,1,R0,B'0000'  RNTA, to nearest, ties away from zero
-         STG   R1,4*8(0,R7)  Store integer-64 result
+         CLFXBR R1,1,R0,B'0000'  RNTA, to nearest, ties away from zero
+         ST    R1,4*4(0,R7)  Store uint-32 result
          STFPC 4*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(4*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(4*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGXBRA R1,3,R0,B'0000'  RFS, to prepare for shorter precision
-         STG   R1,5*8(0,R7)  Store integer-64 result
+         CLFXBR R1,3,R0,B'0000'  RFS, to prepare for shorter precision
+         ST    R1,5*4(0,R7)  Store uint-32 result
          STFPC 5*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(5*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(5*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGXBRA R1,4,R0,B'0000'  RNTE to nearest, ties to even
-         STG   R1,6*8(0,R7)  Store integer-64 result
+         CLFXBR R1,4,R0,B'0000'  RNTE, to nearest, ties to even
+         ST    R1,6*4(0,R7)  Store uint-32 result
          STFPC 6*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(6*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(6*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGXBRA R1,5,R0,B'0000'  RZ toward zero
-         STG   R1,7*8(0,R7)  Store integer-64 result
+         CLFXBR R1,5,R0,B'0000'  RZ, toward zero
+         ST    R1,7*4(0,R7)  Store uint-32 result
          STFPC 7*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(7*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(7*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGXBRA R1,6,R0,B'0000'  to +inf
-         STG   R1,8*8(0,R7)  Store integer-64 result
+         CLFXBR R1,6,R0,B'0000'  RP, to +inf
+         ST    R1,8*4(0,R7)  Store uint-32 result
          STFPC 8*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(8*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(8*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
          LFPC  FPCREGNT      Set exceptions non-trappable, clear flags
-         CGXBRA R1,7,R0,B'0000'  to -inf
-         STG   R1,9*8(0,R7)  Store integer-64 result
+         CLFXBR R1,7,R0,B'0000'  RM, to -inf
+         ST    R1,9*4(0,R7)  Store uint-32 result
          STFPC 9*4(R8)       Store resulting FPCR flags and DXC
          IPM   R1            Get condition code and program mask
          SRL   R1,28         Isolate CC in low order byte
-         STC   R1,(9*4)+3(0,R8)  Save CC as low byte of FPCR
+         STC   R1,(9*4)+3(0,R8)  Save condition code as low byte of FPCR
 *
-         LA    R3,16(0,R3)   Point to next input value
-         LA    R7,10*8(0,R7) Point to next long BFP converted values
-         LA    R8,12*4(0,R8) Point to next FPCR/CC result area
+         LA    R3,16(0,R3)    point to next input value
+         LA    R7,12*4(0,R7)  Point to next long BFP converted values
+         LA    R8,12*4(0,R8)  Point to next FPCR/CC result area
          BCTR  R2,R12        Convert next input value.  
          BR    R13           All converted; return.
          EJECT
@@ -638,25 +650,20 @@ CGXBRA   LM    R2,R3,0(R10)  Get count and address of test input values
 * exceptions.
 *
 ***********************************************************************
-          SPACE 2
+         SPACE 2
 SBFPIN   DS    0F                Inputs for short BFP testing
-         DC    X'3F800000'  +1.0
-         DC    X'40000000'  +2.0
-         DC    X'40800000'  +4.0
-         DC    X'C0000000'  -2.0
-         DC    X'7F810000'  SNaN
-         DC    X'7FC10000'  QNaN
-         DC    X'5F000001'  +max int-64 + 1
-*                                         (+9223372036854775808 + 1)
-         DC    X'DF000002'  -max int-64 - 2
-*                                         (-9223372036854775808 - 2)
-         DS    0F           required by asma for following EQU to work.
+         DC    X'3F800000'         +1.0
+         DC    X'40000000'         +2.0
+         DC    X'40800000'         +4.0
+         DC    X'41100000'         +9.0
+         DC    X'7F810000'         SNaN
+         DC    X'7FC10000'         QNaN
+         DC    X'4F7FFFFF'         largest uint-32 value representable 
+*                                  ...in short bfp (4 294 967 040)
+         DS    0F           Required by asma for following EQU to work.
 SBFPCT   EQU   *-SBFPIN     Count of short BFP in list * 4
 *
 SBFPINRM DS    0F
-         DC    X'C1180000'         -9.5
-         DC    X'C0B00000'         -5.5
-         DC    X'C0200000'         -2.5
          DC    X'BFC00000'         -1.5
          DC    X'BF000000'         -0.5
          DC    X'3F000000'         +0.5
@@ -664,92 +671,89 @@ SBFPINRM DS    0F
          DC    X'40200000'         +2.5
          DC    X'40B00000'         +5.5
          DC    X'41180000'         +9.5
-         DS    0F           required by asma for following EQU to work.
-SBFPRMCT EQU   *-SBFPINRM   Count of short BFP * 4 for rounding tests
+         DC    X'4F7FFFFF'         largest uint-32 value representable 
+*                                  ...in short bfp (4 294 967 040)
+         DS    0F           Required by asma for following EQU to work.
+SBFPRMCT EQU   *-SBFPINRM   Count of short BFP for rounding tests * 4
 *
 LBFPIN   DS    0F                Inputs for long BFP testing
          DC    X'3FF0000000000000'    +1.0
          DC    X'4000000000000000'    +2.0
          DC    X'4010000000000000'    +4.0
-         DC    X'C000000000000000'    -2.0
+         DC    X'4022000000000000'    +9.0
          DC    X'7FF0100000000000'    SNaN
          DC    X'7FF8100000000000'    QNaN
-         DC    X'43E0000000000000'   +max int-64 + 1.  
-*                          (+9223372036854775808 + 1)
-         DC    X'C3E0000000200000'   -max int-64 - 2
-*                          (-9223372036854775808 - 2)
-         DS    0F           required by asma for following EQU to work.
-LBFPCT   EQU   *-LBFPIN     Count of long BFP in list * 8
+         DC    X'41EFFFFFFFF00000'    max uint-32 + 0.5
+*                                                (+4 294 967 295.5)
+         DS    0F            required by asma for following EQU to work.
+LBFPCT   EQU   *-LBFPIN      Count of long BFP in list * 8
 *
 LBFPINRM DS    0F
-         DC    X'C023000000000000'         -9.5
-         DC    X'C016000000000000'         -5.5
-         DC    X'C004000000000000'         -2.5
-         DC    X'BFF8000000000000'         -1.5
-         DC    X'BFE0000000000000'         -0.5
-         DC    X'3FE0000000000000'         +0.5
-         DC    X'3FF8000000000000'         +1.5
-         DC    X'4004000000000000'         +2.5
-         DC    X'4016000000000000'         +5.5
-         DC    X'4023000000000000'         +9.5
-         DS    0F           required by asma for following EQU to work.
-LBFPRMCT EQU   *-LBFPINRM   Count of long BFP * 8 for rounding tests
+         DC    X'BFF8000000000000'    -1.5
+         DC    X'BFE0000000000000'    -0.5
+         DC    X'3FE0000000000000'    +0.5
+         DC    X'3FF8000000000000'    +1.5
+         DC    X'4004000000000000'    +2.5
+         DC    X'4016000000000000'    +5.5
+         DC    X'4023000000000000'    +9.5
+         DC    X'41EFFFFFFFF00000'    max uint-32 + 0.5
+*                                                (+4 294 967 295.5)
+         DS    0F           Required by asma for following EQU to work.
+LBFPRMCT EQU   *-LBFPINRM   Count of long BFP for rounding tests * 8 
 *
 XBFPIN   DS    0D                Inputs for long BFP testing
          DC    X'3FFF0000000000000000000000000000'    +1.0
          DC    X'40000000000000000000000000000000'    +2.0
          DC    X'40010000000000000000000000000000'    +4.0
-         DC    X'C0000000000000000000000000000000'    -2.0
+         DC    X'40022000000000000000000000000000'    +9.0
          DC    X'7FFF0100000000000000000000000000'    SNaN
          DC    X'7FFF8100000000000000000000000000'    QNaN
-         DC    X'403E0000000000000000000000000000'   +max int-64 + 1
-*                                          (+9223372036854775808 + 1)
-         DC    X'C03E0000000200000000000000000000'   -max int-64 - 2
-*                                          (-9223372036854775808 - 2)
+         DC    X'401EFFFFFFFF00000000000000000000'    max uint-32+ 0.5
+*                                                (+4 294 967 295.5)
          DS    0D           required by asma for following EQU to work.
 XBFPCT   EQU   *-XBFPIN     Count of extended BFP in list * 16
 *
 XBFPINRM DS    0D
-         DC    X'C0023000000000000000000000000000'         -9.5
-         DC    X'C0016000000000000000000000000000'         -5.5
-         DC    X'C0004000000000000000000000000000'         -2.5
-         DC    X'BFFF8000000000000000000000000000'         -1.5
-         DC    X'BFFE0000000000000000000000000000'         -0.5
-         DC    X'3FFE0000000000000000000000000000'         +0.5
-         DC    X'3FFF8000000000000000000000000000'         +1.5
-         DC    X'40004000000000000000000000000000'         +2.5
-         DC    X'40016000000000000000000000000000'         +5.5
-         DC    X'40023000000000000000000000000000'         +9.5
+         DC    X'BFFF8000000000000000000000000000'   -1.5
+         DC    X'BFFE0000000000000000000000000000'   -0.5
+         DC    X'3FFE0000000000000000000000000000'   +0.5
+         DC    X'3FFF8000000000000000000000000000'   +1.5
+         DC    X'40004000000000000000000000000000'   +2.5
+         DC    X'40016000000000000000000000000000'   +5.5
+         DC    X'40023000000000000000000000000000'   +9.5
+         DC    X'401EFFFFFFFF00000000000000000000'   max uint-32 + 0.5
+*                                                (+4 294 967 295.5)
          DS    0D           required by asma for following EQU to work.
-XBFPRMCT EQU   *-XBFPINRM   Count of ext'd BFP * 16 for rounding tests
+XBFPRMCT EQU   *-XBFPINRM   Count of extended BFP rounding tests * 16
 *
 *  Locations for results
 *
-SINTOUT  EQU   BFPCVTTF+X'1000'    Integer-64 values from short BFP
-*                                  ..8 pairs used, no room for more
-SINTFLGS EQU   BFPCVTTF+X'1080'    FPCR flags and DXC from short BFP
-*                                  ..8 pairs used,room for 16
-SINTRMO  EQU   BFPCVTTF+X'1100'    Short rounding mode test results
-*                                  ..10 sets used, space fully used
-SINTRMOF EQU   BFPCVTTF+X'1500'    Short rounding mode FPCR contents
-*                                  ..10 sets used, space fully used
+SINTOUT  EQU   BFPCVTTL+X'1000'    uint-32 values from short BFP
+*                                  ..7 pairs used used, room for 8
+SINTFLGS EQU   BFPCVTTL+X'1080'    FPCR flags and DXC from short BFP
+*                                  ..7 pairs used, room for 8
+SINTRMO  EQU   BFPCVTTL+X'1100'    Short rounding mode test results
+*                                  ..8 sets used, room for 10
+SINTRMOF EQU   BFPCVTTL+X'1300'    Short rounding mode FPCR contents
+*                                  ..8 sets used, room for 10
 *
-LINTOUT  EQU   BFPCVTTF+X'1700'    Integer-64 values from long BFP
-*                                  ..8 pairs used, no room for more
-LINTFLGS EQU   BFPCVTTF+X'1780'    FPCR flags and DXC from long BFP
-*                                  ..8 pairs used,room for 16
-LINTRMO  EQU   BFPCVTTF+X'1800'    Long rounding mode test results
-*                                  ..10 sets used, space fully used
-LINTRMOF EQU   BFPCVTTF+X'1C00'    Long rounding mode FPCR contents
-*                                  ..10 sets used, space fully used
+LINTOUT  EQU   BFPCVTTL+X'1500'    uint-32 values from long BFP
+*                                  ..7 pairs used used, room for 8
+LINTFLGS EQU   BFPCVTTL+X'1580'    FPCR flags and DXC from long BFP
+*                                  ..7 pairs used used, room for 8
+LINTRMO  EQU   BFPCVTTL+X'1600'    Long rounding mode test results
+*                                  ..8 sets used, room for 10
+LINTRMOF EQU   BFPCVTTL+X'1800'    Long rounding mode FPCR contents
+*                                  ..8 sets used, room for 10
 *
-XINTOUT  EQU   BFPCVTTF+X'1E00'    Integer-64 values from extended BFP
-*                                  ..8 pairs used, no room for more
-XINTFLGS EQU   BFPCVTTF+X'1E80'    FPCR flags and DXC from extended BFP
-*                                  ..8 pairs used,room for 16
-XINTRMO  EQU   BFPCVTTF+X'1F00'    Extended rounding mode test results
-*                                  ..10 sets used, space fully used
-XINTRMOF EQU   BFPCVTTF+X'2300'    Extended rndg mode FPCR contents
-*                                  ..10 sets used, space fully used
+XINTOUT  EQU   BFPCVTTL+X'1A00'    uint-32 values from extended BFP
+*                                  ..7 pairs used used, room for 8
+XINTFLGS EQU   BFPCVTTL+X'1A80'    FPCR flags and DXC from extended BFP
+*                                  ..7 pairs used used, room for 8
+XINTRMO  EQU   BFPCVTTL+X'1B00'    Extended rounding mode test results
+*                                  ..8 sets used, room for 10
+XINTRMOF EQU   BFPCVTTL+X'1D00'    Extended rounding mode FPCR contents
+*                                  ..8 sets used, room for 10
 *
+
          END
