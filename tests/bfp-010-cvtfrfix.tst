@@ -44,47 +44,47 @@ r 1130.08
 
 # Short BFP rounding mode tests - FPCR & M3 modes, positive & negative inputs
 *Compare
-r 1200.10                              RZ       RP       RM       RFS
+r 1200.10  #                           RZ       RP       RM       RFS
 *Want "CEFBRA RU FPC modes 1-3, 7"   4EFFFFFF 4F000000 4EFFFFFF 4EFFFFFF
-r 1210.10                              RNTA     RFS      RNTE     RZ
+r 1210.10  #                           RNTA     RFS      RNTE     RZ
 *Want "CEFBRA RU M3 modes 1, 3-5"    4F000000 4EFFFFFF 4F000000 4EFFFFFF
-r 1220.08                              RP       RM
+r 1220.08  #                           RP       RM
 *Want "CEFBRA RU M3 modes 6, 7"      4F000000 4EFFFFFF
 
-r 1230.10                              RZ       RP       RM       RFS
+r 1230.10  #                           RZ       RP       RM       RFS
 *Want "CEFBRA Tie FPC modes 1-3, 7"  4EFFFFFF 4F000000 4EFFFFFF 4EFFFFFF
-r 1240.10                              RNTA     RFS      RNTE     RZ
+r 1240.10  #                           RNTA     RFS      RNTE     RZ
 *Want "CEFBRA Tie M3 modes 1, 3-5"   4F000000 4EFFFFFF 4F000000 4EFFFFFF
-r 1250.08                              RP       RM
+r 1250.08  #                           RP       RM
 *Want "CEFBRA Tie M3 modes 6, 7"     4F000000 4EFFFFFF 
 
-r 1260.10                              RZ       RP       RM       RFS
+r 1260.10  #                           RZ       RP       RM       RFS
 *Want "CEFBRA RD FPC modes 1-3, 7"   4EFFFFFF 4F000000 4EFFFFFF 4EFFFFFF
-r 1270.10                              RNTA     RFS      RNTE     RZ
+r 1270.10  #                           RNTA     RFS      RNTE     RZ
 *Want "CEFBRA RD M3 modes 1, 3-5"    4EFFFFFF 4EFFFFFF 4EFFFFFF 4EFFFFFF
-r 1280.08                              RP       RM
+r 1280.08  #                           RP       RM
 *Want "CEFBRA RD M3 modes 6, 7"      4F000000 4EFFFFFF
 
 *Compare
-r 1500.10                                   RZ       RP       RM       RFS
+r 1500.10  #                                RZ       RP       RM       RFS
 *Want "CEFBRA RU FPC modes 1-3, 7 FCPR"   00000001 00000002 00000003 00000007
-r 1510.10                                   RNTA     RFS      RNTE     RZ
+r 1510.10  #                                RNTA     RFS      RNTE     RZ
 *Want "CEFBRA RU M3 modes 1, 3-5 FPCR"    00080000 00080000 00080000 00080000
-r 1520.08                                   RP       RM
+r 1520.08  #                                RP       RM
 *Want "CEFBRA RU M3 modes 6, 7 FPCR"      00080000 00080000
 
-r 1530.10                                   RZ       RP       RM       RFS
+r 1530.10  #                                RZ       RP       RM       RFS
 *Want "CEFBRA Tie FPC modes 1-3, 7 FPCR"  00000001 00000002 00000003 00000007
-r 1540.10                                   RNTA     RFS      RNTE     RZ
+r 1540.10  #                                RNTA     RFS      RNTE     RZ
 *Want "CEFBRA Tie M3 modes 1, 3-5 FPCR"   00080000 00080000 00080000 00080000
-r 1550.08                                   RP       RM
+r 1550.08  #                                RP       RM
 *Want "CEFBRA Tie M3 modes 6, 7 FPCR"     00080000 00080000
 
-r 1560.10                                   RZ       RP       RM       RFS
+r 1560.10  #                                RZ       RP       RM       RFS
 *Want "CEFBRA RD FPC modes 1-3, 7 FPCR"   00000001 00000002 00000003 00000007
-r 1570.10                                   RNTA     RFS      RNTE     RZ
+r 1570.10  #                                RNTA     RFS      RNTE     RZ
 *Want "CEFBRA RD M3 modes 1, 3-5 FPCR"    00080000 00080000 00080000 00080000
-r 1580.08                                   RP       RM
+r 1580.08  #                                RP       RM
 *Want "CEFBRA RD M3 modes 6, 7 FPCR"      00080000 00080000
 
 

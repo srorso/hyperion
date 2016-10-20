@@ -46,102 +46,102 @@ r 1140.08
 
 #  Short BFP rounding mode tests - results from rounding
 *Compare
-r 1200.10                               RZ,     RP,       RM,      RFS
+r 1200.10  #                            RZ,     RP,       RM,      RFS
 *Want "CFEBRA -9.5 FPCR modes 1-3, 7" FFFFFFF7 FFFFFFF7 FFFFFFF6 FFFFFFF7
-r 1210.10                               RNTA,    RFS,     RNTE,    RZ
+r 1210.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA -9.5 M3 modes 1, 3-5"   FFFFFFF6 FFFFFFF7 FFFFFFF6 FFFFFFF7
-r 1220.08                               RP,      RM
+r 1220.08  #                            RP,      RM
 *Want "CFEBRA -9.5 M3 modes 6, 7"     FFFFFFF7 FFFFFFF6
 
-r 1230.10                               RZ,      RP,      RM,      RFS
+r 1230.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA -5.5 FPCR modes 1-3, 7" FFFFFFFB FFFFFFFB FFFFFFFA FFFFFFFB
-r 1240.10                               RNTA,    RFS,     RNTE,    RZ
+r 1240.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA -5.5 M3 modes 1, 3-5"   FFFFFFFA FFFFFFFB FFFFFFFA FFFFFFFB
-r 1250.08                               RP,      RM
+r 1250.08  #                            RP,      RM
 *Want "CFEBRA -5.5 M3 modes 6, 7"     FFFFFFFB FFFFFFFA
 
-r 1260.10                               RZ,      RP,      RM,      RFS
+r 1260.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA -2.5 FPCR modes 1-3, 7" FFFFFFFE FFFFFFFE FFFFFFFD FFFFFFFD
-r 1270.10                               RNTA,    RFS,     RNTE,    RZ
+r 1270.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA -2.5 M3 modes 1, 3-5"   FFFFFFFD FFFFFFFD FFFFFFFE FFFFFFFE
-r 1280.08                               RP,      RM
+r 1280.08  #                            RP,      RM
 *Want "CFEBRA -2.5 M3 modes 6, 7"     FFFFFFFE FFFFFFFD
 
-r 1290.10                               RZ,      RP,      RM,      RFS
+r 1290.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA -1.5 FPCR modes 1-3, 7" FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFFF
-r 12A0.10                               RNTA,    RFS,     RNTE,    RZ
+r 12A0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA -1.5 M3 modes 1, 3-5"   FFFFFFFE FFFFFFFF FFFFFFFE FFFFFFFF
-r 12B0.08                               RP,      RM
+r 12B0.08  #                            RP,      RM
 *Want "CFEBRA -1.5 M3 modes 6, 7"     FFFFFFFF FFFFFFFE
 
-r 12C0.10                               RZ,      RP,      RM,      RFS
+r 12C0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA -0.5 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 12D0.10                               RNTA,    RFS,     RNTE,    RZ
+r 12D0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA -0.5 M3 modes 1, 3-5"   FFFFFFFF FFFFFFFF 00000000 00000000
-r 12E0.08                               RP,      RM
+r 12E0.08  #                            RP,      RM
 *Want "CFEBRA -0.5 M3 modes 6, 7"     00000000 FFFFFFFF
 
-r 12F0.10                               RZ,      RP,      RM,      RFS
+r 12F0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA +0.5 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 1300.10                               RNTA,    RFS,     RNTE,    RZ
+r 1300.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA +0.5 M3 modes 1, 3-5"   00000001 00000001 00000000 00000000
-r 1310.08                               RP,      RM
+r 1310.08  #                            RP,      RM
 *Want "CFEBRA +0.5 M3 modes 6, 7"     00000001 00000000
 
-r 1320.10                               RZ,     RP,      RM,      RFS
+r 1320.10  #                            RZ,     RP,      RM,      RFS
 *Want "CFEBRA +1.5 FPCR modes 1-3, 7" 00000001 00000002 00000001 00000001
-r 1330.10                               RNTA,    RFS,     RNTE,    RZ
+r 1330.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA +1.5 M3 modes 1, 3-5"   00000002 00000001 00000002 00000001
-r 1340.08                               RP,      RM
+r 1340.08  #                            RP,      RM
 *Want "CFEBRA +1.5 M3 modes 6, 7"     00000002 00000001
 
-r 1350.10                               RZ,      RP,      RM,      RFS
+r 1350.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA +2.5 FPCR modes 1-3, 7" 00000002 00000003 00000002 00000003
-r 1360.10                               RNTA,    RFS,     RNTE,    RZ
+r 1360.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA +2.5 M3 modes 1, 3-5"   00000003 00000003 00000002 00000002
-r 1370.08                               RP,      RM
+r 1370.08  #                            RP,      RM
 *Want "CFEBRA +2.5 M3 modes 6, 7"     00000003 00000002
 
-r 1380.10                               RZ,      RP,      RM,      RFS
+r 1380.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA +5.5 FPCR modes 1-3, 7" 00000005 00000006 00000005 00000005
-r 1390.10                               RNTA,    RFS,     RNTE,    RZ
+r 1390.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA +5.5 M3 modes 1, 3-5"   00000006 00000005 00000006 00000005
-r 13A0.08                               RP,      RM
+r 13A0.08  #                            RP,      RM
 *Want "CFEBRA +5.5 M3 modes 6, 7"     00000006 00000005
 
-r 13B0.10                               RZ,      RP,      RM,      RFS
+r 13B0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA +9.5 FPCR modes 1-3, 7" 00000009 0000000A 00000009 00000009
-r 13C0.10                               RNTA,    RFS,     RNTE,    RZ
+r 13C0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA +9.5 M3 modes 1, 3-5"   0000000A 00000009 0000000A 00000009
-r 13D0.08                               RP,      RM
+r 13D0.08  #                            RP,      RM
 *Want "CFEBRA +9.5 M3 modes 6, 7"     0000000A 00000009
 
-r 13E0.10                               RZ,      RP,      RM,      RFS
+r 13E0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA +0.75 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 13F0.10                               RNTA,    RFS,     RNTE,    RZ
+r 13F0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA +0.75 M3 modes 1, 3-5"   00000001 00000001 00000001 00000000
-r 1400.08                               RP,      RM
+r 1400.08  #                            RP,      RM
 *Want "CFEBRA +0.75 M3 modes 6, 7"     00000001 00000000
 
-r 1410.10                               RZ,      RP,      RM,      RFS
+r 1410.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA +0.25 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 1420.10                               RNTA,    RFS,     RNTE,    RZ
+r 1420.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA +0.25 M3 modes 1, 3-5"   00000000 00000001 00000000 00000000
-r 1430.08                               RP,      RM
+r 1430.08  #                            RP,      RM
 *Want "CFEBRA +0.25 M3 modes 6, 7"     00000001 00000000
 
-r 1440.10                               RZ,      RP,      RM,      RFS
+r 1440.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA -0.75 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 1450.10                               RNTA,    RFS,     RNTE,    RZ
+r 1450.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA -0.75 M3 modes 1, 3-5"   FFFFFFFF FFFFFFFF FFFFFFFF 00000000
-r 1460.08                               RP,      RM
+r 1460.08  #                            RP,      RM
 *Want "CFEBRA -0.75 M3 modes 6, 7"     00000000 FFFFFFFF
 
-r 1470.10                               RZ,      RP,      RM,      RFS
+r 1470.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFEBRA -0.25 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 1480.10                               RNTA,    RFS,     RNTE,    RZ
+r 1480.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFEBRA -0.25 M3 modes 1, 3-5"   00000000 FFFFFFFF 00000000 00000000
-r 1490.08                               RP,      RM
+r 1490.08  #                            RP,      RM
 *Want "CFEBRA -0.25 M3 modes 6, 7"     00000000 FFFFFFFF
 
 
@@ -275,109 +275,109 @@ r 2140.10
 
 #  rounding mode tests - long BFP - results from rounding
 *Compare
-r 2200.10                               RZ,      RP,       RM,      RFS
+r 2200.10  #                            RZ,      RP,       RM,      RFS
 *Want "CFDBRA -9.5 FPCR modes 1-3, 7" FFFFFFF7 FFFFFFF7 FFFFFFF6 FFFFFFF7
-r 2210.10                               RNTA,    RFS,     RNTE,    RZ
+r 2210.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA -9.5 M3 modes 1, 3-5"   FFFFFFF6 FFFFFFF7 FFFFFFF6 FFFFFFF7
-r 2220.08                               RP,      RM
+r 2220.08  #                            RP,      RM
 *Want "CFDBRA -9.5 M3 modes 6, 7"     FFFFFFF7 FFFFFFF6
 
-r 2230.10                               RZ,      RP,      RM,      RFS
+r 2230.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA -5.5 FPCR modes 1-3, 7" FFFFFFFB FFFFFFFB FFFFFFFA FFFFFFFB
-r 2240.10                               RNTA,    RFS,     RNTE,    RZ
+r 2240.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA -5.5 M3 modes 1, 3-5"   FFFFFFFA FFFFFFFB FFFFFFFA FFFFFFFB
-r 2250.08                               RP,      RM
+r 2250.08  #                            RP,      RM
 *Want "CFDBRA -5.5 M3 modes 6, 7"     FFFFFFFB FFFFFFFA
 
-r 2260.10                               RZ,      RP,      RM,      RFS
+r 2260.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA -2.5 FPCR modes 1-3, 7" FFFFFFFE FFFFFFFE FFFFFFFD FFFFFFFD
-r 2270.10                               RNTA,    RFS,     RNTE,    RZ
+r 2270.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA -2.5 M3 modes 1, 3-5"   FFFFFFFD FFFFFFFD FFFFFFFE FFFFFFFE
-r 2280.08                               RP,      RM
+r 2280.08  #                            RP,      RM
 *Want "CFDBRA -2.5 M3 modes 6, 7"     FFFFFFFE FFFFFFFD
 
-r 2290.10                               RZ,      RP,      RM,      RFS
+r 2290.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA -1.5 FPCR modes 1-3, 7" FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFFF
-r 22A0.10                               RNTA,    RFS,     RNTE,    RZ
+r 22A0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA -1.5 M3 modes 1, 3-5"   FFFFFFFE FFFFFFFF FFFFFFFE FFFFFFFF
-r 22B0.08                               RP,      RM
+r 22B0.08  #                            RP,      RM
 *Want "CFDBRA -1.5 M3 modes 6, 7"     FFFFFFFF FFFFFFFE
 
-r 22C0.10                               RZ,      RP,      RM,      RFS
+r 22C0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA -0.5 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 22D0.10                               RNTA,    RFS,     RNTE,    RZ
+r 22D0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA -0.5 M3 modes 1, 3-5"   FFFFFFFF FFFFFFFF 00000000 00000000
-r 22E0.08                               RP,      RM
+r 22E0.08  #                            RP,      RM
 *Want "CFDBRA -0.5 M3 modes 6, 7"     00000000 FFFFFFFF
 
-r 22F0.10                               RZ,      RP,      RM,      RFS
+r 22F0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA +0.5 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 2300.10                               RNTA,    RFS,     RNTE,    RZ
+r 2300.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA +0.5 M3 modes 1, 3-5"   00000001 00000001 00000000 00000000
-r 2310.08                               RP,      RM
+r 2310.08  #                            RP,      RM
 *Want "CFDBRA +0.5 M3 modes 6, 7"     00000001 00000000
 
-r 2320.10                               RZ,      RP,      RM,      RFS
+r 2320.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA +1.5 FPCR modes 1-3, 7" 00000001 00000002 00000001 00000001
-r 2330.10                               RNTA,    RFS,     RNTE,    RZ
+r 2330.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA +1.5 M3 modes 1, 3-5"   00000002 00000001 00000002 00000001
-r 2340.08                               RP,      RM
+r 2340.08  #                            RP,      RM
 *Want "CFDBRA +1.5 M3 modes 6, 7"     00000002 00000001
 
-r 2350.10                               RZ,      RP,      RM,      RFS
+r 2350.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA +2.5 FPCR modes 1-3, 7" 00000002 00000003 00000002 00000003
-r 2360.10                               RNTA,    RFS,     RNTE,    RZ
+r 2360.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA +2.5 M3 modes 1, 3-5"   00000003 00000003 00000002 00000002
-r 2370.08                               RP,      RM
+r 2370.08  #                            RP,      RM
 *Want "CFDBRA +2.5 M3 modes 6, 7"     00000003 00000002
 
-r 2380.10                               RZ,      RP,      RM,      RFS
+r 2380.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA +5.5 FPCR modes 1-3, 7" 00000005 00000006 00000005 00000005
-r 2390.10                               RNTA,    RFS,     RNTE,    RZ
+r 2390.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA +5.5 M3 modes 1, 3-5"   00000006 00000005 00000006 00000005
-r 23A0.08                               RP,      RM
+r 23A0.08  #                            RP,      RM
 *Want "CFDBRA +5.5 M3 modes 6, 7"     00000006 00000005
 
-r 23B0.10                               RZ,      RP,      RM,      RFS
+r 23B0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA +9.5 FPCR modes 1-3, 7" 00000009 0000000A 00000009 00000009
-r 23C0.10                               RNTA,    RFS,     RNTE,    RZ
+r 23C0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA +9.5 M3 modes 1, 3-5"   0000000A 00000009 0000000A 00000009
-r 23D0.08                               RP,      RM
+r 23D0.08  #                            RP,      RM
 *Want "CFDBRA +9.5 M3 modes 6, 7"     0000000A 00000009
 
-r 23E0.10                               RZ,      RP,      RM,      RFS
+r 23E0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA +0.75 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 23F0.10                               RNTA,    RFS,     RNTE,    RZ
+r 23F0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA +0.75 M3 modes 1, 3-5"   00000001 00000001 00000001 00000000
-r 2400.08                               RP,      RM
+r 2400.08  #                            RP,      RM
 *Want "CFDBRA +0.75 M3 modes 6, 7"     00000001 00000000
 
-r 2410.10                               RZ,      RP,      RM,      RFS
+r 2410.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA +0.25 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 2420.10                               RNTA,    RFS,     RNTE,    RZ
+r 2420.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA +0.25 M3 modes 1, 3-5"   00000000 00000001 00000000 00000000
-r 2430.08                               RP,      RM
+r 2430.08  #                            RP,      RM
 *Want "CFDBRA +0.25 M3 modes 6, 7"     00000001 00000000
 
-r 2440.10                               RZ,      RP,      RM,      RFS
+r 2440.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA -0.75 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 2450.10                               RNTA,    RFS,     RNTE,    RZ
+r 2450.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA -0.75 M3 modes 1, 3-5"   FFFFFFFF FFFFFFFF FFFFFFFF 00000000
-r 2460.08                               RP,      RM
+r 2460.08  #                            RP,      RM
 *Want "CFDBRA -0.75 M3 modes 6, 7"     00000000 FFFFFFFF
 
-r 2470.10                               RZ,      RP,      RM,      RFS
+r 2470.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFDBRA -0.25 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 2480.10                               RNTA,    RFS,     RNTE,    RZ
+r 2480.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA -0.25 M3 modes 1, 3-5"   00000000 FFFFFFFF 00000000 00000000
-r 2490.08                               RP,      RM
+r 2490.08  #                            RP,      RM
 *Want "CFDBRA -0.25 M3 modes 6, 7"     00000000 FFFFFFFF
 
-r 24A0.10                                  RZ,      RP,      RM,      RFS
+r 24A0.10  #                               RZ,      RP,      RM,      RFS
 *Want "CFDBRA max+0.5 FPCR modes 1-3, 7" 7FFFFFFF 7FFFFFFF 7FFFFFFF 7FFFFFFF
-r 24B0.10                                  RNTA,    RFS,     RNTE,    RZ
+r 24B0.10  #                               RNTA,    RFS,     RNTE,    RZ
 *Want "CFDBRA max+0.5 M3 modes 1, 3-5"   7FFFFFFF 7FFFFFFF 7FFFFFFF 7FFFFFFF
-r 24C0.08                                  RP,      RM
+r 24C0.08  #                               RP,      RM
 *Want "CFDBRA max+0.5 M3 modes 6, 7"     7FFFFFFF 7FFFFFFF
 
 
@@ -520,109 +520,109 @@ r 3140.10
 
 #  rounding mode tests - extended BFP - results from rounding
 *Compare
-r 3200.10                               RZ,      RP,      RM,      RFS
+r 3200.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA -9.5 FPCR modes 1-3, 7" FFFFFFF7 FFFFFFF7 FFFFFFF6 FFFFFFF7
-r 3210.10                               RNTA,    RFS,     RNTE,    RZ
+r 3210.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA -9.5 M3 modes 1, 3-5"   FFFFFFF6 FFFFFFF7 FFFFFFF6 FFFFFFF7
-r 3220.08                               RP,      RM
+r 3220.08  #                            RP,      RM
 *Want "CFXBRA -9.5 M3 modes 6, 7"     FFFFFFF7 FFFFFFF6
 
-r 3230.10                               RZ,      RP,      RM,      RFS
+r 3230.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA -5.5 FPCR modes 1-3, 7" FFFFFFFB FFFFFFFB FFFFFFFA FFFFFFFB
-r 3240.10                               RNTA,    RFS,     RNTE,    RZ
+r 3240.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA -5.5 M3 modes 1, 3-5"   FFFFFFFA FFFFFFFB FFFFFFFA FFFFFFFB
-r 3250.08                               RP,      RM
+r 3250.08  #                            RP,      RM
 *Want "CFXBRA -5.5 M3 modes 6, 7"     FFFFFFFB FFFFFFFA
 
-r 3260.10                               RZ,      RP,      RM,      RFS
+r 3260.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA -2.5 FPCR modes 1-3, 7" FFFFFFFE FFFFFFFE FFFFFFFD FFFFFFFD
-r 3270.10                               RNTA,    RFS,     RNTE,    RZ
+r 3270.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA -2.5 M3 modes 1, 3-5"   FFFFFFFD FFFFFFFD FFFFFFFE FFFFFFFE
-r 3280.08                               RP,      RM
+r 3280.08  #                            RP,      RM
 *Want "CFXBRA -2.5 M3 modes 6, 7"     FFFFFFFE FFFFFFFD
 
-r 3290.10                               RZ,      RP,      RM,      RFS
+r 3290.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA -1.5 FPCR modes 1-3, 7" FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFFF
-r 32A0.10                               RNTA,    RFS,     RNTE,    RZ
+r 32A0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA -1.5 M3 modes 1, 3-5"   FFFFFFFE FFFFFFFF FFFFFFFE FFFFFFFF
-r 32B0.08                               RP,      RM
+r 32B0.08  #                            RP,      RM
 *Want "CFXBRA -1.5 M3 modes 6, 7"     FFFFFFFF FFFFFFFE
 
-r 32C0.10                               RZ,      RP,      RM,      RFS
+r 32C0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA -0.5 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 32D0.10                               RNTA,    RFS,     RNTE,    RZ
+r 32D0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA -0.5 M3 modes 1, 3-5"   FFFFFFFF FFFFFFFF 00000000 00000000
-r 32E0.08                               RP,      RM
+r 32E0.08  #                            RP,      RM
 *Want "CFXBRA -0.5 M3 modes 6, 7"     00000000 FFFFFFFF
 
-r 32F0.10                               RZ,      RP,      RM,      RFS
+r 32F0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA +0.5 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 3300.10                               RNTA,    RFS,     RNTE,    RZ
+r 3300.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA +0.5 M3 modes 1, 3-5"   00000001 00000001 00000000 00000000
-r 3310.08                               RP,      RM
+r 3310.08  #                            RP,      RM
 *Want "CFXBRA +0.5 M3 modes 6, 7"     00000001 00000000
 
-r 3320.10                               RZ,      RP,      RM,      RFS
+r 3320.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA +1.5 FPCR modes 1-3, 7" 00000001 00000002 00000001 00000001
-r 3330.10                               RNTA,    RFS,     RNTE,    RZ
+r 3330.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA +1.5 M3 modes 1, 3-5"   00000002 00000001 00000002 00000001
-r 3340.08                               RP,      RM
+r 3340.08  #                            RP,      RM
 *Want "CFXBRA +1.5 M3 modes 6, 7"     00000002 00000001
 
-r 3350.10                               RZ,      RP,      RM,      RFS
+r 3350.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA +2.5 FPCR modes 1-3, 7" 00000002 00000003 00000002 00000003
-r 3360.10                               RNTA,    RFS,     RNTE,    RZ
+r 3360.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA +2.5 M3 modes 1, 3-5"   00000003 00000003 00000002 00000002
-r 3370.08                               RP,      RM
+r 3370.08  #                            RP,      RM
 *Want "CFXBRA +2.5 M3 modes 6, 7"     00000003 00000002
 
-r 3380.10                               RZ,      RP,      RM,      RFS
+r 3380.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA +5.5 FPCR modes 1-3, 7" 00000005 00000006 00000005 00000005
-r 3390.10                               RNTA,    RFS,     RNTE,    RZ
+r 3390.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA +5.5 M3 modes 1, 3-5"   00000006 00000005 00000006 00000005
-r 33A0.08                               RP,      RM
+r 33A0.08  #                            RP,      RM
 *Want "CFXBRA +5.5 M3 modes 6, 7"     00000006 00000005
 
-r 33B0.10                               RZ,      RP,      RM,      RFS
+r 33B0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA +9.5 FPCR modes 1-3, 7" 00000009 0000000A 00000009 00000009
-r 33C0.10                               RNTA,    RFS,    RNTE,    RZ
+r 33C0.10  #                            RNTA,    RFS,    RNTE,    RZ
 *Want "CFXBRA +9.5 M3 modes 1, 3-5"   0000000A 00000009 0000000A 00000009
-r 33D0.08                               RP,      RM
+r 33D0.08  #                            RP,      RM
 *Want "CFXBRA +9.5 M3 modes 6, 7"     0000000A 00000009
 
-r 33E0.10                               RZ,      RP,      RM,      RFS
+r 33E0.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA +0.75 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 33F0.10                               RNTA,    RFS,     RNTE,    RZ
+r 33F0.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA +0.75 M3 modes 1, 3-5"   00000001 00000001 00000001 00000000
-r 3400.08                               RP,      RM
+r 3400.08  #                            RP,      RM
 *Want "CFXBRA +0.75 M3 modes 6, 7"     00000001 00000000
 
-r 3410.10                               RZ,      RP,      RM,      RFS
+r 3410.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA +0.25 FPCR modes 1-3, 7" 00000000 00000001 00000000 00000001
-r 3420.10                               RNTA,    RFS,     RNTE,    RZ
+r 3420.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA +0.25 M3 modes 1, 3-5"   00000000 00000001 00000000 00000000
-r 3430.08                               RP,      RM
+r 3430.08  #                            RP,      RM
 *Want "CFXBRA +0.25 M3 modes 6, 7"     00000001 00000000
 
-r 3440.10                               RZ,      RP,      RM,      RFS
+r 3440.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA -0.75 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 3450.10                               RNTA,    RFS,     RNTE,    RZ
+r 3450.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA -0.75 M3 modes 1, 3-5"   FFFFFFFF FFFFFFFF FFFFFFFF 00000000
-r 3460.08                               RP,      RM
+r 3460.08  #                            RP,      RM
 *Want "CFXBRA -0.75 M3 modes 6, 7"     00000000 FFFFFFFF
 
-r 3470.10                               RZ,      RP,      RM,      RFS
+r 3470.10  #                            RZ,      RP,      RM,      RFS
 *Want "CFXBRA -0.25 FPCR modes 1-3, 7" 00000000 00000000 FFFFFFFF FFFFFFFF
-r 3480.10                               RNTA,    RFS,     RNTE,    RZ
+r 3480.10  #                            RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA -0.25 M3 modes 1, 3-5"   00000000 FFFFFFFF 00000000 00000000
-r 3490.08                               RP,      RM
+r 3490.08  #                            RP,      RM
 *Want "CFXBRA -0.25 M3 modes 6, 7"     00000000 FFFFFFFF
 
-r 34A0.10                                  RZ,      RP,      RM,      RFS
+r 34A0.10  #                               RZ,      RP,      RM,      RFS
 *Want "CFXBRA max+0.5 FPCR modes 1-3, 7" 7FFFFFFF 7FFFFFFF 7FFFFFFF 7FFFFFFF
-r 34B0.10                                  RNTA,    RFS,     RNTE,    RZ
+r 34B0.10  #                               RNTA,    RFS,     RNTE,    RZ
 *Want "CFXBRA max+0.5 M3 modes 1, 3-5"   7FFFFFFF 7FFFFFFF 7FFFFFFF 7FFFFFFF
-r 34C0.08                                  RP,      RM
+r 34C0.08  #                               RP,      RM
 *Want "CFXBRA max+0.5 M3 modes 6, 7"     7FFFFFFF 7FFFFFFF
 
 

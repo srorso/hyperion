@@ -20,9 +20,9 @@ runtest 1.0
 
 # BFP short inputs converted to uint-32 test results
 *Compare
-r 1000.10                         1        1        2        2
+r 1000.10
 *Want "CLFEBR result pairs 1-2" 00000001 00000001 00000002 00000002
-r 1010.10                         4        4        
+r 1010.10
 *Want "CLFEBR result pairs 3-4" 00000004 00000004 00000000 00000000
 r 1020.10                         
 *Want "CLFEBR result pairs 5-6" 00000000 00000000 FFFFFFFF 00000000

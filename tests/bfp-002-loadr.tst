@@ -77,131 +77,131 @@ r 3090.10
 
 # Long BFP Inputs converted to short BFP - rounding mode test results
 *Compare
-r 1100.10                                 RZ,      RP,      RM,      RFS
+r 1100.10  #                              RZ,      RP,      RM,      RFS
 *Want "LEDBRA +exact FPCR modes 1-3, 7" 3FFFFFFF 3FFFFFFF 3FFFFFFF 3FFFFFFF
-r 1110.10                                 RNTA,    RFS,     RNTE,    RZ
+r 1110.10  #                              RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +exact M3 modes 1, 3-5"   3FFFFFFF 3FFFFFFF 3FFFFFFF 3FFFFFFF
-r 1120.08                                 RP,      RM
+r 1120.08  #                              RP,      RM
 *Want "LEDBRA +exact M3 modes 6, 7"     3FFFFFFF 3FFFFFFF
 
 *Compare
-r 1130.10                                 RZ,      RP,      RM,      RFS
+r 1130.10  #                              RZ,      RP,      RM,      RFS
 *Want "LEDBRA -exact FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF BFFFFFFF BFFFFFFF
-r 1140.10                                 RNTA,    RFS,     RNTE,    RZ
+r 1140.10  #                              RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -exact M3 modes 1, 3-5"   BFFFFFFF BFFFFFFF BFFFFFFF BFFFFFFF
-r 1150.08                                 RP,      RM
+r 1150.08  #                              RP,      RM
 *Want "LEDBRA -exact M3 modes 6, 7"     BFFFFFFF BFFFFFFF
 
 *Compare
-r 1160.10                                   RZ,      RP,      RM,      RFS
+r 1160.10  #                                RZ,      RP,      RM,      RFS
 *Want "LEDBRA +tie odd FPCR modes 1-3, 7" 3FFFFFFF 40000000 3FFFFFFF 3FFFFFFF
-r 1170.10                                   RNTA,    RFS,     RNTE,    RZ
+r 1170.10  #                                RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +tie odd M3 modes 1, 3-5"   40000000 3FFFFFFF 40000000 3FFFFFFF
-r 1180.08                                   RP,      RM
+r 1180.08  #                                RP,      RM
 *Want "LEDBRA +tie odd M3 modes 6, 7"     40000000 3FFFFFFF
 
 *Compare
-r 1190.10                                   RZ,      RP,      RM,      RFS
+r 1190.10  #                                RZ,      RP,      RM,      RFS
 *Want "LEDBRA -tie odd FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF C0000000 BFFFFFFF
-r 11A0.10                                   RNTA,    RFS,     RNTE,    RZ
+r 11A0.10  #                                RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -tie odd M3 modes 1, 3-5"   C0000000 BFFFFFFF C0000000 BFFFFFFF
-r 11B0.08                                   RP,      RM
+r 11B0.08  #                                RP,      RM
 *Want "LEDBRA -tie odd M3 modes 6, 7"     BFFFFFFF C0000000
 
 *Compare
-r 11C0.10                                    RZ,      RP,      RM,      RFS
+r 11C0.10  #                                 RZ,      RP,      RM,      RFS
 *Want "LEDBRA +tie even FPCR modes 1-3, 7" 3FFFFFFE 3FFFFFFF 3FFFFFFE 3FFFFFFF
-r 11D0.10                                    RNTA,    RFS,     RNTE,    RZ
+r 11D0.10  #                                 RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +tie even M3 modes 1, 3-5"   3FFFFFFF 3FFFFFFF 3FFFFFFE 3FFFFFFE
-r 11E0.08                                    RP,      RM
+r 11E0.08  #                                 RP,      RM
 *Want "LEDBRA +tie even M3 modes 6, 7"     3FFFFFFF 3FFFFFFE
 
 *Compare
-r 11F0.10                                    RZ,      RP,      RM,      RFS
+r 11F0.10  #                                 RZ,      RP,      RM,      RFS
 *Want "LEDBRA -tie even FPCR modes 1-3, 7" BFFFFFFE BFFFFFFE BFFFFFFF BFFFFFFF
-r 1200.10                                    RNTA,    RFS,     RNTE,    RZ
+r 1200.10  #                                 RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -tie even M3 modes 1, 3-5"   BFFFFFFF BFFFFFFF BFFFFFFE BFFFFFFE
-r 1210.08                                    RP,      RM
+r 1210.08  #                                 RP,      RM
 *Want "LEDBRA -tie even M3 modes 6, 7"     BFFFFFFE BFFFFFFF
 
 *Compare
-r 1220.10                                       RZ,      RP,      RM,      RFS
+r 1220.10  #                                    RZ,      RP,      RM,      RFS
 *Want "LEDBRA +false exact FPCR modes 1-3, 7" 3FFFFFFF 40000000 3FFFFFFF 3FFFFFFF
-r 1230.10                                       RNTA,    RFS,     RNTE,    RZ
+r 1230.10  #                                    RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +false exact M3 modes 1, 3-5"   3FFFFFFF 3FFFFFFF 3FFFFFFF 3FFFFFFF
-r 1240.08                                       RP,      RM
+r 1240.08  #                                    RP,      RM
 *Want "LEDBRA +false exact M3 modes 6, 7"     40000000 3FFFFFFF
 
 *Compare
-r 1250.10                                       RZ,      RP,      RM,      RFS
+r 1250.10  #                                    RZ,      RP,      RM,      RFS
 *Want "LEDBRA -false exact FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF C0000000 BFFFFFFF
-r 1260.10                                       RNTA,    RFS,     RNTE,    RZ
+r 1260.10  #                                    RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -false exact M3 modes 1, 3-5"   BFFFFFFF BFFFFFFF BFFFFFFF BFFFFFFF
-r 1270.08                                       RP,      RM
+r 1270.08  #                                    RP,      RM
 *Want "LEDBRA -false exact M3 modes 6, 7"     BFFFFFFF C0000000
 
 *Compare
-r 1280.10                                     RZ,      RP,      RM,      RFS
+r 1280.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEDBRA +near zero FPCR modes 1-3, 7" 3FFFFFFF 40000000 3FFFFFFF 3FFFFFFF
-r 1290.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1290.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +near zero M3 modes 1, 3-5"   3FFFFFFF 3FFFFFFF 3FFFFFFF 3FFFFFFF
-r 12A0.08                                     RP,      RM
+r 12A0.08  #                                  RP,      RM
 *Want "LEDBRA +near zero M3 modes 6, 7"     40000000 3FFFFFFF
 
 *Compare
-r 12B0.10                                     RZ,      RP,      RM,      RFS
+r 12B0.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEDBRA -near zero FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF C0000000 BFFFFFFF
-r 12C0.10                                     RNTA,    RFS,     RNTE,    RZ
+r 12C0.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -near zero M3 modes 1, 3-5"   BFFFFFFF BFFFFFFF BFFFFFFF BFFFFFFF
-r 12D0.08                                    RP,      RM
+r 12D0.08  #                                 RP,      RM
 *Want "LEDBRA -near zero M3 modes 6, 7"     BFFFFFFF C0000000
 
 *Compare
-r 12E0.10                                     RZ,      RP,      RM,      RFS
+r 12E0.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEDBRA +near +inf FPCR modes 1-3, 7" 3FFFFFFF 40000000 3FFFFFFF 3FFFFFFF
-r 12F0.10                                     RNTA,    RFS,     RNTE,    RZ
+r 12F0.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +near +inf M3 modes 1, 3-5"   40000000 3FFFFFFF 40000000 3FFFFFFF
-r 1300.08                                     RP,      RM
+r 1300.08  #                                  RP,      RM
 *Want "LEDBRA +near +inf M3 modes 6, 7"     40000000 3FFFFFFF
 
 *Compare
-r 1310.10                                     RZ,      RP,      RM,      RFS
+r 1310.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEDBRA -near -inf FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF C0000000 BFFFFFFF
-r 1320.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1320.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -near -inf M3 modes 1, 3-5"   C0000000 BFFFFFFF C0000000 BFFFFFFF
-r 1330.08                                     RP,      RM
+r 1330.08  #                                  RP,      RM
 *Want "LEDBRA -near -inf M3 modes 6, 7"     BFFFFFFF C0000000
 
 *Compare
-r 1340.10                                     RZ,      RP,      RM,      RFS
+r 1340.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEDBRA +overflow FPCR modes 1-3, 7"  7F7FFFFF 7F800000 7F7FFFFF 7F7FFFFF
-r 1350.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1350.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +overflow M3 modes 1, 3-5"    7F800000 7F7FFFFF 7F800000 7F7FFFFF
-r 1360.08                                     RP,      RM
+r 1360.08  #                                  RP,      RM
 *Want "LEDBRA +overflow M3 modes 6, 7"      7F800000 7F7FFFFF
 
 *Compare
-r 1370.10                                     RZ,      RP,      RM,      RFS
+r 1370.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEDBRA -overflow FPCR modes 1-3, 7"  FF7FFFFF FF7FFFFF FF800000 FF7FFFFF
-r 1380.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1380.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -overflow M3 modes 1, 3-5"    FF800000 FF7FFFFF FF800000 FF7FFFFF
-r 1390.08                                     RP,      RM
+r 1390.08  #                                  RP,      RM
 *Want "LEDBRA -overflow M3 modes 6, 7"      FF7FFFFF FF800000
 
 *Compare
-r 13A0.10                                         RZ,      RP,      RM,      RFS
+r 13A0.10  #                                      RZ,      RP,      RM,      RFS
 *Want "LEDBRA +tiny tie odd FPCR modes 1-3, 7"  00000000 00000001 00000000 00000001
-r 13B0.10                                         RNTA,    RFS,     RNTE,    RZ
+r 13B0.10  #                                      RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +tiny tie odd M3 modes 1, 3-5"    00000001 00000001 00000000 00000000
-r 13C0.08                                         RP,      RM
+r 13C0.08  #                                      RP,      RM
 *Want "LEDBRA +tiny tie odd M3 modes 6, 7"      00000001 00000000
 
 *Compare
-r 13D0.10                                         RZ,      RP,      RM,      RFS
+r 13D0.10  #                                      RZ,      RP,      RM,      RFS
 *Want "LEDBRA -tiny tie odd FPCR modes 1-3, 7"  80000000 80000000 80000001 80000001
-r 13E0.10                                         RNTA,    RFS,     RNTE,    RZ
+r 13E0.10  #                                      RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -tiny tie odd M3 modes 1, 3-5"    80000001 80000001 80000000 80000000
-r 13F0.08                                         RP,      RM
+r 13F0.08  #                                      RP,      RM
 *Want "LEDBRA -tiny tie odd M3 modes 6, 7"      80000000 80000001
 
 
@@ -292,35 +292,35 @@ r 1730.08
 *Want "LEDBRA -near -inf M3 modes 6, 7 FCPR"     00080000 00080000
 
 *Compare
-r 1740.10                                          RZ,      RP,      RM,      RFS
+r 1740.10  #                                       RZ,      RP,      RM,      RFS
 *Want "LEDBRA +overflow FPCR modes 1-3, 7 FPCR"  00000001 00200002 00000003 00000007
-r 1750.10                                          RNTA,    RFS,     RNTE,    RZ
+r 1750.10  #                                       RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +overflow M3 modes 1, 3-5 FPCR"    00280000 00080000 00280000 00080000
-r 1760.08                                          RP,      RM
+r 1760.08  #                                       RP,      RM
 *Want "LEDBRA +overflow M3 modes 6, 7 FPCR"      00280000 00080000
 
 *Compare
-r 1770.10                                          RZ,      RP,      RM,      RFS
+r 1770.10  #                                       RZ,      RP,      RM,      RFS
 *Want "LEDBRA -overflow FPCR modes 1-3, 7 FPCR"  00000001 00000002 00200003 00000007
-r 1780.10                                          RNTA,    RFS,     RNTE,    RZ
+r 1780.10  #                                       RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -overflow M3 modes 1, 3-5 FPCR"    00280000 00080000 00280000 00080000
-r 1790.08                                          RP,      RM
+r 1790.08  #                                       RP,      RM
 *Want "LEDBRA -overflow M3 modes 6, 7 FPCR"      00080000 00280000
 
 *Compare
-r 17A0.10                                              RZ,      RP,      RM,      RFS
+r 17A0.10  #                                           RZ,      RP,      RM,      RFS
 *Want "LEDBRA +tiny tie odd FPCR modes 1-3, 7 FPCR"  00100001 00100002 00100003 00100007
-r 17B0.10                                              RNTA,    RFS,     RNTE,    RZ
+r 17B0.10  #                                           RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA +tiny tie odd M3 modes 1, 3-5 FPCR"    00180000 00180000 00180000 00180000
-r 17C0.08                                              RP,      RM
+r 17C0.08  #                                           RP,      RM
 *Want "LEDBRA +tiny tie odd M3 modes 6, 7 FPCR"      00180000 00180000
 
 *Compare
-r 17D0.10                                              RZ,      RP,      RM,      RFS
+r 17D0.10  #                                           RZ,      RP,      RM,      RFS
 *Want "LEDBRA -tiny tie odd FPCR modes 1-3, 7 FPCR"  00100001 00100002 00100003 00100007
-r 17E0.10                                              RNTA,    RFS,     RNTE,    RZ
+r 17E0.10  #                                           RNTA,    RFS,     RNTE,    RZ
 *Want "LEDBRA -tiny tie odd M3 modes 1, 3-5 FPCR"    00180000 00180000 00180000 00180000
-r 17F0.08                                              RP,      RM
+r 17F0.08  #                                           RP,      RM
 *Want "LEDBRA -tiny tie odd M3 modes 6, 7 FPCR"      00180000 00180000
 
 
@@ -391,131 +391,131 @@ r 3190.10
 
 # Extended BFP inputs rounded to short BFP - rounding mode test results
 *Compare
-r 1A00.10                                 RZ,      RP,      RM,      RFS
+r 1A00.10  #                              RZ,      RP,      RM,      RFS
 *Want "LEXBRA +exact FPCR modes 1-3, 7" 3FFFFFFF 3FFFFFFF 3FFFFFFF 3FFFFFFF
-r 1A10.10                                 RNTA,    RFS,     RNTE,    RZ
+r 1A10.10  #                              RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +exact M3 modes 1, 3-5"   3FFFFFFF 3FFFFFFF 3FFFFFFF 3FFFFFFF
-r 1A20.08                                 RP,      RM
+r 1A20.08  #                              RP,      RM
 *Want "LEXBRA +exact M3 modes 6, 7"     3FFFFFFF 3FFFFFFF
 
 *Compare
-r 1A30.10                                 RZ,      RP,      RM,      RFS
+r 1A30.10  #                              RZ,      RP,      RM,      RFS
 *Want "LEXBRA -exact FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF BFFFFFFF BFFFFFFF
-r 1A40.10                                 RNTA,    RFS,     RNTE,    RZ
+r 1A40.10  #                              RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -exact M3 modes 1, 3-5"   BFFFFFFF BFFFFFFF BFFFFFFF BFFFFFFF
-r 1A50.08                                 RP,      RM
+r 1A50.08  #                              RP,      RM
 *Want "LEXBRA -exact M3 modes 6, 7"     BFFFFFFF BFFFFFFF
 
 *Compare
-r 1A60.10                                   RZ,      RP,      RM,      RFS
+r 1A60.10  #                                RZ,      RP,      RM,      RFS
 *Want "LEXBRA +tie odd FPCR modes 1-3, 7" 3FFFFFFF 40000000 3FFFFFFF 3FFFFFFF
-r 1A70.10                                   RNTA,    RFS,     RNTE,    RZ
+r 1A70.10  #                                RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +tie odd M3 modes 1, 3-5"   40000000 3FFFFFFF 40000000 3FFFFFFF
-r 1A80.08                                   RP,      RM
+r 1A80.08  #                                RP,      RM
 *Want "LEXBRA +tie odd M3 modes 6, 7"     40000000 3FFFFFFF
 
 *Compare
-r 1A90.10                                   RZ,      RP,      RM,      RFS
+r 1A90.10  #                                RZ,      RP,      RM,      RFS
 *Want "LEXBRA -tie odd FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF C0000000 BFFFFFFF
-r 1AA0.10                                   RNTA,    RFS,     RNTE,    RZ
+r 1AA0.10  #                                RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -tie odd M3 modes 1, 3-5"   C0000000 BFFFFFFF C0000000 BFFFFFFF
-r 1AB0.08                                   RP,      RM
+r 1AB0.08  #                                RP,      RM
 *Want "LEXBRA -tie odd M3 modes 6, 7"     BFFFFFFF C0000000
 
 *Compare
-r 1AC0.10                                    RZ,      RP,      RM,      RFS
+r 1AC0.10  #                                 RZ,      RP,      RM,      RFS
 *Want "LEXBRA +tie even FPCR modes 1-3, 7" 3FFFFFFE 3FFFFFFF 3FFFFFFE 3FFFFFFF
-r 1AD0.10                                    RNTA,    RFS,     RNTE,    RZ
+r 1AD0.10  #                                 RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +tie even M3 modes 1, 3-5"   3FFFFFFF 3FFFFFFF 3FFFFFFE 3FFFFFFE
-r 1AE0.08                                    RP,      RM
+r 1AE0.08  #                                 RP,      RM
 *Want "LEXBRA +tie even M3 modes 6, 7"     3FFFFFFF 3FFFFFFE
 
 *Compare
-r 1AF0.10                                    RZ,      RP,      RM,      RFS
+r 1AF0.10  #                                 RZ,      RP,      RM,      RFS
 *Want "LEXBRA -tie even FPCR modes 1-3, 7" BFFFFFFE BFFFFFFE BFFFFFFF BFFFFFFF
-r 1B00.10                                    RNTA,    RFS,     RNTE,    RZ
+r 1B00.10  #                                 RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -tie even M3 modes 1, 3-5"   BFFFFFFF BFFFFFFF BFFFFFFE BFFFFFFE
-r 1B10.08                                    RP,      RM
+r 1B10.08  #                                 RP,      RM
 *Want "LEXBRA -tie even M3 modes 6, 7"     BFFFFFFE BFFFFFFF
 
 *Compare
-r 1B20.10                                       RZ,      RP,      RM,      RFS
+r 1B20.10  #                                    RZ,      RP,      RM,      RFS
 *Want "LEXBRA +false exact FPCR modes 1-3, 7" 3FFFFFFF 40000000 3FFFFFFF 3FFFFFFF
-r 1B30.10                                       RNTA,    RFS,     RNTE,    RZ
+r 1B30.10  #                                    RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +false exact M3 modes 1, 3-5"   3FFFFFFF 3FFFFFFF 3FFFFFFF 3FFFFFFF
-r 1B40.08                                       RP,      RM
+r 1B40.08  #                                    RP,      RM
 *Want "LEXBRA +false exact M3 modes 6, 7"     40000000 3FFFFFFF
 
 *Compare
-r 1B50.10                                       RZ,      RP,      RM,      RFS
+r 1B50.10  #                                    RZ,      RP,      RM,      RFS
 *Want "LEXBRA -false exact FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF C0000000 BFFFFFFF
-r 1B60.10                                       RNTA,    RFS,     RNTE,    RZ
+r 1B60.10  #                                    RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -false exact M3 modes 1, 3-5"   BFFFFFFF BFFFFFFF BFFFFFFF BFFFFFFF
-r 1B70.08                                       RP,      RM
+r 1B70.08  #                                    RP,      RM
 *Want "LEXBRA -false exact M3 modes 6, 7"     BFFFFFFF C0000000
 
 *Compare
-r 1B80.10                                     RZ,      RP,      RM,      RFS
+r 1B80.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEXBRA +near zero FPCR modes 1-3, 7" 3FFFFFFF 40000000 3FFFFFFF 3FFFFFFF
-r 1B90.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1B90.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +near zero M3 modes 1, 3-5"   3FFFFFFF 3FFFFFFF 3FFFFFFF 3FFFFFFF
-r 1BA0.08                                     RP,      RM
+r 1BA0.08  #                                  RP,      RM
 *Want "LEXBRA +near zero M3 modes 6, 7"     40000000 3FFFFFFF
 
 *Compare
-r 1BB0.10                                     RZ,      RP,      RM,      RFS
+r 1BB0.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEXBRA -near zero FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF C0000000 BFFFFFFF
-r 1BC0.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1BC0.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -near zero M3 modes 1, 3-5"   BFFFFFFF BFFFFFFF BFFFFFFF BFFFFFFF
-r 1BD0.08                                    RP,      RM
+r 1BD0.08  #                                 RP,      RM
 *Want "LEXBRA -near zero M3 modes 6, 7"     BFFFFFFF C0000000
 
 *Compare
-r 1BE0.10                                     RZ,      RP,      RM,      RFS
+r 1BE0.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEXBRA +near +inf FPCR modes 1-3, 7" 3FFFFFFF 40000000 3FFFFFFF 3FFFFFFF
-r 1BF0.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1BF0.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +near +inf M3 modes 1, 3-5"   40000000 3FFFFFFF 40000000 3FFFFFFF
-r 1C00.08                                     RP,      RM
+r 1C00.08  #                                  RP,      RM
 *Want "LEXBRA +near +inf M3 modes 6, 7"     40000000 3FFFFFFF
 
 *Compare
-r 1C10.10                                     RZ,      RP,      RM,      RFS
+r 1C10.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEXBRA -near -inf FPCR modes 1-3, 7" BFFFFFFF BFFFFFFF C0000000 BFFFFFFF
-r 1C20.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1C20.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -near -inf M3 modes 1, 3-5"   C0000000 BFFFFFFF C0000000 BFFFFFFF
-r 1C30.08                                     RP,      RM
+r 1C30.08  #                                  RP,      RM
 *Want "LEXBRA -near -inf M3 modes 6, 7"     BFFFFFFF C0000000
 
 *Compare
-r 1C40.10                                     RZ,      RP,      RM,      RFS
+r 1C40.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEXBRA +overflow FPCR modes 1-3, 7"  7F7FFFFF 7F800000 7F7FFFFF 7F7FFFFF
-r 1C50.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1C50.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +overflow M3 modes 1, 3-5"    7F800000 7F7FFFFF 7F800000 7F7FFFFF
-r 1C60.08                                     RP,      RM
+r 1C60.08  #                                  RP,      RM
 *Want "LEXBRA +overflow M3 modes 6, 7"      7F800000 7F7FFFFF
 
 *Compare
-r 1C70.10                                     RZ,      RP,      RM,      RFS
+r 1C70.10  #                                  RZ,      RP,      RM,      RFS
 *Want "LEXBRA -overflow FPCR modes 1-3, 7"  FF7FFFFF FF7FFFFF FF800000 FF7FFFFF
-r 1C80.10                                     RNTA,    RFS,     RNTE,    RZ
+r 1C80.10  #                                  RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -overflow M3 modes 1, 3-5"    FF800000 FF7FFFFF FF800000 FF7FFFFF
-r 1C90.08                                     RP,      RM
+r 1C90.08  #                                  RP,      RM
 *Want "LEXBRA -overflow M3 modes 6, 7"      FF7FFFFF FF800000
 
 *Compare
-r 1CA0.10                                         RZ,      RP,      RM,      RFS
+r 1CA0.10  #                                      RZ,      RP,      RM,      RFS
 *Want "LEXBRA +tiny tie odd FPCR modes 1-3, 7"  00000000 00000001 00000000 00000001
-r 1CB0.10                                         RNTA,    RFS,     RNTE,    RZ
+r 1CB0.10  #                                      RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +tiny tie odd M3 modes 1, 3-5"    00000001 00000001 00000000 00000000
-r 1CC0.08                                         RP,      RM
+r 1CC0.08  #                                      RP,      RM
 *Want "LEXBRA +tiny tie odd M3 modes 6, 7"      00000001 00000000
 
 *Compare
-r 1CD0.10                                         RZ,      RP,      RM,      RFS
+r 1CD0.10  #                                      RZ,      RP,      RM,      RFS
 *Want "LEXBRA -tiny tie odd FPCR modes 1-3, 7"  80000000 80000000 80000001 80000001
-r 1CE0.10                                         RNTA,    RFS,     RNTE,    RZ
+r 1CE0.10  #                                      RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -tiny tie odd M3 modes 1, 3-5"    80000001 80000001 80000000 80000000
-r 1CF0.08                                         RP,      RM
+r 1CF0.08  #                                      RP,      RM
 *Want "LEXBRA -tiny tie odd M3 modes 6, 7"      80000000 80000001
 
 # Extended BFP inputs converted to short BFP - rounding mode tests - FPCR contents 
@@ -605,35 +605,35 @@ r 2030.08
 *Want "LEXBRA -near -inf M3 modes 6, 7 FCPR"     00080000 00080000
 
 *Compare
-r 2040.10                                          RZ,      RP,      RM,      RFS
+r 2040.10  #                                       RZ,      RP,      RM,      RFS
 *Want "LEXBRA +overflow FPCR modes 1-3, 7 FPCR"  00000001 00200002 00000003 00000007
-r 2050.10                                          RNTA,    RFS,     RNTE,    RZ
+r 2050.10  #                                       RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +overflow M3 modes 1, 3-5 FPCR"    00280000 00080000 00280000 00080000
-r 2060.08                                          RP,      RM
+r 2060.08  #                                       RP,      RM
 *Want "LEXBRA +overflow M3 modes 6, 7 FPCR"      00280000 00080000
 
 *Compare
-r 2070.10                                          RZ,      RP,      RM,      RFS
+r 2070.10  #                                       RZ,      RP,      RM,      RFS
 *Want "LEXBRA -overflow FPCR modes 1-3, 7 FPCR"  00000001 00000002 00200003 00000007
-r 2080.10                                          RNTA,    RFS,     RNTE,    RZ
+r 2080.10  #                                       RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -overflow M3 modes 1, 3-5 FPCR"    00280000 00080000 00280000 00080000
-r 2090.08                                          RP,      RM
+r 2090.08  #                                       RP,      RM
 *Want "LEXBRA -overflow M3 modes 6, 7 FPCR"      00080000 00280000
 
 *Compare
-r 20A0.10                                              RZ,      RP,      RM,      RFS
+r 20A0.10  #                                           RZ,      RP,      RM,      RFS
 *Want "LEXBRA +tiny tie odd FPCR modes 1-3, 7 FPCR"  00100001 00100002 00100003 00100007
-r 20B0.10                                              RNTA,    RFS,     RNTE,    RZ
+r 20B0.10  #                                           RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA +tiny tie odd M3 modes 1, 3-5 FPCR"    00180000 00180000 00180000 00180000
-r 20C0.08                                              RP,      RM
+r 20C0.08  #                                           RP,      RM
 *Want "LEXBRA +tiny tie odd M3 modes 6, 7 FPCR"      00180000 00180000
 
 *Compare
-r 20D0.10                                              RZ,      RP,      RM,      RFS
+r 20D0.10  #                                           RZ,      RP,      RM,      RFS
 *Want "LEXBRA -tiny tie odd FPCR modes 1-3, 7 FPCR"  00100001 00100002 00100003 00100007
-r 20E0.10                                              RNTA,    RFS,     RNTE,    RZ
+r 20E0.10  #                                           RNTA,    RFS,     RNTE,    RZ
 *Want "LEXBRA -tiny tie odd M3 modes 1, 3-5 FPCR"    00180000 00180000 00180000 00180000
-r 20F0.08                                              RP,      RM
+r 20F0.08  #                                           RP,      RM
 *Want "LEXBRA -tiny tie odd M3 modes 6, 7 FPCR"      00180000 00180000
 
 
@@ -712,180 +712,180 @@ r 3290.10
 
 # Extended BFP inputs rounded to long BFP - rounding mode test results
 *Compare
-r 2400.10                                      RZ,               RP
+r 2400.10  #                                   RZ,               RP
 *Want "LDXBRA +exact FPC modes 1, 2"         3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2410.10                                      RM,               RFS
+r 2410.10  #                                   RM,               RFS
 *Want "LDXBRA +exact FPC modes 3, 7"         3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2420.10                                      RNTA,             RFS
+r 2420.10  #                                   RNTA,             RFS
 *Want "LDXBRA +exact M3 modes 1, 3"          3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2430.10                                      RNTE,             RZ
+r 2430.10  #                                   RNTE,             RZ
 *Want "LDXBRA +exact M3 modes 4, 5"          3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2440.10                                      RP,               RM
+r 2440.10  #                                   RP,               RM
 *Want "LDXBRA +exact M3 modes 6, 7"          3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
 
-r 2450.10                                      RZ,               RP
+r 2450.10  #                                   RZ,               RP
 *Want "LDXBRA -exact FPC modes 1, 2"         BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2460.10                                      RM,               RFS
+r 2460.10  #                                   RM,               RFS
 *Want "LDXBRA -exact FPC modes 3, 7"         BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2470.10                                      RNTA,             RFS
+r 2470.10  #                                   RNTA,             RFS
 *Want "LDXBRA -exact M3 modes 1, 3"          BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2480.10                                      RNTE,             RZ
+r 2480.10  #                                   RNTE,             RZ
 *Want "LDXBRA -exact M3 modes 4, 5"          BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2490.10                                      RP,               RM
+r 2490.10  #                                   RP,               RM
 *Want "LDXBRA -exact M3 modes 6, 7"          BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
 
-r 24A0.10                                      RZ,               RP
+r 24A0.10  #                                   RZ,               RP
 *Want "LDXBRA +tie odd FPC modes 1, 2"       3FFFFFFF FFFFFFFF 40000000 00000000
-r 24B0.10                                      RM,               RFS
+r 24B0.10  #                                   RM,               RFS
 *Want "LDXBRA +tie odd FPC modes 3, 7"       3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 24C0.10                                      RNTA,             RFS
+r 24C0.10  #                                   RNTA,             RFS
 *Want "LDXBRA +tie odd M3 modes 1, 3"        40000000 00000000 3FFFFFFF FFFFFFFF
-r 24D0.10                                      RNTE,             RZ
+r 24D0.10  #                                   RNTE,             RZ
 *Want "LDXBRA +tie odd M3 modes 4, 5"        40000000 00000000 3FFFFFFF FFFFFFFF
-r 24E0.10                                      RP,               RM
+r 24E0.10  #                                   RP,               RM
 *Want "LDXBRA +tie odd M3 modes 6, 7"        40000000 00000000 3FFFFFFF FFFFFFFF
 
-r 24F0.10                                      RZ,               RP
+r 24F0.10  #                                   RZ,               RP
 *Want "LDXBRA -tie odd FPC modes 1, 2"       BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2500.10                                      RM,               RFS
+r 2500.10  #                                   RM,               RFS
 *Want "LDXBRA -tie odd FPC modes 3, 7"       C0000000 00000000 BFFFFFFF FFFFFFFF
-r 2510.10                                      RNTA,             RFS
+r 2510.10  #                                   RNTA,             RFS
 *Want "LDXBRA -tie odd M3 modes 1, 3"        C0000000 00000000 BFFFFFFF FFFFFFFF
-r 2520.10                                      RNTE,             RZ
+r 2520.10  #                                   RNTE,             RZ
 *Want "LDXBRA -tie odd M3 modes 4, 5"        C0000000 00000000 BFFFFFFF FFFFFFFF
-r 2530.10                                      RP,               RM
+r 2530.10  #                                   RP,               RM
 *Want "LDXBRA -tie odd M3 modes 6, 7"        BFFFFFFF FFFFFFFF C0000000 00000000
 
-r 2540.10                                      RZ,               RP
+r 2540.10  #                                   RZ,               RP
 *Want "LDXBRA +tie even FPC modes 1, 2"      3FFFFFFF FFFFFFFE 3FFFFFFF FFFFFFFF
-r 2550.10                                      RM,               RFS
+r 2550.10  #                                   RM,               RFS
 *Want "LDXBRA +tie even FPC modes 3, 7"      3FFFFFFF FFFFFFFE 3FFFFFFF FFFFFFFF
-r 2560.10                                      RNTA,             RFS
+r 2560.10  #                                   RNTA,             RFS
 *Want "LDXBRA +tie even M3 modes 1, 3"       3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2570.10                                      RNTE,             RZ
+r 2570.10  #                                   RNTE,             RZ
 *Want "LDXBRA +tie even M3 modes 4, 5"       3FFFFFFF FFFFFFFE 3FFFFFFF FFFFFFFE
-r 2580.10                                      RP,               RM
+r 2580.10  #                                   RP,               RM
 *Want "LDXBRA +tie even M3 modes 6, 7"       3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFE
 
-r 2590.10                                      RZ,               RP
+r 2590.10  #                                   RZ,               RP
 *Want "LDXBRA -tie even FPC modes 1, 2"      BFFFFFFF FFFFFFFE BFFFFFFF FFFFFFFE
-r 25A0.10                                      RM,               RFS
+r 25A0.10  #                                   RM,               RFS
 *Want "LDXBRA -tie even FPC modes 3, 7"      BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 25B0.10                                      RNTA,             RFS
+r 25B0.10  #                                   RNTA,             RFS
 *Want "LDXBRA -tie even M3 modes 1, 3"       BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 25C0.10                                      RNTE,             RZ
+r 25C0.10  #                                   RNTE,             RZ
 *Want "LDXBRA -tie even M3 modes 4, 5"       BFFFFFFF FFFFFFFE BFFFFFFF FFFFFFFE
-r 25D0.10                                      RP,               RM
+r 25D0.10  #                                   RP,               RM
 *Want "LDXBRA -tie even M3 modes 6, 7"       BFFFFFFF FFFFFFFE BFFFFFFF FFFFFFFF
 
-r 25E0.10                                      RZ,               RP
+r 25E0.10  #                                   RZ,               RP
 *Want "LDXBRA +false exact FPC modes 1, 2"   3FFFFFFF FFFFFFFF 40000000 00000000
-r 25F0.10                                      RM,               RFS
+r 25F0.10  #                                   RM,               RFS
 *Want "LDXBRA +false exact FPC modes 3, 7"   3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2600.10                                      RNTA,             RFS
+r 2600.10  #                                   RNTA,             RFS
 *Want "LDXBRA +false exact M3 modes 1, 3"    3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2610.10                                      RNTE,             RZ
+r 2610.10  #                                   RNTE,             RZ
 *Want "LDXBRA +false exact M3 modes 4, 5"    3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2620.10                                      RP,               RM
+r 2620.10  #                                   RP,               RM
 *Want "LDXBRA +false exact M3 modes 6, 7"    40000000 00000000 3FFFFFFF FFFFFFFF
 
-r 2630.10                                      RZ,               RP
+r 2630.10  #                                   RZ,               RP
 *Want "LDXBRA -false exact FPC modes 1, 2"   BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2640.10                                      RM,               RFS
+r 2640.10  #                                   RM,               RFS
 *Want "LDXBRA -false exact FPC modes 3, 7"   C0000000 00000000 BFFFFFFF FFFFFFFF
-r 2650.10                                      RNTA,             RFS
+r 2650.10  #                                   RNTA,             RFS
 *Want "LDXBRA -false exact M3 modes 1, 3"    BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2660.10                                      RNTE,             RZ
+r 2660.10  #                                   RNTE,             RZ
 *Want "LDXBRA -false exact M3 modes 4, 5"    BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2670.10                                      RP,               RM
+r 2670.10  #                                   RP,               RM
 *Want "LDXBRA -false exact M3 modes 6, 7"    BFFFFFFF FFFFFFFF C0000000 00000000
 
-r 2680.10                                      RZ,               RP
+r 2680.10  #                                   RZ,               RP
 *Want "LDXBRA +near zero FPC modes 1, 2"     3FFFFFFF FFFFFFFF 40000000 00000000
-r 2690.10                                      RM,               RFS
+r 2690.10  #                                   RM,               RFS
 *Want "LDXBRA +near zero FPC modes 3, 7"     3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 26A0.10                                      RNTA,             RFS
+r 26A0.10  #                                   RNTA,             RFS
 *Want "LDXBRA +near zero M3 modes 1, 3"      3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 26B0.10                                      RNTE,             RZ
+r 26B0.10  #                                   RNTE,             RZ
 *Want "LDXBRA +near zero M3 modes 4, 5"      3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 26C0.10                                      RP,               RM
+r 26C0.10  #                                   RP,               RM
 *Want "LDXBRA +near zero M3 modes 6, 7"      40000000 00000000 3FFFFFFF FFFFFFFF
 
-r 26D0.10                                      RZ,               RP
+r 26D0.10  #                                   RZ,               RP
 *Want "LDXBRA -near zero FPC modes 1, 2"     BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 26E0.10                                      RM,               RFS
+r 26E0.10  #                                   RM,               RFS
 *Want "LDXBRA -near zero FPC modes 3, 7"     C0000000 00000000 BFFFFFFF FFFFFFFF
-r 26F0.10                                      RNTA,             RFS
+r 26F0.10  #                                   RNTA,             RFS
 *Want "LDXBRA -near zero M3 modes 1, 3"      BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2700.10                                      RNTE,             RZ
+r 2700.10  #                                   RNTE,             RZ
 *Want "LDXBRA -near zero M3 modes 4, 5"      BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2710.10                                      RP,               RM
+r 2710.10  #                                   RP,               RM
 *Want "LDXBRA -near zero M3 modes 6, 7"      BFFFFFFF FFFFFFFF C0000000 00000000
 
-r 2720.10                                      RZ,               RP
+r 2720.10  #                                   RZ,               RP
 *Want "LDXBRA +near +inf FPC modes 1, 2"     3FFFFFFF FFFFFFFF 40000000 00000000
-r 2730.10                                      RM,               RFS
+r 2730.10  #                                   RM,               RFS
 *Want "LDXBRA +near +inf FPC modes 3, 7"     3FFFFFFF FFFFFFFF 3FFFFFFF FFFFFFFF
-r 2740.10                                      RNTA,             RFS
+r 2740.10  #                                   RNTA,             RFS
 *Want "LDXBRA +near +inf M3 modes 1, 3"      40000000 00000000 3FFFFFFF FFFFFFFF
-r 2750.10                                      RNTE,             RZ
+r 2750.10  #                                   RNTE,             RZ
 *Want "LDXBRA +near +inf M3 modes 4, 5"      40000000 00000000 3FFFFFFF FFFFFFFF
-r 2760.10                                      RP,               RM
+r 2760.10  #                                   RP,               RM
 *Want "LDXBRA +near +inf M3 modes 6, 7"      40000000 00000000 3FFFFFFF FFFFFFFF
 
-r 2770.10                                      RZ,               RP
+r 2770.10  #                                   RZ,               RP
 *Want "LDXBRA -near -inf FPC modes 1, 2"     BFFFFFFF FFFFFFFF BFFFFFFF FFFFFFFF
-r 2780.10                                      RM,               RFS
+r 2780.10  #                                   RM,               RFS
 *Want "LDXBRA -near -inf FPC modes 3, 7"     C0000000 00000000 BFFFFFFF FFFFFFFF
-r 2790.10                                      RNTA,             RFS
+r 2790.10  #                                   RNTA,             RFS
 *Want "LDXBRA -near -inf M3 modes 1, 3"      C0000000 00000000 BFFFFFFF FFFFFFFF
-r 27A0.10                                      RNTE,             RZ
+r 27A0.10  #                                   RNTE,             RZ
 *Want "LDXBRA -near -inf M3 modes 4, 5"      C0000000 00000000 BFFFFFFF FFFFFFFF
-r 27B0.10                                      RP,               RM
+r 27B0.10  #                                   RP,               RM
 *Want "LDXBRA -near -inf M3 modes 6, 7"      BFFFFFFF FFFFFFFF C0000000 00000000
 
-r 27C0.10                                      RZ,               RP
+r 27C0.10  #                                   RZ,               RP
 *Want "LDXBRA +overflow FPC modes 1, 2"      7FEFFFFF FFFFFFFF 7FF00000 00000000
-r 27D0.10                                      RM,               RFS
+r 27D0.10  #                                   RM,               RFS
 *Want "LDXBRA +overflow FPC modes 3, 7"      7FEFFFFF FFFFFFFF 7FEFFFFF FFFFFFFF
-r 27E0.10                                      RNTA,             RFS
+r 27E0.10  #                                   RNTA,             RFS
 *Want "LDXBRA +overflow M3 modes 1, 3"       7FF00000 00000000 7FEFFFFF FFFFFFFF
-r 27F0.10                                      RNTE,             RZ
+r 27F0.10  #                                   RNTE,             RZ
 *Want "LDXBRA +overflow M3 modes 4, 5"       7FF00000 00000000 7FEFFFFF FFFFFFFF
-r 2800.10                                      RP,               RM
+r 2800.10  #                                   RP,               RM
 *Want "LDXBRA +overflow M3 modes 6, 7"       7FF00000 00000000 7FEFFFFF FFFFFFFF
 
-r 2810.10                                      RZ,               RP
+r 2810.10  #                                   RZ,               RP
 *Want "LDXBRA -overflow FPC modes 1, 2"      FFEFFFFF FFFFFFFF FFEFFFFF FFFFFFFF
-r 2820.10                                      RM,               RFS
+r 2820.10  #                                   RM,               RFS
 *Want "LDXBRA -overflow FPC modes 3, 7"      FFF00000 00000000 FFEFFFFF FFFFFFFF
-r 2830.10                                      RNTA,             RFS
+r 2830.10  #                                   RNTA,             RFS
 *Want "LDXBRA -overflow M3 modes 1, 3"       FFF00000 00000000 FFEFFFFF FFFFFFFF
-r 2840.10                                      RNTE,             RZ
+r 2840.10  #                                   RNTE,             RZ
 *Want "LDXBRA -overflow M3 modes 4, 5"       FFF00000 00000000 FFEFFFFF FFFFFFFF
-r 2850.10                                      RP,               RM
+r 2850.10  #                                   RP,               RM
 *Want "LDXBRA -overflow M3 modes 6, 7"       FFEFFFFF FFFFFFFF FFF00000 00000000 
 
-r 2860.10                                      RZ,               RP
+r 2860.10  #                                   RZ,               RP
 *Want "LDXBRA +tiny tie odd FPC modes 1, 2"  00000000 00000000 00000000 00000001
-r 2870.10                                      RM,               RFS
+r 2870.10  #                                   RM,               RFS
 *Want "LDXBRA +tiny tie odd FPC modes 3, 7"  00000000 00000000 00000000 00000001
-r 2880.10                                      RNTA,             RFS
+r 2880.10  #                                   RNTA,             RFS
 *Want "LDXBRA +tiny tie odd M3 modes 1, 3"   00000000 00000001 00000000 00000001
-r 2890.10                                      RNTE,             RZ
+r 2890.10  #                                   RNTE,             RZ
 *Want "LDXBRA +tiny tie odd M3 modes 4, 5"   00000000 00000000 00000000 00000000
-r 28A0.10                                      RP,               RM
+r 28A0.10  #                                   RP,               RM
 *Want "LDXBRA +tiny tie odd M3 modes 6, 7"   00000000 00000001 00000000 00000000
 
-r 28B0.10                                      RZ,               RP
+r 28B0.10  #                                   RZ,               RP
 *Want "LDXBRA -tiny tie odd FPC modes 1, 2"  80000000 00000000 80000000 00000000
-r 28C0.10                                      RM,               RFS
+r 28C0.10  #                                   RM,               RFS
 *Want "LDXBRA -tiny tie odd FPC modes 3, 7"  80000000 00000001 80000000 00000001
-r 28D0.10                                      RNTA,             RFS
+r 28D0.10  #                                   RNTA,             RFS
 *Want "LDXBRA -tiny tie odd M3 modes 1, 3"   80000000 00000001 80000000 00000001
-r 28E0.10                                      RNTE,             RZ
+r 28E0.10  #                                   RNTE,             RZ
 *Want "LDXBRA -tiny tie odd M3 modes 4, 5"   80000000 00000000 80000000 00000000
-r 28F0.10                                      RP,               RM
+r 28F0.10  #                                   RP,               RM
 *Want "LDXBRA -tiny tie odd M3 modes 6, 7"   80000000 00000000 80000000 00000001
 
 
@@ -976,35 +976,35 @@ r 2D30.08
 *Want "LDXBRA -near -inf M3 modes 6, 7 FCPR"     00080000 00080000
 
 *Compare
-r 2D40.10                                          RZ,      RP,      RM,      RFS
+r 2D40.10  #                                       RZ,      RP,      RM,      RFS
 *Want "LDXBRA +overflow FPCR modes 1-3, 7 FPCR"  00000001 00200002 00000003 00000007
-r 2D50.10                                          RNTA,    RFS,     RNTE,    RZ
+r 2D50.10  #                                       RNTA,    RFS,     RNTE,    RZ
 *Want "LDXBRA +overflow M3 modes 1, 3-5 FPCR"    00280000 00080000 00280000 00080000
-r 2D60.08                                          RP,      RM
+r 2D60.08  #                                       RP,      RM
 *Want "LDXBRA +overflow M3 modes 6, 7 FPCR"      00280000 00080000
 
 *Compare
-r 2D70.10                                          RZ,      RP,      RM,      RFS
+r 2D70.10  #                                       RZ,      RP,      RM,      RFS
 *Want "LDXBRA -overflow FPCR modes 1-3, 7 FPCR"  00000001 00000002 00200003 00000007
-r 2D80.10                                          RNTA,    RFS,     RNTE,    RZ
+r 2D80.10  #                                       RNTA,    RFS,     RNTE,    RZ
 *Want "LDXBRA -overflow M3 modes 1, 3-5 FPCR"    00280000 00080000 00280000 00080000
-r 2D90.08                                          RP,      RM
+r 2D90.08  #                                       RP,      RM
 *Want "LDXBRA -overflow M3 modes 6, 7 FPCR"      00080000 00280000
 
 *Compare
-r 2DA0.10                                              RZ,      RP,      RM,      RFS
+r 2DA0.10  #                                           RZ,      RP,      RM,      RFS
 *Want "LDXBRA +tiny tie odd FPCR modes 1-3, 7 FPCR"  00100001 00100002 00100003 00100007
-r 2DB0.10                                              RNTA,    RFS,     RNTE,    RZ
+r 2DB0.10  #                                           RNTA,    RFS,     RNTE,    RZ
 *Want "LDXBRA +tiny tie odd M3 modes 1, 3-5 FPCR"    00180000 00180000 00180000 00180000
-r 2DC0.08                                              RP,      RM
+r 2DC0.08  #                                           RP,      RM
 *Want "LDXBRA +tiny tie odd M3 modes 6, 7 FPCR"      00180000 00180000
 
 *Compare
-r 2DD0.10                                              RZ,      RP,      RM,      RFS
+r 2DD0.10  #                                           RZ,      RP,      RM,      RFS
 *Want "LDXBRA -tiny tie odd FPCR modes 1-3, 7 FPCR"  00100001 00100002 00100003 00100007
-r 2DE0.10                                              RNTA,    RFS,     RNTE,    RZ
+r 2DE0.10  #                                           RNTA,    RFS,     RNTE,    RZ
 *Want "LDXBRA -tiny tie odd M3 modes 1, 3-5 FPCR"    00180000 00180000 00180000 00180000
-r 2DF0.08                                              RP,      RM
+r 2DF0.08  #                                           RP,      RM
 *Want "LDXBRA -tiny tie odd M3 modes 6, 7 FPCR"      00180000 00180000
 
 
