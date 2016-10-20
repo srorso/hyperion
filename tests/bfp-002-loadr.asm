@@ -14,8 +14,7 @@
 *Testcase IEEE LOAD ROUNDED
 *  Test case capability includes ieee exceptions trappable and 
 *  otherwise.  Test result, FPCR flags, and DXC saved for all tests.  
-*  Load Rounded does not set the condition code.  Overflow and 
-*  underflow are not tested by this program.  
+*  Load Rounded does not set the condition code.  
 *
 * Tests the following three conversion instructions
 *   LOAD ROUNDED (long to short BFP, RRE)
@@ -27,9 +26,9 @@
 *
 * This routine exhaustively tests rounding in 32- and 64-bit binary 
 * floating point.  It is not possible to use Load Rounded to test
-* rounding of 128-bit results; we will have to back in to those tests
-* using Add.  
-
+* rounding of 128-bit results.  There is no Load Rounded that returns
+* a 128-bit result.
+*
 * Test data is compiled into this program.  The test script that runs
 * this program can provide alternative test data through Hercules R 
 * commands.
@@ -58,15 +57,15 @@
 *   rounding, which means 7 'extra' bits participate in the 
 *   rounding.  If any of the right-hand 22 bits are non-zero, the 
 *   30-bit pre-rounded value is or'd with 1 in the low-order bit 
-*   position.  
+*   position.  Bit 30 is the "sticky bit."
 * 
 * Round extended to long: Softfloat uses the left-most 62 bits of
 *   the extended BFP stored significand for rounding, which means 
 *   10 'extra' bits participate in the rounding.  If any of the 
 *   remaining right-hand 50 bits are non-zero, the 62-bit pre- 
-*   rounded value is or'd with 1 in the low-order bit position.  
-*   At least one of the test cases will have one bits in only the 
-*   low-order 64 bits of the stored significand.  
+*   rounded value is or'd with 1 in the low-order bit position.  Bit 62
+*   is the "sticky bit."  At least one of the test cases will have one
+*   bits in only the low-order 64 bits of the stored significand.  
 *
 * The or'd 1 bit representing the bits not participating in the 
 *   rounding process prevents false exacts.  False exacts would 

@@ -1,4 +1,4 @@
-  TITLE 'bfp-011-divtoint.asm: Test IEEE Divide To Integer'
+  TITLE 'bfp-001-divtoint.asm: Test IEEE Divide To Integer'
 ***********************************************************************
 *
 *Testcase IEEE DIVIDE TO INTEGER
@@ -139,7 +139,7 @@ PCOLDPSW EQU   STRTLABL+X'150'     z/Arch Program check old PSW
          ORG   STRTLABL+X'200'
 PROGCHK  DS    0H             Program check occured...
          CLI   PCINTCD+1,X'07'  Data Exception?
-         JNE   PCNOTDTA       ..no, hardwait (not sure if R15 is ok)
+         JNE   PCNOTDTA       ..no, hardwait
          LPSWE PCOLDPSW       ..yes, resume program execution
 PCNOTDTA DS    0H
          LTR   R14,R14        Return address provided?
