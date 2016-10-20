@@ -459,8 +459,6 @@ libherc_la_SOURCES =  \
 	script.c          \
 	service.c         \
 	sie.c             \
-	SoftFloat-specialise.c \
-	SoftFloat.c       \
 	sr.c              \
 	stack.c           \
 	strsignal.c       \
@@ -769,6 +767,8 @@ EXTRA_DIST =                    \
 	msvc.makefile.includes/BZIP2_RULES.msvc     \
 	msvc.makefile.includes/CONFIG.msvc          \
 	msvc.makefile.includes/DEBUG_RETAIL.msvc    \
+	msvc.makefile.includes/EXTPKG_DIRS.msvc     \
+	msvc.makefile.includes/EXTPKG_FLAGS.msvc    \
 	msvc.makefile.includes/HERC_FLAGS.msvc      \
 	msvc.makefile.includes/HQA_DIR.msvc         \
 	msvc.makefile.includes/HQA_FLAGS.msvc       \
@@ -815,7 +815,6 @@ EXTRA_DIST =                    \
 	README.RXVT4APL             \
 	README.S37X                 \
 	README.SETUID               \
-	README.SOFTFLOAT            \
 	README.SUN                  \
 	README.TAPE                 \
 	README.TELNET               \
@@ -833,7 +832,6 @@ EXTRA_DIST =                    \
 	scripts/hexecio.rexx        \
 	scripts/hlinein.rexx        \
 	scripts/hrecurs.rexx        \
-	SoftFloat-2b.zip            \
 	util/CMPSC.txt
 
 #
@@ -937,11 +935,8 @@ noinst_HEADERS =            \
 	shared.h                \
 	sllib.h                 \
 	sockdev.h               \
-	SoftFloat-macros.h      \
-	SoftFloat-milieu.h      \
-	SoftFloat-specialise.h  \
-	SoftFloat-types.h       \
-	SoftFloat.h             \
+	softfloat-types.h       \
+	softfloat.h             \
 	sr.h                    \
 	tapedev.h               \
 	targetver.h             \
@@ -1033,12 +1028,11 @@ uninstall-hook:
 %.i: %.c
 	$(COMPILE) -E $< >$@
 
-# PROGRAMMING NOTE: the following two rules cause only ieee.c and softfloat.c
-# to be recompiled (the only two source files dependent on SoftFloat-specialise)
-# whenever the interface to SoftFloat-specialise is changed.
+# PROGRAMMING NOTE: the following two rules cause only ieee.c to be
+# recompiled whenever the interface to Softfloat 3a is changed.
+# Changes to softfloat.h and softfloat-types.h are evidence of same.
 
-.libs/SoftFloat.o:  SoftFloat-specialise.h
-.libs/ieee.o:       SoftFloat-specialise.h
+.libs/ieee.o:       softfloat.h softfloat-types.h
 
 check:
 if APPLE

@@ -657,7 +657,6 @@
     <None Include="README.RXVT4APL" />
     <None Include="README.S37X" />
     <None Include="README.SETUID" />
-    <None Include="README.SOFTFLOAT" />
     <None Include="README.SUN" />
     <None Include="README.TAPE" />
     <None Include="README.TELNET" />
@@ -987,7 +986,8 @@
     <ClInclude Include="shared.h" />
     <ClInclude Include="sllib.h" />
     <ClInclude Include="sockdev.h" />
-    <ClInclude Include="SoftFloat.h" />
+    <ClInclude Include="softfloat-types.h" />
+    <ClInclude Include="softfloat.h" />
     <ClInclude Include="sr.h" />
     <ClInclude Include="tapedev.h" />
     <ClInclude Include="targetver.h" />
