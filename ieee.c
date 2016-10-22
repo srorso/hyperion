@@ -137,29 +137,6 @@
 #define SOFTFLOAT_FAST_INT64
 #include "softfloat.h"
 
-/* Handy constants                           low    high                 */
-static const float128_t  float128_zero   = { 0ULL, 0x0000000000000000ULL };
-static const float64_t   float64_zero    = {       0x0000000000000000ULL };
-static const float32_t   float32_zero    = {       0x00000000 };
-/*                                           low    high                 */
-#if 0
-static const float128_t  float128_neg0   = { 0ULL, 0x8000000000000000ULL };
-#endif
-static const float64_t   float64_neg0    = {       0x8000000000000000ULL };
-static const float32_t   float32_neg0    = {       0x80000000 };
-/*                                           low       high                 */
-#if 0
-static const float128_t  float128_inf    = { 0ULL, 0x7FFF000000000000ULL };
-#endif
-static const float64_t   float64_inf     = {       0x7FF0000000000000ULL };
-static const float32_t   float32_inf     = {       0x7F800000 };
-/*                                           low       high                 */
-#if 0
-static const float128_t  float128_neginf = { 0ULL, 0xFFFF000000000000ULL };
-#endif
-static const float64_t   float64_neginf  = {       0xFFF0000000000000ULL };
-static const float32_t   float32_neginf  = {       0xFF800000 };
-
 /* Default QNaN per SA22-7832-10 page 9-3: plus sign, quiet, and payload of zero */
 static const float64_t   float64_default_qnan = { 0x7FF8000000000000ULL  };
 static const float32_t   float32_default_qnan = { 0x7FC00000 };
@@ -400,10 +377,11 @@ static INLINE U32 float32_class( float32_t op )
 /* ****           End of Softfloat architecture-dependent code                               **** */
 
                                     /* Translate FPC rounding mode into matching Softfloat rounding mode  */
-#define SET_SF_RM_FROM_FPC map_fpc_brm_to_sf_rm[ (regs->fpc & FPC_BRM_3BIT) ]
+#define SET_SF_RM_FROM_FPC softfloat_roundingMode = map_fpc_brm_to_sf_rm[ (regs->fpc & FPC_BRM_3BIT) ]
 
                                     /* Translate M3 rounding mode into matching Softfloat rounding mode, use FPC mode if M3 zero  */
-#define SET_SF_RM_FROM_M3(_m3) softfloat_roundingMode = _m3 ? map_m3_to_sf_rm[_m3] : SET_SF_RM_FROM_FPC 
+#define SET_SF_RM_FROM_M3(_m3) softfloat_roundingMode = _m3 ? map_m3_to_sf_rm[_m3]         \
+                                                            : map_fpc_brm_to_sf_rm[(regs->fpc & FPC_BRM_3BIT)]
 
 
                                     /* fastpath test for Xi trap; many instructions only return Xi   */
@@ -1110,7 +1088,7 @@ DEF_INST(add_bfp_ext_reg)
     GET_FLOAT128_OPS( op1, r1, op2, r2, regs );             /* Get operand values                                   */
 
     softfloat_exceptionFlags = 0;                           /* Clear all Softfloat IEEE flags                       */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                                     /* Set rounding mode from FPC                           */
     ans = f128_add( op1, op2 );                             /* Add two float128_t values                            */
 
     if (softfloat_exceptionFlags)                           /* Any IEEE Exceptions?                                 */
@@ -1142,7 +1120,7 @@ DEF_INST(add_bfp_long_reg)
     GET_FLOAT64_OPS( op1, r1, op2, r2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
     ans = f64_add( op1, op2 );
 
     /* following optimized around "normal" case: no ieee exceptions or no traps enabled  */
@@ -1175,7 +1153,7 @@ DEF_INST(add_bfp_long)
     VFETCH_FLOAT64_OP( op2, effective_addr2, b2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
     ans = f64_add( op1, op2 );
 
     /* following optimized around "normal" case: no ieee exceptions or no traps enabled  */
@@ -1207,7 +1185,7 @@ DEF_INST(add_bfp_short_reg)
     GET_FLOAT32_OPS( op1, r1, op2, r2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
 
     ans = f32_add( op1, op2 );
 
@@ -1242,7 +1220,7 @@ DEF_INST(add_bfp_short)
     VFETCH_FLOAT32_OP( op2, effective_addr2, b2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
     ans = f32_add( op1, op2 );
 
     /* following optimized around "normal" case: no ieee exceptions or no traps enabled  */
@@ -1519,7 +1497,8 @@ DEF_INST(convert_fix32_to_bfp_ext_reg)
     BFPREGPAIR_CHECK(r1, regs);
 
 #if defined(FEATURE_FLOATING_POINT_EXTENSION_FACILITY)
-    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction         */
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction          */
+    UNREFERENCED(m4);                 /* M4 field supported but does nothing; no inexact    */
 #else
     if (m3 | m4)                      /* ensure M3 and M4 are zero for pre-FPEF interpretation of instructions  */
         regs->program_interrupt(regs, PGM_SPECIFICATION_EXCEPTION);
@@ -1552,9 +1531,10 @@ DEF_INST(convert_fix32_to_bfp_long_reg)
     BFPINST_CHECK(regs);
 
 #if defined(FEATURE_FLOATING_POINT_EXTENSION_FACILITY)
-    BFPRM_CHECK(m3, regs);              /* validate BFP Rounding mode in instruction         */
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction          */
+    UNREFERENCED(m4);                 /* M4 field supported but does nothing; no inexact    */
 #else
-    if (m3 | m4)                        /* ensure M3 and M4 are zero for pre-FPEF interpretation of instructions  */
+    if (m3 | m4)                      /* ensure M3 and M4 are zero for pre-FPEF interpretation of instructions  */
         regs->program_interrupt(regs, PGM_SPECIFICATION_EXCEPTION);  
 #endif
 
@@ -1588,7 +1568,8 @@ DEF_INST(convert_fix32_to_bfp_short_reg)
     BFPINST_CHECK(regs);
 
 #if defined(FEATURE_FLOATING_POINT_EXTENSION_FACILITY)
-    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction         */
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction          */
+    UNREFERENCED(m4);                 /* M4 field supported but does nothing; no inexact    */
 #else
     if (m3 | m4)                      /* ensure M3 and M4 are zero for pre-FPEF interpretation of instructions  */
         regs->program_interrupt(regs, PGM_SPECIFICATION_EXCEPTION);
@@ -1627,7 +1608,8 @@ DEF_INST(convert_fix64_to_bfp_ext_reg)
     BFPREGPAIR_CHECK(r1, regs);
 
 #if defined(FEATURE_FLOATING_POINT_EXTENSION_FACILITY)
-    BFPRM_CHECK(m3, regs);              /* validate BFP Rounding mode in instruction         */
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction          */
+    UNREFERENCED(m4);                 /* M4 field supported but does nothing; no inexact    */
 #else
     if (m3 | m4)                        /* ensure M3 and M4 are zero for pre-FPEF interpretation of instructions  */
         regs->program_interrupt(regs, PGM_SPECIFICATION_EXCEPTION);
@@ -2195,10 +2177,11 @@ DEF_INST(convert_u32_to_bfp_ext_reg)
 
     BFPINST_CHECK(regs);
     BFPREGPAIR_CHECK(r1, regs);
-    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction         */
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction                  */
+    UNREFERENCED(m4);                 /* M4 field supported but does nothing; no inexact            */
 
     op2 = regs->GR_L(r2);
-    SET_SF_RM_FROM_M3(m3);            /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+    SET_SF_RM_FROM_M3(m3);            /* Set Softfloat rounding mode from M3 or FPC if M3 = 0       */
     softfloat_exceptionFlags = 0;
     op1 = ui32_to_f128(op2);
 
@@ -2222,10 +2205,11 @@ DEF_INST(convert_u32_to_bfp_long_reg)
 
     RRF_MM(inst, regs, r1, r2, m3, m4);
     BFPINST_CHECK(regs);
-    BFPRM_CHECK(m3, regs);              /* validate BFP Rounding mode in instruction         */
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction                  */
+    UNREFERENCED(m4);                 /* M4 field supported but does nothing; no inexact            */
 
     op2 = regs->GR_L(r2);
-    SET_SF_RM_FROM_M3(m3);              /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
+    SET_SF_RM_FROM_M3(m3);            /* Set Softfloat rounding mode from M3 or FPC if M3 = 0       */
     softfloat_exceptionFlags = 0;
     op1 = ui32_to_f64(op2);
 
@@ -2283,10 +2267,11 @@ DEF_INST(convert_u64_to_bfp_ext_reg)
     RRF_MM(inst, regs, r1, r2, m3, m4);
     BFPINST_CHECK(regs);
     BFPREGPAIR_CHECK(r1, regs);
-    BFPRM_CHECK(m3, regs);              /* validate BFP Rounding mode in instruction         */
+    BFPRM_CHECK(m3, regs);            /* validate BFP Rounding mode in instruction                  */
+    UNREFERENCED(m4);                 /* M4 field supported but does nothing; no inexact            */
 
-    SET_SF_RM_FROM_M3(m3);              /* Set Softfloat rounding mode from M3 or FPC if M3 = 0  */
-    op2 = regs->GR_G(r2);               /* HERE'S THE ERROR    !!!!!!!  should be the whole register*/
+    SET_SF_RM_FROM_M3(m3);            /* Set Softfloat rounding mode from M3 or FPC if M3 = 0       */
+    op2 = regs->GR_G(r2);             /* HERE'S THE ERROR    !!!!!!!  should be the whole register  */
     softfloat_exceptionFlags = 0;
     op1 = ui64_to_f128(op2);
     /* No flags set by CONVERT FROM LOGICAL (64 to extended BFP); */
@@ -2702,7 +2687,7 @@ DEF_INST(divide_bfp_ext_reg)
     GET_FLOAT128_OPS( op1, r1, op2, r2, regs );
 
     softfloat_exceptionFlags = 0;                   /* clear all Softfloat exceptions  */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;    /* set rounding mode from FPC      */
+    SET_SF_RM_FROM_FPC;                             /* set rounding mode from FPC      */
     ans = f128_div( op1, op2 );
 
     if (softfloat_exceptionFlags)           /* any IEEE exceptions from Softfloat?  */
@@ -2735,7 +2720,7 @@ DEF_INST(divide_bfp_long_reg)
     GET_FLOAT64_OPS( op1, r1, op2, r2, regs );
 
     softfloat_exceptionFlags = 0;                   /* clear all Softfloat exceptions  */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;    /* set rounding mode from FPC      */
+    SET_SF_RM_FROM_FPC;                             /* set rounding mode from FPC      */
     ans = f64_div( op1, op2 );
 
     if (softfloat_exceptionFlags)           /* any IEEE exceptions from Softfloat?  */
@@ -2770,7 +2755,7 @@ DEF_INST(divide_bfp_long)
     VFETCH_FLOAT64_OP( op2, effective_addr2, b2, regs );
 
     softfloat_exceptionFlags = 0;                   /* clear all Softfloat exceptions  */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;    /* set rounding mode from FPC      */
+    SET_SF_RM_FROM_FPC;                             /* set rounding mode from FPC      */
     ans = f64_div(op1, op2);
 
     if (softfloat_exceptionFlags)           /* any IEEE exceptions from Softfloat?  */
@@ -2802,8 +2787,8 @@ DEF_INST(divide_bfp_short_reg)
     BFPINST_CHECK(regs);
     GET_FLOAT32_OPS( op1, r1, op2, r2, regs );
 
-    softfloat_exceptionFlags = 0;                   /* clear all Softfloat exceptions  */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;    /* set rounding mode from FPC      */
+    softfloat_exceptionFlags = 0;           /* clear all Softfloat exceptions       */
+    SET_SF_RM_FROM_FPC;                     /* set rounding mode from FPC           */
     ans = f32_div( op1, op2 );
 
     if (softfloat_exceptionFlags)           /* any IEEE exceptions from Softfloat?  */
@@ -2836,8 +2821,8 @@ DEF_INST(divide_bfp_short)
     GET_FLOAT32_OP( op1, r1, regs );
     VFETCH_FLOAT32_OP( op2, effective_addr2, b2, regs );
 
-    softfloat_exceptionFlags = 0;                   /* clear all Softfloat exceptions  */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;    /* set rounding mode from FPC      */
+    softfloat_exceptionFlags = 0;           /* clear all Softfloat exceptions       */
+    SET_SF_RM_FROM_FPC;                     /* set rounding mode from FPC           */
     ans = f32_div(op1, op2);
 
     if (softfloat_exceptionFlags)           /* any IEEE exceptions from Softfloat?  */
@@ -2872,6 +2857,7 @@ DEF_INST(load_and_test_bfp_ext_reg)
     if (FLOAT128_ISNAN(op))                             /* Testing needed only if NaN is input      */
     {
         if (f128_isSignalingNaN(op))                    /* Signalling NaN?                          */
+        {
             if (regs->fpc & FPC_MASK_IMI)               /* ..yes, is trapping enabled?              */
                 ieee_trap(regs, DXC_IEEE_INVALID_OP);   /* ..yes, raise DXC, no return              */
             else
@@ -2879,6 +2865,7 @@ DEF_INST(load_and_test_bfp_ext_reg)
                 regs->fpc |= FPC_FLAG_SFI;
                 FLOAT128_MAKE_QNAN(op);
             }
+        }
     }
 
     PUT_FLOAT128_CC( op, r1, regs );
@@ -2899,6 +2886,7 @@ DEF_INST(load_and_test_bfp_long_reg)
     if (FLOAT64_ISNAN(op))                              /* Testing needed only if NaN is input      */
     {
         if (f64_isSignalingNaN(op))                     /* Signalling NaN?                          */
+        {
             if (regs->fpc & FPC_MASK_IMI)               /* ..yes, is trapping enabled?              */
                 ieee_trap(regs, DXC_IEEE_INVALID_OP);   /* ..yes, raise DXC, no return              */
             else
@@ -2906,6 +2894,7 @@ DEF_INST(load_and_test_bfp_long_reg)
                 regs->fpc |= FPC_FLAG_SFI;
                 FLOAT64_MAKE_QNAN(op);
             }
+        }
     }
 
     PUT_FLOAT64_CC(op, r1, regs);
@@ -2926,6 +2915,7 @@ DEF_INST(load_and_test_bfp_short_reg)
     if (FLOAT32_ISNAN(op))                              /* Testing needed only if NaN is input      */
     {
         if (f32_isSignalingNaN(op))                     /* Signalling NaN?                          */
+        {
             if (regs->fpc & FPC_MASK_IMI)               /* ..yes, is trapping enabled?              */
                 ieee_trap(regs, DXC_IEEE_INVALID_OP);   /* ..yes, raise DXC, no return              */
             else
@@ -2933,6 +2923,7 @@ DEF_INST(load_and_test_bfp_short_reg)
                 regs->fpc |= FPC_FLAG_SFI;
                 FLOAT32_MAKE_QNAN(op);
             }
+        }
     }
 
     PUT_FLOAT32_CC( op, r1, regs );
@@ -2989,8 +2980,9 @@ DEF_INST(load_fp_int_bfp_long_reg)
 #else
     RRF_M(inst, regs, r1, r2, m3);
     m4 = 0;
-#endif    BFPINST_CHECK(regs);
+#endif
 
+    BFPINST_CHECK(regs);
     BFPRM_CHECK(m3,regs);
     GET_FLOAT64_OP( op, r2, regs );
 
@@ -3024,8 +3016,8 @@ DEF_INST(load_fp_int_bfp_ext_reg)
 #else
     RRF_M(inst, regs, r1, r2, m3);
     m4 = 0;
-#endif    BFPINST_CHECK(regs);
-
+#endif
+    
     BFPINST_CHECK(regs);
     BFPREGPAIR2_CHECK(r1, r2, regs);
     BFPRM_CHECK(m3,regs);
@@ -3554,7 +3546,7 @@ DEF_INST(multiply_bfp_ext_reg)
     GET_FLOAT128_OPS(op1, r1, op2, r2, regs);
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                    /* Set rounding mode from FPC                  */
     ans = f128_mul(op1, op2);
 
     if (softfloat_exceptionFlags)
@@ -3683,12 +3675,12 @@ DEF_INST(multiply_bfp_long_reg)
     GET_FLOAT64_OPS( op1, r1, op2, r2, regs );
     
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                  */
     ans = f64_mul( op1, op2 );
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true    */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f64_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_LONG
@@ -3716,12 +3708,12 @@ DEF_INST(multiply_bfp_long)
     VFETCH_FLOAT64_OP( op2, effective_addr2, b2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f64_mul(op1, op2);
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f64_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_LONG
@@ -3845,12 +3837,12 @@ DEF_INST(multiply_bfp_short_reg)
     GET_FLOAT32_OPS( op1, r1, op2, r2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f32_mul( op1, op2 );
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f32_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_SHORT
@@ -3877,13 +3869,13 @@ DEF_INST(multiply_bfp_short)
     VFETCH_FLOAT32_OP( op2, effective_addr2, b2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                    */
     ans = f32_mul( op1, op2 );
 
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f32_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_SHORT
@@ -3909,12 +3901,12 @@ DEF_INST(multiply_add_bfp_long_reg)
     GET_FLOAT64_OP( op2, r2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f64_mulAdd(op2, op3, op1);
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f64_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_LONG
@@ -3942,12 +3934,12 @@ DEF_INST(multiply_add_bfp_long)
     VFETCH_FLOAT64_OP( op2, effective_addr2, b2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f64_mulAdd(op2, op3, op1);
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f64_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_LONG
@@ -3973,12 +3965,12 @@ DEF_INST(multiply_add_bfp_short_reg)
     GET_FLOAT32_OP( op2, r2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f32_mulAdd(op2, op3, op1);
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f32_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_SHORT
@@ -4005,12 +3997,12 @@ DEF_INST(multiply_add_bfp_short)
     VFETCH_FLOAT32_OP( op2, effective_addr2, b2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f32_mulAdd(op2, op3, op1);
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f32_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_SHORT
@@ -4041,12 +4033,12 @@ DEF_INST(multiply_subtract_bfp_long_reg)
         op1.v ^= 0x8000000000000000ULL;         /* invert sign to enable use of f64_MulAdd      */
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f64_mulAdd(op2, op3, op1 );
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f64_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_LONG
@@ -4077,12 +4069,12 @@ DEF_INST(multiply_subtract_bfp_long)
         op1.v ^= 0x8000000000000000ULL;         /* invert sign to enable use of f64_MulAdd      */
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f64_mulAdd(op2, op3, op1);
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f64_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_LONG
@@ -4113,12 +4105,12 @@ DEF_INST(multiply_subtract_bfp_short_reg)
         op1.v ^= 0x80000000;                    /* invert sign to enable use of f32_MulAdd      */
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f32_mulAdd(op2, op3, op1);
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f32_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_SHORT
@@ -4150,12 +4142,12 @@ DEF_INST(multiply_subtract_bfp_short)
         op1.v ^= 0x80000000;                    /* invert sign to enable use of f32_MulAdd      */
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     ans = f32_mulAdd(op2, op3, op1);
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         ieee_trap_conds = ieee_exception_test_oux(regs);  /* test for overflow, underflow, inexact, save result             */
         if (ieee_trap_conds & (FPC_MASK_IMO | FPC_MASK_IMU))       /* Trappable overflow or underflow?                     */
             ans = f32_scaledResult(ieee_trap_conds & FPC_MASK_IMO ? SCALE_FACTOR_ARITH_OFLOW_SHORT
@@ -4181,12 +4173,12 @@ DEF_INST(squareroot_bfp_ext_reg)
     GET_FLOAT128_OP( op2, r2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     op1 = f128_sqrt( op2 );
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         IEEE_EXCEPTION_TEST_TRAPS(regs, ieee_trap_conds, FPC_MASK_IMX);
     }
 
@@ -4209,12 +4201,12 @@ DEF_INST(squareroot_bfp_long_reg)
     GET_FLOAT64_OP( op2, r2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     op1 = f64_sqrt( op2 );
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         IEEE_EXCEPTION_TEST_TRAPS(regs, ieee_trap_conds, FPC_MASK_IMX);
     }
 
@@ -4238,12 +4230,12 @@ DEF_INST(squareroot_bfp_long)
     VFETCH_FLOAT64_OP( op2, effective_addr2, b2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     op1 = f64_sqrt( op2 );
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         IEEE_EXCEPTION_TEST_TRAPS(regs, ieee_trap_conds, FPC_MASK_IMX);
     }
 
@@ -4266,12 +4258,12 @@ DEF_INST(squareroot_bfp_short_reg)
     GET_FLOAT32_OP( op2, r2, regs );
 
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     op1 = f32_sqrt( op2 );
 
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         IEEE_EXCEPTION_TEST_TRAPS(regs, ieee_trap_conds, FPC_MASK_IMX);
     }
 
@@ -4295,12 +4287,12 @@ DEF_INST(squareroot_bfp_short)
     VFETCH_FLOAT32_OP( op2, effective_addr2, b2, regs );
     
     softfloat_exceptionFlags = 0;
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;                     /* Set rounding mode from FPC                   */
     op1 = f32_sqrt( op2 );
     
     if (softfloat_exceptionFlags)
     {
-        IEEE_EXCEPTION_TRAP_XI(regs);      /* test for trappable Xi, no return if true    */
+        IEEE_EXCEPTION_TRAP_XI(regs);       /* test for trappable Xi, no return if true     */
         IEEE_EXCEPTION_TEST_TRAPS(regs, ieee_trap_conds, FPC_MASK_IMX);
     }
 
@@ -4327,7 +4319,7 @@ DEF_INST(subtract_bfp_ext_reg)
 
     SET_SF_RM_FROM_FPC;                                     /* Set rounding mode for Subtract from FPC              */
     softfloat_exceptionFlags = 0;                           /* Clear all Softfloat IEEE flags                       */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
 
     ans = f128_sub(op1, op2);
 
@@ -4361,7 +4353,7 @@ DEF_INST(subtract_bfp_long_reg)
     GET_FLOAT64_OPS(op1, r1, op2, r2, regs);                /* Get operand values                                   */
 
     softfloat_exceptionFlags = 0;                           /* Clear all Softfloat IEEE flags                       */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
     ans = f64_sub(op1, op2);                                /* Add two float64_t values                             */
 
     if (softfloat_exceptionFlags)                           /* Any IEEE Exceptions?                                 */
@@ -4395,7 +4387,7 @@ DEF_INST(subtract_bfp_long)
     VFETCH_FLOAT64_OP(op2, effective_addr2, b2, regs);
 
     softfloat_exceptionFlags = 0;                           /* Clear all Softfloat IEEE flags                       */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
     ans = f64_sub(op1, op2);                                /* Add two float64_t values                             */
 
     if (softfloat_exceptionFlags)                           /* Any IEEE Exceptions?                                 */
@@ -4428,7 +4420,7 @@ DEF_INST(subtract_bfp_short_reg)
     GET_FLOAT32_OPS(op1, r1, op2, r2, regs);                /* Get operand values                                   */
 
     softfloat_exceptionFlags = 0;                           /* Clear all Softfloat IEEE flags                       */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
     ans = f32_sub(op1, op2);                                /* Add two float64_t values                             */
 
     if (softfloat_exceptionFlags)                           /* Any IEEE Exceptions?                                 */
@@ -4463,7 +4455,7 @@ DEF_INST(subtract_bfp_short)
     VFETCH_FLOAT32_OP(op2, effective_addr2, b2, regs);
 
     softfloat_exceptionFlags = 0;                           /* Clear all Softfloat IEEE flags                       */
-    softfloat_roundingMode = SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
+    SET_SF_RM_FROM_FPC;            /* Set rounding mode from FPC                           */
     ans = f32_sub(op1, op2);                                /* Add two float64_t values                             */
 
     if (softfloat_exceptionFlags)                           /* Any IEEE Exceptions?                                 */
@@ -4606,7 +4598,7 @@ DEF_INST(divide_integer_bfp_long_reg)
         quo = f64_div(op1, op2);                                    /* calculate precise quotient                       */
         quo = f64_roundToInt(quo, softfloat_roundingMode, TRUE);    /* Round to integer per m4 rounding mode            */
         softfloat_exceptionFlags &= softfloat_flag_overflow;        /* Quotient only cares about overflow               */
-        softfloat_roundingMode = SET_SF_RM_FROM_FPC;                /* Set rounding mode from FPC for final remainder   */
+        SET_SF_RM_FROM_FPC;                /* Set rounding mode from FPC for final remainder   */
         quo.v ^= 0x8000000000000000ULL;                             /* Reverse sign of integer quotient                 */
         rem = f64_mulAdd(quo, op2, op1);                            /* Calculate remainder                              */
         quo.v ^= 0x8000000000000000ULL;                             /* Return sign of integer quotient to original value*/
@@ -4805,7 +4797,7 @@ DEF_INST(divide_integer_bfp_short_reg)
         quo = f32_div(op1, op2);                                    /* calculate precise quotient                       */
         quo = f32_roundToInt(quo, softfloat_roundingMode, TRUE);    /* Round to integer per m4 rounding mode            */
         softfloat_exceptionFlags &= softfloat_flag_overflow;        /* Quotient only cares about overflow               */
-        softfloat_roundingMode = SET_SF_RM_FROM_FPC;                /* Set rounding mode from FPC for final remainder   */
+        SET_SF_RM_FROM_FPC;                                         /* Set rounding mode from FPC for final remainder   */
         quo.v ^= 0x80000000;                                        /* Reverse sign of integer quotient                 */
         rem = f32_mulAdd(quo, op2, op1);                            /* Calculate remainder                              */
         quo.v ^= 0x80000000;                                        /* Return sign of integer quotient to original value*/
