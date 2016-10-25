@@ -1,4 +1,4 @@
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     1
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     1
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -54,7 +54,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
                                                                             50 * - All outputs are stored starting at real memory location X'E00'
                                                                             51 * - Count of trials performed by each CPU.
                                                                             52 * - Count of thread pre-emptions (switches) detected by each CPU.
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     2
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     2
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -110,7 +110,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
                                                                            101          MNOTE *,'asma detected; no CSECT padding performed'
                                                                            102          MEND
                                                                            103 *
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     3
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     3
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -166,7 +166,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
                                                                            153 * Above works on real iron (R15=0 after sysclear)
                                                                            154 * and in z/CMS (R15 points to start of load module)
                                                                            155 *
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     4
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     4
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -211,7 +211,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 000000000000020E  077E                                                     192          BNZR  R14            Yes, return to z/CMS test rig.
 0000000000000210  B2B2 F228                             0000000000000228   193          LPSWE HARDWAIT       Not data exception, enter disabled wait
                                                                            194 *
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     5
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     5
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -243,7 +243,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 000000000000024A  0000                                                     220 CPU1ADR  DS    H             CPU addr returned from STAP, used by SIGP
 000000000000024C  0000                                                     221 CPU2ADR  DS    H             CPU addr returned from STAP, used by SIGP
 000000000000024E  0000                                                     222 CPU3ADR  DS    H             CPU addr returned from STAP, used by SIGP
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     6
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     6
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -286,7 +286,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
                                                                            259 *
                                                                            260 *                            Set Prefix and start CPU 2
 0000000000000290  4820 F24C                             000000000000024C   261          LH    R2,CPU2ADR    Get next CPU addresss
-0000000000000294  E310 F5E8 0004                        00000000000005E8   262          LG    R1,=AD(CPU2PRE)   Get address of CPU1 Prefix area
+0000000000000294  E310 F5F8 0004                        00000000000005F8   262          LG    R1,=AD(CPU2PRE)   Get address of CPU1 Prefix area
 000000000000029A  1700                                                     263          XR    R0,R0         Set address of real low core
 000000000000029C  B254 0010                                                264          MVPG  R1,R0         Make a copy of low core
 00000000000002A0  AE12 000D                             000000000000000D   265          SIGP  R1,R2,SIGPPREF Set prefix area for CPU 2
@@ -296,15 +296,15 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
                                                                            269 *
                                                                            270 *                            Set Prefix and start CPU 3
 00000000000002B0  4820 F24E                             000000000000024E   271          LH    R2,CPU3ADR    Get next CPU addresss
-00000000000002B4  E310 F608 0004                        0000000000000608   272          LG    R1,=AD(CPU3PRE)   Get address of CPU1 Prefix area
+00000000000002B4  E310 F5E8 0004                        00000000000005E8   272          LG    R1,=AD(CPU3PRE)   Get address of CPU1 Prefix area
 00000000000002BA  1700                                                     273          XR    R0,R0         Set address of real low core
 00000000000002BC  B254 0010                                                274          MVPG  R1,R0         Make a copy of low core
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     7
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     7
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
 00000000000002C0  AE12 000D                             000000000000000D   275          SIGP  R1,R2,SIGPPREF Set prefix area for CPU 3
-00000000000002C4  D207 11A8 F5F8      00000000000001A8  00000000000005F8   276          MVC   RPSWADR(8,R1),=AD(CPU3BEG)  Update restart PSW in prefix
+00000000000002C4  D207 11A8 F608      00000000000001A8  0000000000000608   276          MVC   RPSWADR(8,R1),=AD(CPU3BEG)  Update restart PSW in prefix
 00000000000002CA  1711                                                     277          XR    R1,R1         Zero SIGP parameter register
 00000000000002CC  AE02 0006                             0000000000000006   278          SIGP  R0,R2,SIGPREST  Start next CPU using a Restart command
                                                                            279 *
@@ -355,7 +355,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 000000000000034C                                                           324 CPU0OPNX DS    0H            Do second floating point operation
 000000000000034C  B29D F3BC                             00000000000003BC   325          LFPC  CPU0FPCR      Reset FPCR to non-trap, RNTE
 0000000000000350  7820 F3CC                             00000000000003CC   326          LE    FPR2,CPU0OP2  Load operand one
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     8
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     8
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -411,7 +411,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 00000000000003D0  3F800000                                                 376 CPU0ER2  DC    X'3F800000'         Expected 1.0
 00000000000003D4  00000000                                                 377 CPU0EF2  DC    X'00000000'         Expected FPCR flag-free, RNTE
                                                                            378 *
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page     9
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page     9
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -467,7 +467,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 000000000000043E  4780 F450                             0000000000000450   428          BE    CPU1OPNX      ..Yes, end of iteration
 0000000000000442  4160 6001                             0000000000000001   429          LA    R6,1(,R6)     Increment FPCR contents error count
 0000000000000446  5060 C034                             0000000000002034   430          ST    R6,CPU1FECT   Store updated loop iteration count
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    10
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    10
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -512,7 +512,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 00000000000004B2  3F800000                                                 469 CPU1ER2  DC    X'3F800000'         Expected 1.0
 00000000000004B6  00000001                                                 470 CPU1EF2  DC    X'00000001'         Expected FPCR flag-free, RM
                                                                            471 *
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    11
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    11
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -568,7 +568,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 0000000000000520  4780 F532                             0000000000000532   521          BE    CPU2OPDN      ..Yes, end of iteration
 0000000000000524  4160 6001                             0000000000000001   522          LA    R6,1(,R6)     Increment FPCR contents error count
 0000000000000528  5060 C038                             0000000000002038   523          ST    R6,CPU2FECT   Store updated loop iteration count
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    12
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    12
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -589,7 +589,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
                                                                            538 *
 0000000000000544  40000000                                                 539 CPU2ERES DC    X'40000000'         Expected 2.0
 0000000000000548  00080002                                                 540 CPU2EFPC DC    X'00080002'         Expected FPCR flag inexact, RM
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    13
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    13
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -645,7 +645,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 00000000000005B2  4780 F5C4                             00000000000005C4   590          BE    CPU3OPDN      ..Yes, end of iteration
 00000000000005B6  4160 6001                             0000000000000001   591          LA    R6,1(,R6)     Increment FPCR contents error count
 00000000000005BA  5060 C03C                             000000000000203C   592          ST    R6,CPU3FECT   Store updated loop iteration count
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    14
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    14
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -670,13 +670,13 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
 
 00000000000005E0                                                           610          LTORG
 00000000000005E0  00000000 000004BA                                        611                =AD(CPU2BEG)
-00000000000005E8  00000000 00012000                                        612                =AD(CPU2PRE)
+00000000000005E8  00000000 00014000                                        612                =AD(CPU3PRE)
 00000000000005F0  00000000 000003D8                                        613                =AD(CPU1BEG)
-00000000000005F8  00000000 0000054C                                        614                =AD(CPU3BEG)
+00000000000005F8  00000000 00012000                                        614                =AD(CPU2PRE)
 0000000000000600  00000000 00010000                                        615                =AD(CPU1PRE)
-0000000000000608  00000000 00014000                                        616                =AD(CPU3PRE)
+0000000000000608  00000000 0000054C                                        616                =AD(CPU3BEG)
 0000000000000610  00989680                                                 617                =F'10000000'
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    15
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    15
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -732,7 +732,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
                                                                            668 * Error Results
                                                                            669 *
 0000000000002060  00000000                                                 670 CPU0XRES DC    X'00000000'         Last error results
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    16
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    16
 
       LOC            OBJECT CODE           ADDR1             ADDR2        STMT
 
@@ -756,7 +756,7 @@ ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety      
                                                                            688          PADCSECT ENDLABL
                                                                            689+         MNOTE *,'asma detected; no CSECT padding performed'
 0000000000002082                                                           690          END
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    17
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    17
 
      SYMBOL        TYPE  VALUE   LENGTH  DEFN  REFERENCES
 
@@ -812,7 +812,7 @@ CPU2ADR             H    00024C       2   221  238  261  357  500  502
 CPU2AFPC            X    002054       4   663  511  520  524
 CPU2ARES            X    002050       4   662  510  513  517
 CPU2BEG             H    0004BA       2   481  266
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    18
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    18
 
      SYMBOL        TYPE  VALUE   LENGTH  DEFN  REFERENCES
 
@@ -868,7 +868,7 @@ FPR7                U    000007       1   137
 FPR8                U    000008       1   138  307  308  327  328  416  417  436  437  509  510  578  579
 FPR9                U    000009       1   139
 HARDWAIT            X    000228       8   212  193
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    19
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    19
 
      SYMBOL        TYPE  VALUE   LENGTH  DEFN  REFERENCES
 
@@ -908,16 +908,16 @@ WAITPSW             X    000218       8   211  365
 =AD(CPU1BEG)        A    0005F0       8   613  256
 =AD(CPU1PRE)        A    000600       8   615  252
 =AD(CPU2BEG)        A    0005E0       8   611  266
-=AD(CPU2PRE)        A    0005E8       8   612  262
-=AD(CPU3BEG)        A    0005F8       8   614  276
-=AD(CPU3PRE)        A    000608       8   616  272
+=AD(CPU2PRE)        A    0005F8       8   614  262
+=AD(CPU3BEG)        A    000608       8   616  276
+=AD(CPU3PRE)        A    0005E8       8   612  272
 =F'10000000'        F    000610       4   617  288
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    20
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    20
 
  MACRO     DEFN  REFERENCES
 
 PADCSECT     82   688
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    21
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    21
 
    DESC     SYMBOL   SIZE     POS        ADDR
 
@@ -926,7 +926,7 @@ Entry: 0
 Image      IMAGE     8322  0000-2081  0000-2081
   Region             8322  0000-2081  0000-2081
     CSECT  BFPTHRED  8322  0000-2081  0000-2081
-ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          19 Oct 2016 10:24:16  Page    22
+ASMA Ver. 0.2.0  bfp-023-threads.asm: Test IEEE/Softfloat 3a Thread Safety                          23 Oct 2016 11:02:58  Page    22
 
    STMT                               FILE NAME
 

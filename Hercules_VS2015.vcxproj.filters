@@ -893,9 +893,6 @@
     <None Include="README.SETUID">
       <Filter>Other Files\DOC\README</Filter>
     </None>
-    <None Include="README.SOFTFLOAT">
-      <Filter>Other Files\DOC\README</Filter>
-    </None>
     <None Include="README.SUN">
       <Filter>Other Files\DOC\README</Filter>
     </None>
@@ -1985,6 +1982,12 @@
     <None Include="tests\bfp-001-divtoint.tst">
       <Filter>Other Files\tests\scripts\tst</Filter>
     </None>
+    <None Include="msvc.makefile.includes\EXTPKG_DIRS.msvc">
+      <Filter>Other Files\Build\msvc\makefile includes</Filter>
+    </None>
+    <None Include="msvc.makefile.includes\EXTPKG_FLAGS.msvc">
+      <Filter>Other Files\Build\msvc\makefile includes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="crypto\aes.h">
@@ -2377,6 +2380,7 @@
     <ClInclude Include="w32util.h">
       <Filter>Source Files\Hercules\Emulation\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="softfloat-types.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="decNumber\readme.txt">

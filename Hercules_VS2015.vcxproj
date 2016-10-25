@@ -611,6 +611,8 @@
     <None Include="msvc.makefile.includes\BZIP2_RULES.msvc" />
     <None Include="msvc.makefile.includes\CONFIG.msvc" />
     <None Include="msvc.makefile.includes\DEBUG_RETAIL.msvc" />
+    <None Include="msvc.makefile.includes\EXTPKG_DIRS.msvc" />
+    <None Include="msvc.makefile.includes\EXTPKG_FLAGS.msvc" />
     <None Include="msvc.makefile.includes\HERC_FLAGS.msvc" />
     <None Include="msvc.makefile.includes\HQA_DIR.msvc" />
     <None Include="msvc.makefile.includes\HQA_FLAGS.msvc" />
