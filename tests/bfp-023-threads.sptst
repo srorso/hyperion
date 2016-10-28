@@ -35,5 +35,7 @@ r 2060.10
 r 2070.10
 *Want "CPU0/CPU1 last error" 00000000 00000000 00000000 00000000
 
+numcpu 1
+
 *Done
 

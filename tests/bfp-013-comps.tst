@@ -10,14 +10,16 @@ archmode esame
 
 #
 # Following suppresses logging of program checks.  This test program, as part
-# of its normal operation, generates lots of program check messages that have
-# no value in the validation process.
+# of its normal operation, generates 215 program check messages that have no
+# value in the validation process.  (The messages, not the program checks.)
 #
 ostailor quiet
 
 loadcore "$(testpath)/bfp-013-comps.core"
 
 runtest 1.0
+
+ostailer null   # restore messages for subsequent tests
 
 
 # Compare short BFP results - FPCR contents and CC

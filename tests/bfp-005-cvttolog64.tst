@@ -10,14 +10,16 @@ archmode esame
 
 #
 # Following suppresses logging of program checks.  This test program, as part
-# of its normal operation, generates lots of program check messages that have
-# no value in the validation process.
+# of its normal operation, generates 16 program check messages that have no
+# value in the validation process.  (The messages, not the program checks.)
 #
 ostailor quiet
 
 loadcore "$(testpath)/bfp-005-cvttolog64.core"
 
 runtest 1.0
+
+ostailer null   # restore messages for subsequent tests
 
 
 # BFP short inputs converted to uint-64 - results

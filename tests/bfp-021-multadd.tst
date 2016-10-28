@@ -10,8 +10,8 @@ archmode esame
 
 #
 # Following suppresses logging of program checks.  This test program, as part
-# of its normal operation, generates lots of program check messages that have
-# no value in the validation process.
+# of its normal operation, generates 1,210 program check messages that have no
+# value in the validation process.  (The messages, not the program checks.)
 #
 ostailor quiet
 

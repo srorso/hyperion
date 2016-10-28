@@ -47,7 +47,7 @@
 *   the program.  
 *
 *Output
-* - All outputs are stored starting at real memory location X'E00'
+* - All outputs are stored starting at real memory location X'2000'
 * - Count of trials performed by each CPU.
 * - Count of thread pre-emptions (switches) detected by each CPU.
 *   Note that not all pre-emptions are detected.
@@ -69,11 +69,7 @@
 * - None
 *
 *Notes
-* - Prefixing is not used by this program.  All four processors use
-*   the same low core locations.  This means that traps (program
-*   checks) are not supported.  Any changes to this program to test
-*   trappable instruction results means prefixing must be used.  
-* - Any program check results in load of a disabled wait PSW.
+* - Prefixing is used by this program.  
 *
 *
 ***********************************************************************
@@ -223,9 +219,10 @@ CPU3ADR  DS    H             CPU addr returned from STAP, used by SIGP
          EJECT
 ***********************************************************************
 *
-* CPU 0 program.  Start all processors, enable Advanced Floating 
-* Point, repetitively perform a floating point operation, then stop
-* all three other processors and load a hard wait PSW.  
+* CPU 0 program.  Set prefixes, start all processors, enable Additional
+* Floating Point Registers, repetitively perform a floating point
+* operation, then stop all three other processors and load a hard wait 
+* PSW.  
 *
 ***********************************************************************
          SPACE 2
@@ -276,6 +273,8 @@ CPU0BEG  DS    0H            Start of processing for CPU zero
          MVC   RPSWADR(8,R1),=AD(CPU3BEG)  Update restart PSW in prefix
          XR    R1,R1         Zero SIGP parameter register
          SIGP  R0,R2,SIGPREST  Start next CPU using a Restart command
+*
+* Other processors started.  Now perform floating point operations.  
 *
          STCTL R0,R0,CPU0CR0 Store CR0 to enable AFP
          OI    CPU0CR0+1,X'04' Turn on AFP bit
