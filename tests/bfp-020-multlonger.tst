@@ -21,7 +21,7 @@ loadcore "$(testpath)/bfp-020-multlonger.core"
 
 runtest 1.0
 
-ostailer null   # restore messages for subsequent tests
+ostailor null   # restore messages for subsequent tests
 
 
 # Short BFP multiply to long results

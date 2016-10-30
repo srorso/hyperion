@@ -17,7 +17,7 @@ ostailor quiet
 loadcore "$(testpath)/bfp-004-cvttolog.core"
 runtest 1.0
 
-ostailer null   # restore messages for subsequent tests
+ostailor null   # restore messages for subsequent tests
 
 
 # BFP short inputs converted to uint-32 test results

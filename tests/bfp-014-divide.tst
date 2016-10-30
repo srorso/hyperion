@@ -19,7 +19,7 @@ loadcore "$(testpath)/bfp-014-divide.core"
 
 runtest 1.0
 
-ostailer null   # restore messages for subsequent tests
+ostailor null   # restore messages for subsequent tests
 
 
 # Short BFP Non-finite test results
