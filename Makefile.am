@@ -935,7 +935,7 @@ noinst_HEADERS =            \
 	shared.h                \
 	sllib.h                 \
 	sockdev.h               \
-	softfloat-types.h       \
+	softfloat_types.h       \
 	softfloat.h             \
 	sr.h                    \
 	tapedev.h               \
@@ -1032,7 +1032,7 @@ uninstall-hook:
 # recompiled whenever the interface to Softfloat 3a is changed.
 # Changes to softfloat.h and softfloat-types.h are evidence of same.
 
-.libs/ieee.o:       softfloat.h softfloat-types.h
+.libs/ieee.o:       softfloat.h softfloat_types.h
 
 check:
 if APPLE
