@@ -45,11 +45,6 @@
  #error Unable to determine Architecture Mode
 #endif
 
-#ifdef FEATURE_FLOATING_POINT_EXTENSION_FACILITY
-  /* FEATURE_FLOATING_POINT_EXTENSION_FACILITY defined*/
-#else
-  /* **ERROR**  FEATURE_FLOATING_POINT_EXTENSION_FACILITY not defined  */
-#endif // FEATURE_FLOATING_POINT_EXTENSION_FACILITY
 #include  "featchk.h"
 
 #undef ARCH_MODE
