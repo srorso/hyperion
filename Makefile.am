@@ -23,13 +23,14 @@ SUBDIRS =       \
 	.           \
 	crypto
 
-LDADD = @LIBS@
+LDADD = @LIBS@ -L$(abs_top_builddir)/../s3fh/lib -lSoftFloat
 
 DYNAMIC_VERSION := $(shell $(top_srcdir)/_dynamic_version $(top_srcdir))
 
-AM_CPPFLAGS =                  \
-	-I$(top_srcdir)             \
-	-I$(top_srcdir)/decNumber   \
+AM_CPPFLAGS =                          \
+	-I$(top_srcdir)                    \
+	-I$(top_srcdir)/decNumber          \
+    -I$(abs_top_builddir)/../s3fh/include  \
 	-I@HQA_INC@
 
 if BUILD_HERCIFC
@@ -1032,7 +1033,8 @@ uninstall-hook:
 # recompiled whenever the interface to Softfloat 3a is changed.
 # Changes to softfloat.h and softfloat-types.h are evidence of same.
 
-.libs/ieee.o:       softfloat.h softfloat_types.h
+.libs/ieee.o:    $(abs_top_builddir)/../s3fh/include/softfloat.h                 \
+                 $(abs_top_builddir)/../s3fh/include/softfloat_types.h
 
 check:
 if APPLE
