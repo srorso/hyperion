@@ -21,7 +21,8 @@ SUBDIRS =       \
 	html        \
 	man         \
 	.           \
-	crypto
+	crypto      \
+    tests
 
 LDADD = @LIBS@ -L$(abs_top_builddir)/../s3fh/lib -lSoftFloat
 
