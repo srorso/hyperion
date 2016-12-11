@@ -22,9 +22,21 @@
 
 !IFNDEF SFLIB_DIR
 # Undefined: use default value, if it exists.
+
 # SFLIB_DIR defaults to ..\$(PROCESSOR_ARCHITECTURE)\s3fh relative to current directory
-SFLIB_DIR = ..\$(PROCESSOR_ARCHITECTURE)\s3fh
+# Unfortunately, because VS is a 32-bit application, $(PROCESSOR_ARCHITECTURE) is 
+# always set to x86.  So we translate $(CPU) into the appropriate value for the 
+# SFLIB_DIR path.
+
+!IF "$(CPU)" == "AMD64"
+SFLIB_DIR = ..\AMD64\s3fh
+!ELSEIF "$(CPU)" == "i386"
+SFLIB_DIR = ..\x86\s3fh
+!ELSE
+!ERROR Softfloat detected invalid CPU value: "$(CPU)"
+!ENDIF
 !MESSAGE SoftFloat 3a install tree defaulted to "$(SFLIB_DIR)"
+
 !ELSE
 # Defined: use explicit directory or subdirectory
 # unless "NONE" is specified or it doesn't exist.
@@ -34,6 +46,7 @@ SFLIB_DIR = ..\$(PROCESSOR_ARCHITECTURE)\s3fh
 !ELSE
 !MESSAGE SoftFloat 3a install tree set to "$(SFLIB_DIR)" from SFLIB_DIR environment variable
 !ENDIF   
+
 !ENDIF
 
 # check for the public headers and fail the build if they are missing.  We cannot test for the 
