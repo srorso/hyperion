@@ -73,33 +73,22 @@ DIRECTORY STRUCTURE FOR HERCULES FOR WINDOWS
 DIRECTORY STRUCTURE FOR THE BZIP2, PCRE, AND ZLIB OPTIONAL PACKAGES
 
    The Windows build of Hercules by default expects to find the bzip2, 
-   pcre, and zlib packages in the winbuild directory in the hyperion 
-   directory, like so:   
-   
-   <topdir>\hyperion                  # Hercules source\build directory
-           \hyperion\winbuild         # Packages for Windows builds
-           \hyperion\winbuild\bzip2   # ..bzip2 compression
-           \hyperion\winbuild\pcre    # ..perl-compatible regular expr.
-           \hyperion\winbuild\bzip2   # ..zip2 compression
-
-   This default is left over from early Cygwin/MinGW-based builds of 
-   Hercules under Windows and is not recommended.  
-   
-   Instead, set up the winbuild directory under <topdir>, at the same
-   level as the hyperion directory, like so:
+   pcre, and zlib packages in the winbuild directory, which should be at
+   the same level as the hyperion directory, like so:
 
    <topdir>\hyperion                  # Hercules source\build directory
            \winbuild                  # Packages for Windows builds
            \winbuild\bzip2            # ..bzip2 compression
            \winbuild\pcre             # ..perl-compatible regular expr.
-           \winbuild\bzip2            # ..zip2 compression
+           \winbuild\zlib             # ..zip2 compression
 
-   and override the Windows build defaults by setting the following 
-   Windows environment variables:   
+   If you wish, you may place the winbuild directory whereever you wish 
+   and override the Hercules Windows build defaults by setting the
+   following Windows environment variables:   
 
-     SET ZLIB_DIR=<drive><path><topdir>\winbuild\zlib
-     SET BZIP2_DIR=<drive><path><topdir>\winbuild\bzip2
-     SET PCRE_DIR=<drive><path><topdir>\winbuild\pcre
+     SET ZLIB_DIR=<drive><path>\winbuild\zlib
+     SET BZIP2_DIR=<drive><path>\winbuild\bzip2
+     SET PCRE_DIR=<drive><path>\winbuild\pcre
    
    Replace <drive> with the drive letter and <path> with the path
    containing the top directory of the Hercules build.  
@@ -426,5 +415,24 @@ APPENDIX: WHY IS WIN32.MAK REQUIRED TO BUILD HERCULES?
    What is the easiest way to address this issue: copy win32.mak from 
    an earlier SDK.  And that is what many developers have done.  
 
+
+DEPRECATED BUT SUPPORTED ALTERNATE WINBUILD DIRECTORY LOCATION
+   
+   Hercules formerly expected the winbuild directory to be located 
+   within the hyperion directory tree, thus:
+   
+   <topdir>\hyperion                  # Hercules source\build directory
+           \hyperion\winbuild         # Packages for Windows builds
+           \hyperion\winbuild\bzip2   # ..bzip2 compression
+           \hyperion\winbuild\pcre    # ..perl-compatible regular expr.
+           \hyperion\winbuild\zlib    # ..zip2 compression
+
+   This default is left over from early Cygwin/MinGW-based builds of 
+   Hercules under Windows and is deprecated.  While it is currently
+   supported, you are urged to move the winbuild directory to the 
+   same level as the hyperion directory.  
+   
+   Support for this directory location will be removed in a future
+   release.  
    
 
