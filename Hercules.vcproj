@@ -1637,7 +1637,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\softfloat-types.h"
+							RelativePath=".\softfloat_types.h"
 							>
 						</File>
 						<File

@@ -850,7 +850,7 @@
     <ClInclude Include="printfmt.h" />
     <ClInclude Include="pttrace.h" />
     <ClInclude Include="service.h" />
-    <ClInclude Include="softfloat-types.h" />
+    <ClInclude Include="softfloat_types.h" />
     <ClInclude Include="softfloat.h" />
     <ClInclude Include="sr.h" />
     <ClInclude Include="version.h" />
