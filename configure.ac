@@ -9,6 +9,52 @@
 ###############################################################################
 
 AC_INIT(hercules.h)           # (package, version, bugreport email, etc)
+
+
+###############################################################################
+# Test for an in-source build and abort if such is attempted.  The
+# working directory for configure should be the build directory, not
+# the source directory.  If the working directory when configure is run
+# is the same as the path for configure, then we assume an in-source
+# build.  If configure.ac exists in the build directory, then we assume
+# an in-source build.
+###############################################################################
+
+AC_MSG_NOTICE( [build directory:    $(pwd)])
+AC_MSG_NOTICE( [source directory:   $(cd $(dirname $0) && pwd)] )
+if test "$(pwd)" = "$(cd $(dirname $0) && pwd)"; then
+    AC_MSG_NOTICE( [---------------------------------------------------------------------------] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [ ERROR: source and build directories cannot be the same.                   ] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [ In-source build detected.  Hercules must be built out of source.          ] )
+    AC_MSG_NOTICE( [ See https://github.com/hercules-390/hyperion/blob/master/README.BuildUNIX.txt ] )
+    AC_MSG_NOTICE( [ for additional information.                                               ] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [---------------------------------------------------------------------------] )
+    AC_MSG_ERROR([in source build detected, aborting configure...])
+fi
+
+if test -e $(pwd)/configure.ac; then
+    AC_MSG_NOTICE( [---------------------------------------------------------------------------] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [ ERROR: configure.ac found in build directory.  Suspect in-source build.   ] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [ Hercules must be built out of source.  If this is truly an out of source  ] )
+    AC_MSG_NOTICE( [ build, then remove configure.ac from the build directory.  See            ] )
+    AC_MSG_NOTICE( [ https://github.com/hercules-390/hyperion/blob/master/README.BuildUNIX.txt ] )
+    AC_MSG_NOTICE( [ for additional information.                                               ] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [---------------------------------------------------------------------------] )
+    AC_MSG_ERROR([in source build detected (configure.ac found), aborting configure...])
+fi
+
+###############################################################################
+# Building outside of the source directory.  Continue.
+###############################################################################
+
+
+
 AC_REVISION($Revision$)       # (the version of this configure.ac)
 AC_CONFIG_AUX_DIR(autoconf)   # (directory containing auxillary build tools)
 
@@ -226,6 +272,72 @@ if test "$hc_cv_is_aix" = "yes"; then
   LDFLAGS="$LDFLAGS -L/usr/local/lib"
   CPPFLAGS="$CPPFLAGS -I/usr/local/include -D_LARGE_FILES -D_LFS_LARGEFILE -D_LINUX_SOURCE_COMPAT"
 fi
+
+###############################################################################
+#   Checks SoftFloat 3a For Hercules headers.  If an alternate library
+#   test that one.  After successful tests, the path name is converted
+#   to an absolute path.
+###############################################################################
+
+AC_ARG_ENABLE( s3fh-altdir,
+
+    AC_HELP_STRING( [--enable-s3fh-altdir=DIR],
+
+        [define an alternate location for the s3fh directory. Specify a relative
+         path from the build directory or an absolute path.]
+    ),
+    [
+        hc_cv_s3fh_dir=${enableval}
+
+        if test -d "$hc_cv_s3fh_dir" ; then
+          if test -e "$hc_cv_s3fh_dir/include/softfloat.h"          \
+             -a   -e  "$hc_cv_s3fh_dir/include/softfloat_types.h"   \
+             -a   -e  "$hc_cv_s3fh_dir/lib/libSoftFloat.a"        ; then
+            AC_MSG_NOTICE( [using alternate directory "${hc_cv_s3fh_dir}" for SoftFloat-3a] )
+          else
+            AC_MSG_RESULT( [ERROR: --enable-s3fa-altdir= directory does not have SoftFloat-3a headers: $hc_cv_s3fh_dir] )
+            hc_cv_have_softfloat_h=no
+          fi
+        else
+          AC_MSG_RESULT( [ERROR: --enable-s3fa-altdir= directory not found: $hc_cv_s3fh_dir] )
+          hc_cv_have_softfloat_h=no
+        fi
+
+    ],
+    [
+        hc_cv_s3fh_dir=../s3fh
+    ]
+)
+hc_cv_s3fh_dir=$(cd "$(dirname "$hc_cv_s3fh_dir")" && pwd)/$(basename "$hc_cv_s3fh_dir")
+
+AC_MSG_NOTICE( [looking for softfloat_types.h in ${hc_cv_s3fh_dir}/include] )
+
+hc_temp=$CFLAGS
+CFLAGS="$CFLAGS -I${hc_cv_s3fh_dir}/include"
+
+AC_CHECK_HEADER( softfloat_types.h,
+    [hc_cv_have_softfloat_h=yes],
+    [hc_cv_have_softfloat_h=no]
+)
+
+CFLAGS=$hc_temp
+
+if test "$hc_cv_have_softfloat_h" = "no" ; then
+    AC_MSG_NOTICE( [---------------------------------------------------------------------------] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [ ERROR: Required header 'softfloat_types.h' not found.                     ] )
+    AC_MSG_NOTICE( [ Check for ${hc_cv_s3fh_dir} directory                                     ] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [ Take note: SoftFloat-3a For Hercules must now be built separately.        ] )
+    AC_MSG_NOTICE( [ See https://github.com/hercules-390/SoftFloat-3a/blob/master/BUILDING.txt ] )
+    AC_MSG_NOTICE( [ for additional information.                                               ] )
+    AC_MSG_NOTICE( [                                                                           ] )
+    AC_MSG_NOTICE( [---------------------------------------------------------------------------] )
+    AC_MSG_ERROR( [configure aborted...])
+else
+    AC_MSG_NOTICE( [You may ignore the two warnings above, "accepted by the compiler, rejected by the preprocessor!"] )
+fi
+
 
 # -----------------------------------------------------------------------------
 #  PROGRAMMING NOTE: The below 'AC_SUBST' macro causes AC_OUTPUT to replace
@@ -474,6 +586,9 @@ AH_TEMPLATE( [C11_ATOMIC_LLONG_LOCK_FREE],   [Define to 'stdatomics.h' ATOMIC_*_
 AH_TEMPLATE( [C11_ATOMIC_POINTER_LOCK_FREE], [Define to 'stdatomics.h' ATOMIC_*_LOCK_FREE value] )
 AH_TEMPLATE( [HAVE_ATOMIC_INTRINSICS],       [Define if '__atomic_xor_fetch' and friends are available] )
 AH_TEMPLATE( [HAVE_SYNC_BUILTINS],           [Define if '__sync_xor_and_fetch' and friends are available] )
+AH_TEMPLATE( [VERS_MAJ],                     [Hardwired first component of version.] )
+AH_TEMPLATE( [VERS_INT],                     [Hardwired second component of version.] )
+AH_TEMPLATE( [VERS_MIN],                     [Hardwired third component of version.] )
 
 ###############################################################################
 #   Checks for REQUIRED (non-optional) header files...
@@ -532,57 +647,6 @@ AC_CHECK_HEADER( pthread.h, [hc_cv_have_pthread_h=yes],
 )
 
 AC_CACHE_SAVE()
-
-###############################################################################
-#   Checks SoftFloat 3a For Hercules headers.  If an alternate library
-#   test that one.  After successful tests, the path name is converted
-#   to an absolute path.
-###############################################################################
-
-AC_ARG_ENABLE( s3fh-altdir,
-
-    AC_HELP_STRING( [--enable-s3fh-altdir=DIR],
-
-        [define an alternate location for the s3fh directory. Specify a relative
-         path from the build directory or an absolute path.]
-    ),
-    [
-        hc_cv_s3fh_dir=${enableval}
-
-        if test -d "$hc_cv_s3fh_dir" ; then
-          if test -e "$hc_cv_s3fh_dir/include/softfloat.h"          \
-             -a   -e  "$hc_cv_s3fh_dir/include/softfloat_types.h"   \
-             -a   -e  "$hc_cv_s3fh_dir/lib/libSoftFloat.a"        ; then
-            AC_MSG_NOTICE( [using alternate directory "${hc_cv_s3fh_dir}" for SoftFloat-3a] )
-          else
-            AC_MSG_RESULT( [ERROR: --enable-s3fa-altdir= directory does not have SoftFloat-3a headers: $hc_cv_s3fh_dir] )
-            hc_error=yes
-          fi
-        else
-          AC_MSG_RESULT( [ERROR: --enable-s3fa-altdir= directory not found: $hc_cv_s3fh_dir] )
-          hc_error=yes
-        fi
-
-    ],
-    [
-        hc_cv_s3fh_dir=../s3fh
-    ]
-)
-hc_cv_s3fh_dir=$(cd "$(dirname "$hc_cv_s3fh_dir")" && pwd)/$(basename "$hc_cv_s3fh_dir")
-
-AC_MSG_NOTICE( [looking for softfloat_types.h in ${hc_cv_s3fh_dir}/include] )
-
-hc_temp=$CFLAGS
-CFLAGS="$CFLAGS -I${hc_cv_s3fh_dir}/include"
-
-AC_CHECK_HEADER( softfloat_types.h,
-    [hc_cv_have_softfloat_h=yes],
-    [hc_cv_have_softfloat_h=no]
-)
-
-CFLAGS=$hc_temp
-AC_MSG_NOTICE( [You may ignore the two warnings above, "accepted by the compiler, rejected by the preprocessor!"] )
-
 
 ###############################################################################
 #   Checks for optional (non-required) header files...
@@ -1281,13 +1345,13 @@ AC_CACHE_CHECK( [if this is the broken 2.96 version of GCC],
         if test "$GCC" = "yes"; then
 
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
                     #if __GNUC__ == 2 && __GNUC_MINOR__ == 96
                       yes;
                     #else
                       int no;
                     #endif
-                ],
+                ] ],
                 [hc_cv_is_gcc_2_96=no],
                 [hc_cv_is_gcc_2_96=yes]
             )
@@ -1310,16 +1374,17 @@ AC_CACHE_CHECK( [if atomic '_sync' builtins are available],
     [hc_cv_sync_builtins_available],
     [
         AC_COMPILE_IFELSE(
-        [
-            static unsigned char  b = 0;
-            static unsigned char *p = &b;
-            void main()
-            {
-                __sync_or_and_fetch  ( p, 0xFF );
-                __sync_and_and_fetch ( p, 0x00 );
-                __sync_xor_and_fetch ( p, 0xAC );
-            }
-        ],
+                [ AC_LANG_SOURCE [
+                    static unsigned char  b = 0;
+                    static unsigned char *p = &b;
+                    void main()
+                    {
+                        __sync_or_and_fetch  ( p, 0xFF );
+                        __sync_and_and_fetch ( p, 0x00 );
+                        __sync_xor_and_fetch ( p, 0xAC );
+                    }
+                  ]
+                ],
         [hc_cv_sync_builtins_available=yes],
         [hc_cv_sync_builtins_available=no] )
     ]
@@ -1337,7 +1402,7 @@ AC_CACHE_CHECK( [if '__atomic' intrinsics are available],
     [hc_cv_atomic_intrinsics_available],
     [
         AC_COMPILE_IFELSE(
-        [
+        [ AC_LANG_SOURCE [
             static unsigned char  b = 0;
             static unsigned char *p = &b;
             void main()
@@ -1346,6 +1411,7 @@ AC_CACHE_CHECK( [if '__atomic' intrinsics are available],
                 __atomic_and_fetch ( p, 0x00, __ATOMIC_SEQ_CST );
                 __atomic_xor_fetch ( p, 0xAC, __ATOMIC_SEQ_CST );
             }
+          ]
         ],
         [hc_cv_atomic_intrinsics_available=yes],
         [hc_cv_atomic_intrinsics_available=no] )
@@ -1364,7 +1430,7 @@ AC_CACHE_CHECK( [if C11 atomics are available],
     [hc_cv_c11_atomics_available],
     [
         AC_COMPILE_IFELSE(
-        [
+        [ AC_LANG_SOURCE [
             #if !defined(HAVE_STDATOMIC_H) || defined(__STDC_NO_ATOMICS__)
               #error C11 atomics are not available
             #else
@@ -1375,6 +1441,7 @@ AC_CACHE_CHECK( [if C11 atomics are available],
                 #error C11 atomics are not available
               #endif
             #endif
+          ]
         ],
         [hc_cv_c11_atomics_available=yes],
         [hc_cv_c11_atomics_available=no] )
@@ -1464,9 +1531,9 @@ if test "$GCC" = "yes"; then
             CFLAGS="-Wall -Werror"
 
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
                     void logmsg(char*,...) __attribute__ ((format(printf,1,2)));
-                ],
+                ] ],
                 [hc_cv_attr_printf_supported=yes],
                 [hc_cv_attr_printf_supported=no]
             )
@@ -1496,9 +1563,9 @@ if test "$GCC" = "yes"; then
             CFLAGS="-Wall -Werror"
 
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
                     void conftest() __attribute__ ((regparm(1)));
-                ],
+                ] ],
                 [hc_cv_regparm_attr_supported=yes],
                 [hc_cv_regparm_attr_supported=no]
             )
@@ -1524,10 +1591,10 @@ if test "$GCC" = "yes"; then
             CFLAGS="-Wall -Werror"
 
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
                     /* Test an ancient diagnostic */
                     #pragma GCC diagnostic ignored "-Wformat"
-                ],
+                ] ],
                 [hc_cv_have_gcc_diag_pragma=yes],
                 [hc_cv_have_gcc_diag_pragma=no]
             )
@@ -1554,9 +1621,9 @@ if test "$hc_cv_have_gcc_diag_pragma" = "yes"  &&
             CFLAGS="-Wall -Werror"
 
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
                     #pragma GCC diagnostic push
-                ],
+                ] ],
                 [hc_cv_have_gcc_diag_pushpop=yes],
                 [hc_cv_have_gcc_diag_pushpop=no]
             )
@@ -1584,13 +1651,13 @@ if test "$GCC" = "yes"; then
             CFLAGS="-Wall -Werror"
 
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
                     static int unused() {return 1;}
                     int main(int argc, char **argv)
                     {
                         return 0;
                     }
-                ],
+                ] ],
                 [hc_cv_have_gcc_unused_func_warning=no],
                 [hc_cv_have_gcc_unused_func_warning=yes]
             )
@@ -1618,14 +1685,14 @@ if test "$GCC" = "yes"; then
             CFLAGS="-Wall -Werror"
 
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
                     int main(int argc, char **argv)
                     {
                         int rc;
                          rc = 2;
                         return 0;
                     }
-                ],
+                ] ],
                 [hc_cv_have_gcc_set_unused_warning=no],
                 [hc_cv_have_gcc_set_unused_warning=yes]
             )
@@ -1766,7 +1833,7 @@ if test "$GCC" = "yes"; then
             CFLAGS="-Wall -Werror"
 
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
                     #include <stdio.h>
                     #define MACRO(_x,_args...) printf(_x, ## _args)
                     int  main( int argc, char **argv, char **arge )
@@ -1774,7 +1841,7 @@ if test "$GCC" = "yes"; then
                         MACRO( "bare printf\n" );
                         return 0;
                     }
-                ],
+                ] ],
                 [hc_cv_pp_macro_arg_counting_broke=no],
                 [hc_cv_pp_macro_arg_counting_broke=yes]
             )
@@ -1864,7 +1931,7 @@ if test "$GCC" = "yes"; then
 # Note: The test program MUST start in column 1! Otherwise, the compilation
 # will fail when it's not supposed to.
             AC_COMPILE_IFELSE(
-                [
+                [ AC_LANG_SOURCE [
 /* If the following gets an error, then the
    "traditional" preprocessor is K&R C type.
    Otherwise if it compiles WITHOUT error
@@ -1878,7 +1945,7 @@ int main( int, char**, char** )
 {
   return 0;
 }
-                ],
+                ] ],
                 [hc_cv_traditional_cpp_is_K_AND_R_C_type=no],
                 [hc_cv_traditional_cpp_is_K_AND_R_C_type=yes]
             )
@@ -2526,21 +2593,6 @@ if test "$hc_cv_have_full_keepalive"  != "yes"  &&
    AC_MSG_WARN( [WARNING: Support missing for TCP keepalive] )
 fi
 
-#------------------------------------------------------------------------------
-
-if test "$hc_cv_have_softfloat_h" = "no"; then
-    AC_MSG_NOTICE( [---------------------------------------------------------------------------] )
-    AC_MSG_NOTICE( [                                                                           ] )
-    AC_MSG_RESULT( [             ERROR: Required header 'softfloat_types.h' not found.  Check for ${hc_cv_s3fh_dir} directory] )
-    AC_MSG_NOTICE( [                                                                           ] )
-    AC_MSG_NOTICE( [ Take note: SoftFloat-3a For Hercules must now be built separately.        ] )
-    AC_MSG_NOTICE( [ See https://github.com/hercules-390/SoftFloat-3a/blob/master/BUILDING.txt ] )
-    AC_MSG_NOTICE( [ for additional information.                                               ] )
-    AC_MSG_NOTICE( [                                                                           ] )
-    AC_MSG_NOTICE( [---------------------------------------------------------------------------] )
-    hc_error=yes
-fi
-
 ###############################################################################
 # If any errors have been detected, then abort the configure at this time
 ###############################################################################
@@ -2747,6 +2799,9 @@ AC_DEFINE_UNQUOTED( [C11_ATOMIC_INT_LOCK_FREE],      ${hc_cv_c11_atomic_int_lock
 AC_DEFINE_UNQUOTED( [C11_ATOMIC_LONG_LOCK_FREE],     ${hc_cv_c11_atomic_long_lock_free}     )
 AC_DEFINE_UNQUOTED( [C11_ATOMIC_LLONG_LOCK_FREE],    ${hc_cv_c11_atomic_llong_lock_free}    )
 AC_DEFINE_UNQUOTED( [C11_ATOMIC_POINTER_LOCK_FREE],  ${hc_cv_c11_atomic_pointer_lock_free}  )
+AC_DEFINE_UNQUOTED( [VERS_MAJ],                      ${VERS_MAJ}                          )
+AC_DEFINE_UNQUOTED( [VERS_INT],                      ${VERS_INT}                          )
+AC_DEFINE_UNQUOTED( [VERS_MIN],                      ${VERS_MIN}                          )
 
 AC_CACHE_SAVE()
 

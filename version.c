@@ -18,6 +18,8 @@
 #include "hercules.h"
 #include "machdep.h"
 
+#include "commitinfo.h"
+
 /*--------------------------------------------------*/
 /*   "Unusual" (i.e. noteworthy) build options...   */
 /*--------------------------------------------------*/
@@ -328,12 +330,12 @@ static const char *build_info[] = {
     #if defined(__bgq__) || defined(__TOS_BGQ__)
         "/Q"
     #endif
-#elif defined(__FREEBSD__)                                          ||  \
+#elif defined(__FreeBSD__)                                          ||  \
       defined(__NetBSD__)                                           ||  \
       defined(__OpenBSD__)                                          ||  \
       defined(__bsdi__)                                             ||  \
       defined(__DragonFly__)
-    #if defined(__FREEBSD__)
+    #if defined(__FreeBSD__)
         "Free"
     #elif defined(__NetBSD__)
         "Net"
@@ -767,13 +769,13 @@ DLL_EXPORT void display_version( FILE* f, int httpfd, char* prog )
     if (f != stdout)
         if (httpfd)
             hprintf( httpfd, MSG( HHC01413, "I", prog, VERSION,
-                VERS_MAJ, VERS_INT, VERS_MIN, VERS_BLD ));
+                VERS_MAJ, VERS_INT, VERS_MIN, COMMIT_COUNT ));
         else
             fprintf( f, MSG( HHC01413, "I", prog, VERSION,
-                VERS_MAJ, VERS_INT, VERS_MIN, VERS_BLD ));
+                VERS_MAJ, VERS_INT, VERS_MIN, COMMIT_COUNT ));
     else
         WRMSG( HHC01413, "I", prog, VERSION,
-            VERS_MAJ, VERS_INT, VERS_MIN, VERS_BLD );
+            VERS_MAJ, VERS_INT, VERS_MIN, COMMIT_COUNT );
 
     /* Log Copyright */
 
@@ -786,6 +788,32 @@ DLL_EXPORT void display_version( FILE* f, int httpfd, char* prog )
             fprintf( f, MSG( HHC01414, "I", HERCULES_COPYRIGHT ));
     else
         WRMSG( HHC01414, "I", HERCULES_COPYRIGHT );
+
+    /* Commit                                                        */
+
+    if (strlen(COMMIT_HASH))
+    {
+        if (f != stdout)
+            if (httpfd)
+                hprintf( httpfd, MSG( HHC01414, "I", "Commit " COMMIT_HASH "." ));
+            else
+                fprintf( f, MSG( HHC01414, "I", "Commit " COMMIT_HASH "." ));
+        else
+            WRMSG( HHC01414, "I", "Commit " COMMIT_HASH "." );
+    }
+
+    /* Updates not committed                                         */
+
+    if (strlen(COMMIT_MODIFIED COMMIT_UNTRACKED))
+    {
+        if (f != stdout)
+            if (httpfd)
+                hprintf( httpfd, MSG( HHC01414, "I", "After commit:" COMMIT_MODIFIED COMMIT_UNTRACKED ));
+            else
+                fprintf( f, MSG( HHC01414, "I", "After commit:" COMMIT_MODIFIED COMMIT_UNTRACKED ));
+        else
+            WRMSG( HHC01414, "I", "After commit:" COMMIT_MODIFIED COMMIT_UNTRACKED );
+    }
 
     /* Log build date/time */
 
