@@ -58,7 +58,7 @@ REQUIRED SOFTWARE PACKAGES
 
       Package     Minimum Version
 
-	  autoconf        2.64
+      autoconf        2.64
       automake        1.9
       flex            2.5
       gawk            3.0
@@ -68,9 +68,9 @@ REQUIRED SOFTWARE PACKAGES
       make            3.79
       perl            5.6
       sed             3.02
-	  cmake           3.2     (used for SoftFloat 3a For Hercules)
+      cmake           3.2     (used for SoftFloat 3a For Hercules)
 
-	  SoftFloat 3a For Hercules, from the Hercules-390 repository.
+      SoftFloat 3a For Hercules, from the Hercules-390 repository.
 
    Use your host system's package manager to verify that the above build
    tools are installed at the appropriate level.
@@ -83,8 +83,13 @@ OPTIONAL SOFTWARE PACKAGES
 
      libbz2          1.0.6 recommended
      zlib            1.2.8 recommended
-	 ooRexx          4.2.0 recommended
-	 Regina Rexx     3.9.1 recommended
+     ooRexx          4.2.0 recommended
+     Regina Rexx     3.9.1 recommended
+
+     Note that for all of the optional packages, you must install the
+     development libraries to integrate the package into Hercules.  To
+     use runtest and/or make check, you will need the run-time binaries
+     for one or both REXX interpreters.
 
   Compression libraries
 
@@ -92,14 +97,14 @@ OPTIONAL SOFTWARE PACKAGES
      library for either or both of bzip and/or zlib2.
 
      bzip: used for tape and disk compression.  If not available in
-	 your host system's package repositories, you may download and
-	 build from source using the following:
+     your host system's package repositories, you may download and
+     build from source using the following:
 
-	   http://www.bzip.org/
+       http://www.bzip.org/
 
-	 zlib2: used for tape and disk compression.  If not available in
-	 your host system's package repositories, you may download and
-	 build from source using the following:
+     zlib2: used for tape and disk compression.  If not available in
+     your host system's package repositories, you may download and
+     build from source using the following:
 
        http://www.zlib.net
 
@@ -159,6 +164,17 @@ RECOMMENDED DIRECTORY STRUCTURE
 
    Other directory structures might be used, but you are on your
    own.  The above structure is the supported structure.
+
+   If, after having built Hercules, you elect to move the directory
+   structure, in other words, change <topdir>, delete the contents
+   of the build directories and rebuild Hercules.  Configure
+   populates the .deps directory of the build directory with full
+   path names and does not change them if the directory moves.
+
+   If you are using symbolic links to create the above structure, elect
+   to move the linked-do directories, and change the symbolic links
+   such that the above structure still exists, then there is no need
+   to delete the build directories and rebuild Hercules.
 
 
 PREPARING TO BUILD HERCULES

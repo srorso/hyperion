@@ -16,6 +16,7 @@
 #define _MSGENU_H_
 
 #include "printfmt.h"       /* Hercules printf/sscanf format strings */
+
 /*
 -----------------------------------------------------------------------
                         Message principles
@@ -72,7 +73,10 @@ Examples:
   128bit psw: "%016X %016X", psw64h, psw64l
   Regs:       "GR%02d CR%02d AR%02d FP%02d", grnum, crnum, arnum, fpnum
   Strings:    "%s", ""
+
+-----------------------------------------------------------------------
 */
+
 /*-------------------------------------------------------------------*/
 /*                      PRIMARY MESAGE MACROS                        */
 /*-------------------------------------------------------------------*/
@@ -1068,12 +1072,12 @@ Examples:
 /* ecpsvm.c */
 // reserve 017xx for ecps:vm support
 #define HHC01700 "Abend condition detected in DISP2 instruction"
-#define HHC01701 "| %-9s | %8d | %8d |  %3d%% |"
-#define HHC01702 "+-----------+----------+----------+-------+"
+#define HHC01701 "| %-9s | %10"PRIu64" | %10"PRIu64" |  %3"PRIu64"%% |"
+#define HHC01702 "+-----------+------------+------------+-------+"
 #define HHC01703 "* : Unsupported, - : Disabled, %% - Debug"
-#define HHC01704 "%d entry/entries not shown and never invoked"
-#define HHC01705 "%d call(s), was/where made to unsupported functions"
-#define HHC01706 "| %-9s | %-8s | %-8s | %-5s |"
+#define HHC01704 "%"PRIu64" entries not shown and never invoked"
+#define HHC01705 "%"PRIu64" call(s) were made to unsupported functions"
+#define HHC01706 "| %-9s | %10s | %10s | %-5s |"
 #define HHC01707 "ECPS:VM %s feature %s%s%s"
 #define HHC01708 "All ECPS:VM %s features %s%s"
 #define HHC01709 "ECPS:VM global debug %s"
@@ -1091,6 +1095,7 @@ Examples:
 #define HHC01721 "Unknown ECPS:VM subcommand %s"
 #define HHC01722 "ECPS:VM Command processor complete"
 #define HHC01723 "Invalid ECPS:VM level value : %s. Default of 20 used"
+#define HHC01724 "ECPS:VM Operating with CP FREE/FRET trap in effect"
 
 // reserve 018xx for http server
 #define HHC01800 "HTTP server: error in function %s: %s"
@@ -1888,7 +1893,16 @@ Examples:
 // range 03500 - 03599 available
 // range 03600 - 03699 available
 // range 03700 - 03799 available
-// range 03800 - 03899 available
+
+// reserve 038xx for qeth related messages
+#define HHC03801 "%1d:%04X %s: Register guest MAC address %s"
+#define HHC03802 "%1d:%04X %s: Cannot register guest MAC address %s"
+#define HHC03803 "%1d:%04X %s: Unregister guest MAC address %s"
+#define HHC03804 "%1d:%04X %s: Cannot unregister guest MAC address %s"
+#define HHC03805 "%1d:%04X %s: Register guest IP address %s"
+#define HHC03806 "%1d:%04X %s: Cannot register guest IP address %s"
+#define HHC03807 "%1d:%04X %s: Unregister guest IP address %s"
+#define HHC03808 "%1d:%04X %s: Cannot unregister guest IP address %s"
 
 // reserve 039xx for ptp related messages
 #define HHC03901 "%1d:%04X PTP: Guest and driver IP addresses are the same"
