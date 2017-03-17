@@ -64,13 +64,12 @@ if not exist %outfile% @echo off > %outfile%
 
 :: Write dummy file up front so that there is always something
 (
-        echo %id%
         echo #define COMMIT_COUNT 0
         echo #define COMMIT_MESSAGE ""
         echo #define COMMIT_HASH ""
         echo #define COMMIT_UNTRACKED ""
         echo #define COMMIT_MODIFIED ""
-
+        echo %id%
 ) >%tempfile%
 
 git --version >nul
@@ -89,6 +88,7 @@ pushd %1
 set "CommitCount=0"
 set "for_query=git log --pretty=format:"x""
 :: open-source version uses --pretty=oneline, but --pretty=format:"x" is noticeably faster on Windows
+
 for /f "tokens=*" %%a in ('!for_query!') do set /a "CommitCount+=1"
 
 set "for_query=git log -n 1 --pretty=format:"%%H %%h %%ai""
@@ -113,12 +113,11 @@ for /f "tokens=1" %%a in ('git status --porcelain') do (
          set /a "changed+=1"
     )
 )
-echo off
+
 
 popd
 
 (
-    echo %id%
     echo #define COMMIT_COUNT %commitCount%
     echo #define COMMIT_MESSAGE "%$msg%"
     echo #define COMMIT_HASH "%commit%"
@@ -132,30 +131,11 @@ popd
     ) else (
         echo #define COMMIT_MODIFIED "  %changed% added/modified/deleted files."
     )
+    echo %id%
 ) >%tempfile%
 
-:: Windows file comparison utilities have not quite reached a level that
-:: could be termed "primitive".  So we use comp and process its output
-:: to see if there are differences on other than line one.  comp reports
-:: each byte of difference with a three line output.  The first line is
-:: "Compare error at LINE #'  The for statement processes only the first
-:: line of each mismatch and looks for mismatches on other than line 1.
-:: And if the files are different sizes, COMP just reports this without
-:: attempting any line-by-line comparison.  Ugh...
-
 set /a "rv=0"
-set "for_query=echo n|comp /l %outfile% %tempfile% 2>nul"
-
-for /F "tokens=*" %%a in ('!for_query!') do (
-    if "%%a" == "Files are different sizes." (
-        set /a "rv=1"
-    ) else (
-        for /F "tokens=4-5" %%b in ("%%a") do (
-            if "%%b" == "LINE" if not "%%c" == "1" set /a "rv=1"
-        )
-    )
-)
-
+echo n|COMP /n=5 /l %outfile% %tempfile% >nul 2>nul || set /a "rv=1" 2>nul"
 
 if "%rv%" == "1" (
     copy /Y %tempfile% %outfile% >nul
