@@ -254,7 +254,7 @@ compiler=$CC
 # If we don't find anything, use the default library path according
 # to the aix ld manual.
 AC_DEFUN([_LT_AC_SYS_LIBPATH_AIX],
-[AC_LINK_IFELSE(AC_LANG_PROGRAM,[
+[AC_LINK_IFELSE([AC_LANG_PROGRAM],[
 aix_libpath=`dump -H conftest$ac_exeext 2>/dev/null | $SED -n -e '/Import File Strings/,/^$/ { /^0/ { s/^0  *\(.*\)$/\1/; p; }
 }'`
 # Check for a 64-bit object if we didn't find anything.
@@ -1323,7 +1323,9 @@ kfreebsd*-gnu)
   dynamic_linker='GNU ld.so'
   ;;
 
-freebsd*)
+# FreeBSD before 4.0 may have supported a.out format.  test for it and if the
+# objformat migration tool does not exist, assume a.out
+freebsd2 | freebsd2.* | freebsd3 | freebsd3.* )
   objformat=`test -x /usr/bin/objformat && /usr/bin/objformat || echo aout`
   version_type=freebsd-$objformat
   case $version_type in
@@ -1351,6 +1353,16 @@ freebsd*)
     hardcode_into_libs=yes
     ;;
   esac
+  ;;
+
+# FreeBSD 4 and higher always and only support ELF
+freebsd*)
+  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext} $libname${shared_ext}'
+  need_version=no
+  need_lib_prefix=no
+  shlibpath_var=LD_LIBRARY_PATH
+  shlibpath_overrides_runpath=no
+  hardcode_into_libs=yes
   ;;
 
 gnu*)
@@ -1675,7 +1687,7 @@ if test -f "$ltmain" && test -n "$tagnames"; then
 
     # Update the list of available tags.
     if test -n "$tagname"; then
-      echo appending configuration tag \"$tagname\" to $ofile
+      AC_MSG_NOTICE([appending configuration tag "$tagname" to $ofile])
 
       case $tagname in
       CXX)
@@ -2533,9 +2545,10 @@ fi
 #
 # Check to make sure the static flag actually works.
 #
-AC_LIBTOOL_LINKER_OPTION([if $compiler static flag $_LT_AC_TAGVAR(lt_prog_compiler_static, $1) works],
-  _LT_AC_TAGVAR(lt_prog_compiler_static_works, $1),
-  $_LT_AC_TAGVAR(lt_prog_compiler_static, $1),
+wl=$_LT_AC_TAGVAR(lt_prog_compiler_wl, $1) eval lt_tmp_static_flag=\"$_LT_AC_TAGVAR(lt_prog_compiler_static, $1)\"
+AC_LIBTOOL_LINKER_OPTION([if $compiler static flag $lt_tmp_static_flag works],
+  _LT_AC_TAGVAR(lt_cv_prog_compiler_static_works, $1),
+  $lt_tmp_static_flag,
   [],
   [_LT_AC_TAGVAR(lt_prog_compiler_static, $1)=])
 
@@ -4973,12 +4986,18 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
 ])
 AC_MSG_RESULT([$_LT_AC_TAGVAR(lt_prog_compiler_pic, $1)])
 
+AC_CACHE_CHECK([for $compiler option to produce PIC],
+  [_LT_AC_TAGVAR(lt_cv_prog_compiler_pic, $1)],
+  [_LT_AC_TAGVAR(lt_cv_prog_compiler_pic, $1)=$_LT_AC_TAGVAR(lt_prog_compiler_pic, $1)])
+_LT_AC_TAGVAR(lt_prog_compiler_pic, $1)=$_LT_AC_TAGVAR(lt_cv_prog_compiler_pic, $1)
+
+
 #
 # Check to make sure the PIC flag actually works.
 #
 if test -n "$_LT_AC_TAGVAR(lt_prog_compiler_pic, $1)"; then
   AC_LIBTOOL_COMPILER_OPTION([if $compiler PIC flag $_LT_AC_TAGVAR(lt_prog_compiler_pic, $1) works],
-    _LT_AC_TAGVAR(lt_prog_compiler_pic_works, $1),
+    _LT_AC_TAGVAR(lt_cv_prog_compiler_pic_works, $1),
     [$_LT_AC_TAGVAR(lt_prog_compiler_pic, $1)ifelse([$1],[],[ -DPIC],[ifelse([$1],[CXX],[ -DPIC],[])])], [],
     [case $_LT_AC_TAGVAR(lt_prog_compiler_pic, $1) in
      "" | " "*) ;;

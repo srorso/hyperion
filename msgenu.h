@@ -655,7 +655,7 @@ Examples:
 // reserve 009xx for ctc related messages
 /* ctcadpt.c, ctc_ctci.c, ctc_lcs.c, ctc_ptp.c, qeth.c */
 #define HHC00900 "%1d:%04X %s: Error in function %s: %s"
-#define HHC00901 "%1d:%04X %s: Interface %s, type %s opened"
+#define HHC00901 "%1d:%04X %s: Interface %s type %s opened"
 #define HHC00902 "%1d:%04X %s: ioctl %s failed for device %s: %s"
 #define HHC00904 "%1d:%04X %s: Halt or clear recognized"
 #define HHC00906 "%1d:%04X CTC: write CCW count %u is invalid"
@@ -727,12 +727,14 @@ Examples:
 #define HHC00978 "CTC: lcs device port %2.2X: STILL trying to enqueue REPLY frame to device %4.4X %s"
 #define HHC00979 "%s: %s: %s %s %s"
 
-/* ctc_ctci.c, ctc_lcs.c, ctc_ptp.c */
+/* ctc_ctci.c, ctc_lcs.c, ctc_ptp.c qeth.c */
 #define HHC00980 "%1d:%04X %s: Data of size %d bytes displayed, data of size %d bytes not displayed"
 #define HHC00981 "%1d:%04X %s: Accept data of size %d bytes from guest"
 #define HHC00982 "%1d:%04X %s: Present data of size %d bytes to guest"
 #define HHC00983 "%1d:%04X %s: port %2.2X: Send frame of size %d bytes (with %s packet) to device %s"
 #define HHC00984 "%1d:%04X %s: port %2.2X: Receive frame of size %d bytes (with %s packet) from device %s"
+#define HHC00985 "%1d:%04X %s: Send frame of size %d bytes (with %s packet) to device %s"
+#define HHC00986 "%1d:%04X %s: Receive frame of size %d bytes (with %s packet) from device %s"
 
 // reserve 010xx for communication adapter specific component messages
 /* comm3705.c, commadpt.c, console.c, con1052c.c */
@@ -1345,6 +1347,9 @@ Examples:
 #define HHC02341 "Script %d: test: unknown runtest keyword: %s"
 #define HHC02342 "%s file '%s' not found:  %s"
 #define HHC02343 "Terminating due to %d argument errors"
+#define HHC02344 "%s device %1d:%04X group has registered MAC address %s"
+#define HHC02345 "%s device %1d:%04X group has registered IP address %s"
+#define HHC02346 "%s device %1d:%04X group has no registered MAC or IP addresses"
 
 // range 02350 - 02369 available
 
@@ -1941,7 +1946,7 @@ Examples:
 #define HHC03994 "%1d:%04X %s: Status %02X"
 #define HHC03995 "%1d:%04X %s: %s:\n%s"
 #define HHC03996 "%1d:%04X %s: %s: %s"
-#define HHC03997 "%1d:%04X %s: %s: %susing %s %s"
+#define HHC03997 "%1d:%04X %s: Interface %s %susing %s %s"
 #define HHC03998 "%1d:%04X %s: %s inconsistent with %s"
 
 // reserve 04xxx for host os specific component messages

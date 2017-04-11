@@ -387,7 +387,10 @@ static inline int qeth_storage_access_check(U64 addr, size_t len,int key,int acc
   /* This may not be described anywhere - and could be wrong  */
   /* But apparently z/VM TC/IP expects Key 14 to allow access to all */
   /* including storage frames with key 0.... */
+  /* and apparently z/OS TCP/IP expects Key 6 to allow access to all */
+  /* including storage frames with key 0.... */
   if((key & 0Xf0)==0xe0) return 0; /* Special case for key 14 ? */
+  if((key & 0Xf0)==0x60) return 0; /* Special case for key 6 ? */
 
   /* Key match check if keys match we're good */
   if((STORAGE_KEY(addr,dev) & STORKEY_KEY) == key) return 0;
@@ -512,44 +515,93 @@ static inline void clr_dsci(DEVBLK *dev, BYTE bits)
 /*-------------------------------------------------------------------*/
 /* Register local MAC address                                        */
 /*-------------------------------------------------------------------*/
-static int register_mac(BYTE *mac, int type, OSA_GRP *grp)
+/* The returned values are:-                                         */
+/*   -1  The table is full                                           */
+/*    0  The MAC address was added to the table                      */
+/*    1  The MAC address was already in the table                    */
+static int register_mac(OSA_GRP *grp, DEVBLK* dev, BYTE *mac, int type)
 {
 int i;
-    for(i = 0; i < OSA_MAXMAC; i++)
+char charmac[24];
+
+    /* Check whether the MAC address is already registered. */
+    for (i = 0; i < OSA_MAXMAC; i++)
     {
-        if(!grp->mac[i].type || !memcmp(grp->mac[i].addr,mac,IFHWADDRLEN))
+        if (grp->mac[i].type &&
+            memcmp(grp->mac[i].addr, mac, IFHWADDRLEN) == 0)
         {
-            memcpy(grp->mac[i].addr,mac,IFHWADDRLEN);
-            grp->mac[i].type = type;
-            return type;
+            return 1;
         }
     }
-    return MAC_TYPE_NONE;
-
-
-
+    /* Register the previously unknown MAC address. */
+    for (i = 0; i < OSA_MAXMAC; i++)
+    {
+        if (!grp->mac[i].type)
+        {
+            memcpy(grp->mac[i].addr, mac, IFHWADDRLEN);
+            grp->mac[i].type = type;
+            snprintf( charmac, sizeof(charmac),
+                      "%02x:%02x:%02x:%02x:%02x:%02x",
+                      mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
+            // HHC03801 "%1d:%04X %s: Register guest MAC address %s"
+            WRMSG(HHC03801, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, dev->typname,
+                      charmac );
+            return 0;
+        }
+    }
+    /* Oh dear, the MAC address table is full. */
+    snprintf( charmac, sizeof(charmac),
+              "%02x:%02x:%02x:%02x:%02x:%02x",
+              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
+    // HHC03802 "%1d:%04X %s: Cannot register guest MAC address %s"
+    WRMSG(HHC03802, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, dev->typname,
+              charmac );
+    return -1;
 }
 
 /*-------------------------------------------------------------------*/
 /* Unregister local MAC address                                      */
 /*-------------------------------------------------------------------*/
-static int unregister_mac(BYTE *mac, int type, OSA_GRP *grp)
+/* The returned values are:-                                         */
+/*    0  The MAC address was removed from the table                  */
+/*    1  The MAC address was not in the table                        */
+static int unregister_mac(OSA_GRP *grp, DEVBLK* dev, BYTE *mac, int type)
 {
 int i;
-    for(i = 0; i < OSA_MAXMAC; i++)
+char charmac[24];
+UNREFERENCED(type);
+    /* Check whether the MAC address is registered. */
+    for (i = 0; i < OSA_MAXMAC; i++)
     {
-        if((grp->mac[i].type == type) && !memcmp(grp->mac[i].addr,mac,IFHWADDRLEN))
+        if (grp->mac[i].type &&
+            memcmp(grp->mac[i].addr, mac, IFHWADDRLEN) == 0)
         {
             grp->mac[i].type = MAC_TYPE_NONE;
-            return type;
+            memset(grp->mac[i].addr, 0, IFHWADDRLEN);
+            snprintf( charmac, sizeof(charmac),
+                      "%02x:%02x:%02x:%02x:%02x:%02x",
+                      mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
+            // HHC03803 "%1d:%04X %s: Unregistered guest MAC address %s"
+            WRMSG(HHC03803, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, dev->typname,
+                      charmac );
+            return 0;
         }
     }
-    return MAC_TYPE_NONE;
+    /* Oh dear, the MAC address wasn't registered. */
+    snprintf( charmac, sizeof(charmac),
+              "%02x:%02x:%02x:%02x:%02x:%02x",
+              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5] );
+    // HHC03804 "%1d:%04X %s: Cannot unregister guest MAC address %s"
+    WRMSG(HHC03804, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, dev->typname,
+              charmac );
+    return 1;
 }
 
 /*-------------------------------------------------------------------*/
 /* Unregister all local MAC address                                  */
 /*-------------------------------------------------------------------*/
+/* The returned value is:-                                           */
+/*    0  All MAC addresses were removed from the table               */
 static int unregister_all_mac(OSA_GRP *grp)
 {
 int i;
@@ -563,15 +615,38 @@ int i;
 
 /*-------------------------------------------------------------------*/
 /* Validate MAC address and return MAC type                          */
+/* In promiscuous mode, all frames are accepted                      */
+/* a Broadcast frame is always valid (unless we do not seek broadcast*/
+/*  frames                                                           */
 /*-------------------------------------------------------------------*/
 static int validate_mac(BYTE *mac, int type, OSA_GRP *grp)
 {
-int i;
+int i;  /* Utility variable */
+
+    /* Always accept broadcast frames */
+    /* Search for all FFs             */
+
+    for(i=0;i<IFHWADDRLEN;i++)
+    {
+       if(mac[i]!=0xff) break;
+    }
+    /* If we reached end of MAC address, all FF then it is a broadcast */
+    /* Return it is a broadcast unless broadcast isn't sought for      */
+    /* unless the interface is in promiscuous mode                     */
+
+    if(i==(IFHWADDRLEN)) return (MAC_TYPE_BRDCST & type) | grp->promisc;
+
+    /* Find a matching MAC (Unicast or Multicast) */
     for(i = 0; i < OSA_MAXMAC; i++)
     {
+        /* Find a type matching the search mask with a matching MAC addr */
         if((grp->mac[i].type & type) && !memcmp(grp->mac[i].addr,mac,IFHWADDRLEN))
             return grp->mac[i].type | grp->promisc;
     }
+
+    /* Not match found - but accept it if the interface is in promiscuous mode */
+    /* Otherwise, ignore the frame                                             */
+
     return grp->promisc;
 }
 
@@ -856,27 +931,40 @@ static void qeth_report_using( DEVBLK *dev, OSA_GRP *grp )
     char not[8];
     strlcpy( not, grp->enabled ? "" : "not ", sizeof( not ));
 
-    // HHC03997 "%1d:%04X %s: %s: %susing %s %s"
+    // HHC03997 "%1d:%04X %s: Interface %s %susing %s %s"
     WRMSG( HHC03997, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, "QETH",
-        grp->ttifname, not, "MAC", grp->tthwaddr );
+        grp->ttifname, not, "MAC address", grp->tthwaddr );
 
     if (grp->l3 && grp->ttipaddr)
     {
-        if(grp->ttipaddr)
-            WRMSG( HHC03997, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, "QETH",
-                grp->ttifname, not, "IPv4", grp->ttipaddr );
+        WRMSG( HHC03997, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, "QETH",
+             grp->ttifname, not, "IP address", grp->ttipaddr );
+
         if(grp->ttnetmask)
+        {
             WRMSG( HHC03997, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, "QETH",
-                grp->ttifname, not, "MASK", grp->ttnetmask );
+                grp->ttifname, not, "subnet mask", grp->ttnetmask );
+        }
     }
 
     if (grp->l3 && grp->ttipaddr6)
+    {
         WRMSG( HHC03997, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, "QETH",
-            grp->ttifname, not, "IPv6", grp->ttipaddr6 );
+            grp->ttifname, not, "IP address", grp->ttipaddr6 );
+
+        if(grp->ttpfxlen6)
+        {
+            WRMSG( HHC03997, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, "QETH",
+                grp->ttifname, not, "prefix length", grp->ttpfxlen6 );
+        }
+    }
 
     if (grp->ttmtu)
+    {
         WRMSG( HHC03997, "I", SSID_TO_LCSS(dev->ssid), dev->devnum, "QETH",
             grp->ttifname, not, "MTU", grp->ttmtu );
+    }
+
 }
 
 
@@ -1394,11 +1482,11 @@ U16 offph;
 
                 {
                 MPC_IPA_MAC *ipa_mac = (MPC_IPA_MAC*)(ipa+1);
-                char tthwaddr[32] = {0}; // 11:22:33:44:55:66
-#if defined(OPTION_W32_CTCI) // WE SHOULD NOT CHANGE THE MAC OF THE TUN
                 int rc = 0;
-#endif /*defined(OPTION_W32_CTCI)*/
-                    MSGBUF( tthwaddr, "%02X:%02X:%02X:%02X:%02X:%02X"
+#if defined(OPTION_W32_CTCI) // WE SHOULD NOT CHANGE THE MAC OF THE TUN
+                char tthwaddr[32] = {0}; // 11:22:33:44:55:66
+
+                    MSGBUF( tthwaddr, "%02x:%02x:%02x:%02x:%02x:%02x"
                         ,ipa_mac->macaddr[0]
                         ,ipa_mac->macaddr[1]
                         ,ipa_mac->macaddr[2]
@@ -1407,7 +1495,6 @@ U16 offph;
                         ,ipa_mac->macaddr[5]
                     );
 
-#if defined(OPTION_W32_CTCI) // WE SHOULD NOT CHANGE THE MAC OF THE TUN
                     if ((rc = TUNTAP_SetMACAddr( grp->ttifname, tthwaddr )) != 0)
                     {
                         qeth_errnum_msg( dev, grp, rc,
@@ -1415,19 +1502,23 @@ U16 offph;
                         STORE_HW(ipa->rc,IPA_RC_FFFF);
                     }
                     else
+#endif /*defined(OPTION_W32_CTCI)*/
                     {
+#if defined(OPTION_W32_CTCI)
                         if (grp->tthwaddr)
                             free( grp->tthwaddr );
 
                         grp->tthwaddr = strdup( tthwaddr );
                         memcpy( grp->iMAC, ipa_mac->macaddr, IFHWADDRLEN );
-#else /*defined(OPTION_W32_CTCI)*/
-                    {
 #endif /*defined(OPTION_W32_CTCI)*/
-                        if(register_mac(ipa_mac->macaddr,MAC_TYPE_UNICST,grp))
-                            STORE_HW(ipa->rc,IPA_RC_OK);
-                        else
-                            STORE_HW(ipa->rc,IPA_RC_L2_DUP_MAC);
+                        rc = register_mac(grp, dev, ipa_mac->macaddr, MAC_TYPE_UNICST);
+                        if (rc == -1) {          /* MAC table full */
+                            STORE_HW(ipa->rc, IPA_RC_L2_ADDR_TABLE_FULL);
+                        } else if (rc == 1) {    /* MAC address in table */
+                            STORE_HW(ipa->rc, IPA_RC_L2_DUP_MAC);
+                        } else {                 /* MAC address added to table */
+                            STORE_HW(ipa->rc, IPA_RC_SUCCESS);
+                        }
                     }
                 }
                 break;
@@ -1441,11 +1532,13 @@ U16 offph;
 
                 {
                 MPC_IPA_MAC *ipa_mac = (MPC_IPA_MAC*)(ipa+1);
-
-                    if(unregister_mac(ipa_mac->macaddr,MAC_TYPE_UNICST,grp))
-                        STORE_HW(ipa->rc,IPA_RC_OK);
-                    else
-                        STORE_HW(ipa->rc,IPA_RC_L2_MAC_NOT_FOUND);
+                int  rc;
+                    rc = unregister_mac(grp, dev, ipa_mac->macaddr, MAC_TYPE_UNICST);
+                    if (rc == 1) {           /* MAC address not in table */
+                        STORE_HW(ipa->rc, IPA_RC_L2_MAC_NOT_FOUND);
+                    } else {                 /* MAC address removed from table */
+                        STORE_HW(ipa->rc, IPA_RC_SUCCESS);
+                    }
                 }
                 break;
 
@@ -1458,11 +1551,15 @@ U16 offph;
 
                 {
                 MPC_IPA_MAC *ipa_mac = (MPC_IPA_MAC*)(ipa+1);
-
-                    if(register_mac(ipa_mac->macaddr,MAC_TYPE_MLTCST,grp))
-                        STORE_HW(ipa->rc,IPA_RC_OK);
-                    else
-                        STORE_HW(ipa->rc,IPA_RC_L2_DUP_MAC);
+                int  rc;
+                    rc = register_mac(grp, dev, ipa_mac->macaddr, MAC_TYPE_MLTCST);
+                    if (rc == -1) {          /* MAC table full */
+                        STORE_HW(ipa->rc, IPA_RC_L2_ADDR_TABLE_FULL);
+                    } else if (rc == 1) {    /* MAC address in table */
+                        STORE_HW(ipa->rc, IPA_RC_L2_DUP_MAC);
+                    } else {                 /* MAC address added to table */
+                        STORE_HW(ipa->rc, IPA_RC_SUCCESS);
+                    }
                 }
                 break;
 
@@ -1475,11 +1572,13 @@ U16 offph;
 
                 {
                 MPC_IPA_MAC *ipa_mac = (MPC_IPA_MAC*)(ipa+1);
-
-                    if(unregister_mac(ipa_mac->macaddr,MAC_TYPE_MLTCST,grp))
-                        STORE_HW(ipa->rc,IPA_RC_OK);
-                    else
-                        STORE_HW(ipa->rc,IPA_RC_L2_GMAC_NOT_FOUND);
+                int  rc;
+                    rc = unregister_mac(grp, dev, ipa_mac->macaddr, MAC_TYPE_MLTCST);
+                    if (rc == 1) {           /* MAC address not in table */
+                        STORE_HW(ipa->rc, IPA_RC_L2_GMAC_NOT_FOUND);
+                    } else {                 /* MAC address removed from table */
+                        STORE_HW(ipa->rc, IPA_RC_SUCCESS);
+                    }
                 }
                 break;
 
@@ -1749,7 +1848,7 @@ U16 offph;
 
                     /* Return the values that the guest wiil use to create   */
                     /* the low-order 64-bits of the IPv6 link local address. */
-                    memcpy( ip6+0, &grp->iMAC, 6 );
+                    memcpy( ip6+0, grp->iMAC, IFHWADDRLEN );
                     ip6[6] = 0xFF;
                     ip6[7] = 0xFE;
                     ip6[0] |= 0x02; // FIXME: IPA_CMD_CREATEADDR: is this needed?
@@ -1769,7 +1868,7 @@ U16 offph;
                 break;
 
             default:
-                DBGTRC(dev, "  Unknown RRH_TYPE_IPA command 0x%02x\n",ipa->cmd);
+                DBGTRC(dev, "  Unknown RRH_TYPE_IPA command 0x%02X\n",ipa->cmd);
                 STORE_HW(ipa->rc,IPA_RC_NOTSUPP);
             }
             /* end switch(ipa->cmd) */
@@ -2072,7 +2171,7 @@ static inline int l3_cast_type_ipv6( BYTE* dest_addr, OSA_GRP* grp )
     static const BYTE dest_zero[16] = {0};
     int i;
 
-    if (memcmp( dest_addr, dest_zero, 16 ) == 0)     /* Note: why check for the loopback address? */
+    if (memcmp( dest_addr, dest_zero, 16 ) == 0)     /* Note: why check for the any address? */
         return HDR3_FLAGS_NOCAST;
 
     if (dest_addr[0] == 0xFF)
@@ -2404,6 +2503,8 @@ static QRC read_L2_packets( DEVBLK* dev, OSA_GRP *grp,
     int mactype;
     QRC qrc;
     int sb = 0;     /* Start with Storage Block zero */
+    U16  hwEthernetType;
+    char cPktType[8];
 
     do {
         /* Find (another) frame for our MAC */
@@ -2437,11 +2538,28 @@ static QRC read_L2_packets( DEVBLK* dev, OSA_GRP *grp,
             break;
         }
 
-        /* Dump the frame just received */
-        if (grp->debugmask)
+        /* */
+        if (grp->debugmask & DBGQETHPACKET)
         {
-            MPC_DUMP_DATA( "INPUT L2 HDR", (BYTE*)&o2hdr,   (int)sizeof(o2hdr), '<' );
-            MPC_DUMP_DATA( "INPUT L2 FRM", (BYTE*)dev->buf, (int)dev->buflen,   '<' );
+            FETCH_HW( hwEthernetType, eth->hwEthernetType );
+            if( hwEthernetType == ETH_TYPE_IP ) {
+              strcpy( cPktType, "IPv4" );
+            } else if( hwEthernetType == ETH_TYPE_IPV6 ) {
+              strcpy( cPktType, "IPv6" );
+            } else if( hwEthernetType == ETH_TYPE_ARP ) {
+              strcpy( cPktType, "ARP" );
+            } else if( hwEthernetType == ETH_TYPE_RARP ) {
+              strcpy( cPktType, "RARP" );
+            } else if( hwEthernetType == ETH_TYPE_SNA ) {
+              strcpy( cPktType, "SNA" );
+            } else {
+              strcpy( cPktType, "unknown" );
+            }
+            // HHC00986 "%1d:%04X %s: Receive frame of size %d bytes (with %s packet) from device %s"
+            WRMSG(HHC00986, "D", SSID_TO_LCSS(dev->ssid), dev->devnum, dev->typname,
+                                 dev->buflen, cPktType, grp->ttifname );
+            net_data_trace( dev, (BYTE*)&o2hdr, sizeof(o2hdr), TO_GUEST, 'D', "L2 hdr", 0 );
+            net_data_trace( dev, dev->buf, dev->buflen, TO_GUEST, 'D', "Frame ", 0 );
         }
 
         /* Copy header and frame to buffer storage block(s) */
@@ -2465,11 +2583,13 @@ static QRC read_L3_packets( DEVBLK* dev, OSA_GRP *grp,
                             QDIO_SBAL *sbal, BYTE sbalk )
 {
     static const BYTE udp = 17;
+    IP4FRM* ip4;
+    IP6FRM* ip6;
     QRC qrc;
     OSA_HDR3 o3hdr;
     int sb = 0;     /* Start with Storage Block zero */
     int   iPktVer;
-    char  cPktVer[8];
+    char  cPktType[8];
 
     do
     {
@@ -2489,8 +2609,8 @@ static QRC read_L3_packets( DEVBLK* dev, OSA_GRP *grp,
         iPktVer = ( ( dev->buf[0] & 0xF0 ) >> 4 );
         if (iPktVer == 4)
         {
-            IP4FRM* ip4 = (IP4FRM*)dev->buf;
-            strcpy( cPktVer, "IPv4" );
+            ip4 = (IP4FRM*)dev->buf;
+            strcpy( cPktType, " IPv4" );
             memcpy( &o3hdr.dest_addr[12], &ip4->lDstIP, 4 );
             memcpy( o3hdr.in_cksum, ip4->hwChecksum, 2 );
             o3hdr.flags = l3_cast_type_ipv4( &o3hdr.dest_addr[12], grp );
@@ -2500,8 +2620,8 @@ static QRC read_L3_packets( DEVBLK* dev, OSA_GRP *grp,
         }
         else if (iPktVer == 6)
         {
-            IP6FRM* ip6 = (IP6FRM*)dev->buf;
-            strcpy( cPktVer, "IPv6" );
+            ip6 = (IP6FRM*)dev->buf;
+            strcpy( cPktType, " IPv6" );
             memcpy( o3hdr.dest_addr, ip6->bDstAddr, 16 );
             o3hdr.flags = l3_cast_type_ipv6( o3hdr.dest_addr, grp );
             if (o3hdr.flags == HDR3_FLAGS_NOTFORUS)
@@ -2513,14 +2633,17 @@ static QRC read_L3_packets( DEVBLK* dev, OSA_GRP *grp,
         else
         {
             /* Err... not IPv4 or IPv6! */
-            strcpy( cPktVer, "Unknown" );
+            strcpy( cPktType, "" );
         }
 
-        /* Dump the packet just received */
-        if (grp->debugmask)
+        /* */
+        if (grp->debugmask & DBGQETHPACKET)
         {
-            MPC_DUMP_DATA( "INPUT L3 HDR", (BYTE*)&o3hdr,   (int)sizeof(o3hdr), '<' );
-            MPC_DUMP_DATA( "INPUT L3 PKT", (BYTE*)dev->buf, (int)dev->buflen,   '<' );
+            // HHC00913 "%1d:%04X %s: Receive%s packet of size %d bytes from device %s"
+            WRMSG(HHC00913, "D", SSID_TO_LCSS(dev->ssid), dev->devnum, dev->typname,
+                            cPktType, dev->buflen, grp->ttifname );
+            net_data_trace( dev, (BYTE*)&o3hdr, sizeof(o3hdr), TO_GUEST, 'D', "L3 hdr", 0 );
+            net_data_trace( dev, dev->buf, dev->buflen, TO_GUEST, 'D', "Packet", 0 );
         }
 
         /* Copy header and packet to buffer storage block(s) */
@@ -2557,6 +2680,11 @@ static QRC write_buffered_packets( DEVBLK* dev, OSA_GRP *grp,
     QRC qrc;                            /* Internal return code      */
     BYTE hdr_id;                        /* OSA Header Block Id       */
     BYTE flag0;                         /* Storage Block Flag        */
+
+    ETHFRM* eth;                        /* Ethernet frame header */
+    U16  hwEthernetType;
+    int iPktVer;
+    char cPktType[8];
 
     sb = 0;                             /* Start w/Storage Block 0   */
 
@@ -2632,13 +2760,54 @@ static QRC write_buffered_packets( DEVBLK* dev, OSA_GRP *grp,
         flag0 = sbal->sbale[sb].flags[0];
 
         /* Trace the pack/frame if debugging is enabled */
-        if (grp->debugmask)
+        DBGTRC( dev, "Output SBALE(%d-%d): Len: %04X (%d)\n",
+                        ssb, sb, dev->buflen, dev->buflen );
+
+        /* */
+        if (grp->debugmask & DBGQETHPACKET)
         {
-            DBGTRC( dev, "Output SBALE(%d-%d): Len: %04X (%d)\n",
-                ssb, sb, dev->buflen, dev->buflen );
-            MPC_DUMP_DATA( "OUTPUT BUF", dev->buf, dev->buflen, '>' );
+            if (!grp->l3) {
+                eth = (ETHFRM*)dev->buf;
+                FETCH_HW( hwEthernetType, eth->hwEthernetType );
+                if( hwEthernetType == ETH_TYPE_IP ) {
+                  strcpy( cPktType, "IPv4" );
+                } else if( hwEthernetType == ETH_TYPE_IPV6 ) {
+                  strcpy( cPktType, "IPv6" );
+                } else if( hwEthernetType == ETH_TYPE_ARP ) {
+                  strcpy( cPktType, "ARP" );
+                } else if( hwEthernetType == ETH_TYPE_RARP ) {
+                  strcpy( cPktType, "RARP" );
+                } else if( hwEthernetType == ETH_TYPE_SNA ) {
+                  strcpy( cPktType, "SNA" );
+                } else {
+                  strcpy( cPktType, "unknown" );
+                }
+                // HHC00985 "%1d:%04X %s: Send frame of size %d bytes (with %s packet) to device %s"
+                WRMSG(HHC00985, "D", SSID_TO_LCSS(dev->ssid), dev->devnum, dev->typname,
+                                     dev->buflen, cPktType, grp->ttifname );
+                net_data_trace( dev, dev->buf, dev->buflen, FROM_GUEST, 'D', "Frame ", 0 );
+            } else {
+                iPktVer = ( ( dev->buf[0] & 0xF0 ) >> 4 );
+                if (iPktVer == 4)
+                {
+                    strcpy( cPktType, " IPv4" );
+                }
+                else if (iPktVer == 6)
+                {
+                    strcpy( cPktType, " IPv6" );
+                }
+                else
+                {
+                    strcpy( cPktType, "" );    /* Err... not IPv4 or IPv6! */
+                }
+                // HHC00910 "%1d:%04X %s: Send%s packet of size %d bytes to device %s"
+                WRMSG(HHC00910, "D", SSID_TO_LCSS(dev->ssid), dev->devnum, dev->typname,
+                                cPktType, dev->buflen, grp->ttifname );
+                net_data_trace( dev, dev->buf, dev->buflen, FROM_GUEST, 'D', "Packet", 0 );
+            }
         }
 
+        /* */
         qrc = write_packet( dev, grp, dev->buf, dev->buflen );
     }
     while (qrc >= 0 && !IS_LAST_SBALE_ENTRY( flag0 ) && ++sb < QMAXSTBK);
@@ -3004,6 +3173,11 @@ U32 mask4;
         dev->chptype[0] = CHP_TYPE_OSD;
         dev->pmcw.flag4 |= PMCW4_Q;
         dev->fd = -1;
+        /* Setting dev->bufsize = 0xFFFF causes, on return to attach_device */
+        /* in config.c, storage of size 0xFFFF bytes to be obtained, and    */
+        /* the storage address to be placed in dev->buf. The storage is     */
+        /* used to receive data from the TUNTAP interface, so 0xFFFF is     */
+        /* effectively the largest MTU that could ever be used by QETH.     */
         dev->bufsize = 0xFFFF;      /* maximum packet/frame size */
 
         if(!(grouped = group_device(dev,groupsize)) && !dev->member)
@@ -3012,7 +3186,6 @@ U32 mask4;
             dev->group->grp_data = grp = malloc(sizeof(OSA_GRP));
             memset (grp, 0, sizeof(OSA_GRP));
 
-            register_mac((BYTE*)"\xFF\xFF\xFF\xFF\xFF\xFF",MAC_TYPE_BRDCST,grp);
 
             initialize_condition( &grp->qrcond );
             initialize_condition( &grp->qdcond );
@@ -4337,7 +4510,7 @@ U32 num;                                /* Number of bytes to move   */
     /*---------------------------------------------------------------*/
     /* INVALID OPERATION                                             */
     /*---------------------------------------------------------------*/
-        DBGTRC(dev, "Unknown CCW opcode 0x%02x)\n",code);
+        DBGTRC(dev, "Unknown CCW opcode 0x%02X)\n",code);
         /* Set command reject sense byte, and unit check status */
         dev->sense[0] = SENSE_CR;
         *unitstat = CSW_CE | CSW_DE | CSW_UC;
@@ -5427,11 +5600,11 @@ static void InitMACAddr( DEVBLK* dev, OSA_GRP* grp )
     char szMAC[3*IFHWADDRLEN] = {0};
     int rc = 0;
 
-    /* Do different things for TUN's and TAP's */
+    /* Do different things for TAP's (layer 2) and TUN's (layer 3) */
     if (!grp->l3) {
 
-        /* Retrieve the MAC Address directly from the tap interface */
-            rc = TUNTAP_GetMACAddr( grp->ttifname, &tthwaddr );
+        /* Retrieve the MAC Address directly from the TAP interface */
+        rc = TUNTAP_GetMACAddr( grp->ttifname, &tthwaddr );
 
         /* Did we get what we wanted? */
         if (0
@@ -5445,7 +5618,7 @@ static void InitMACAddr( DEVBLK* dev, OSA_GRP* grp )
             if (tthwaddr)
                 free( tthwaddr );
             build_herc_iface_mac( iMAC, NULL );
-            MSGBUF( szMAC, "%02X:%02X:%02X:%02X:%02X:%02X",
+            MSGBUF( szMAC, "%02x:%02x:%02x:%02x:%02x:%02x",
                 iMAC[0], iMAC[1], iMAC[2],
                 iMAC[3], iMAC[4], iMAC[5] );
             tthwaddr = strdup( szMAC );
@@ -5460,7 +5633,8 @@ static void InitMACAddr( DEVBLK* dev, OSA_GRP* grp )
 
         /* If grp->tthwaddr specified a valid MAC address use it, */
         /* otherwise create a MAC address. This MAC address is    */
-        /* only for the benefit and use of the guest.             */
+        /* reported to and used by the guest. The reported MAC    */
+        /* is used to create the guests link local IPv6 address.  */
         if (grp->tthwaddr &&
             ParseMAC( grp->tthwaddr, iMAC ) == 0 &&
             memcmp( iMAC, zeromac, IFHWADDRLEN ) != 0)
@@ -5469,7 +5643,7 @@ static void InitMACAddr( DEVBLK* dev, OSA_GRP* grp )
         } else {
             if (grp->tthwaddr) free(grp->tthwaddr);
             build_herc_iface_mac( iMAC, NULL );
-            MSGBUF( szMAC, "%02X:%02X:%02X:%02X:%02X:%02X",
+            MSGBUF( szMAC, "%02x:%02x:%02x:%02x:%02x:%02x",
                     iMAC[0], iMAC[1], iMAC[2], iMAC[3], iMAC[4], iMAC[5] );
             grp->tthwaddr = strdup( szMAC );
             memcpy( grp->iMAC, iMAC, IFHWADDRLEN );
