@@ -54,9 +54,23 @@
   #include <windows.h>
 #endif
 
+/* -----------------------------------------------------------------------------------------
+   Note: <math.h> must come BEFORE <intrin.h> for Visual Studio 2008 because 
+   of a duplicate definition of the ceil() function in those two headers.  See
+   MS VC Bug ID 381422 at https://connect.microsoft.com/VisualStudio/Feedback/Details/381422
+   for additional information.  This issue was addressed by the time of Visual
+   Studio 2015, when the Windows headers including <intrin.h> were moved to the 
+   Windows SDK and the ceil() definition removed.  This issue may have been 
+   addressed between VS2008 and VS2015, but we do not have confirmation.  (Yet?)
+
+   So if we are building on Windows before VS2015, we shall include <math.h> here.
+   Otherwise we shall include it later in the list of headers.  
+   ---------------------------------------------------------------------------------------- */
+
 #ifdef _MSVC_
-  #include <math.h>             // Must come BEFORE <intrin.h> due to
-                                // MS VC Bug ID 381422
+#  if (_MSC_VER < VS2015)
+#    include <math.h>
+#  endif
   #include <xmmintrin.h>
   #include <tchar.h>
   #include <wincon.h>
@@ -96,6 +110,7 @@
   #include <sys/mman.h>
 #endif
 #include <sys/types.h>
+#include <math.h>           /* needed for impl.c, clock.c, control.c use  */
 
 /* Optional headers  --  These we can live without */
 
@@ -194,9 +209,6 @@
 #endif
 #ifdef HAVE_MALLOC_H
   #include <malloc.h>
-#endif
-#if defined(HAVE_MATH_H) && !defined(_MSVC_)
-  #include <math.h>
 #endif
 #ifdef HAVE_NETDB_H
   #include <netdb.h>

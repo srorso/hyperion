@@ -53,7 +53,6 @@ DISABLE_GCC_WARNING( "-Wunused-function" )
 #define DEBUG_DUMP              0
 #endif
 
-
 /*-------------------------------------------------------------------*/
 /* Internal function definitions                                     */
 /*-------------------------------------------------------------------*/
@@ -2432,7 +2431,6 @@ ScheduleIORequest ( DEVBLK *dev )
         if (ioq == dev)
         {
             rc = 2;
-            BREAK_INTO_DEBUGGER();
             break;
         }
 
@@ -2461,7 +2459,6 @@ ScheduleIORequest ( DEVBLK *dev )
             if (ioq == dev)
             {
                 rc = 2;
-                BREAK_INTO_DEBUGGER();
                 break;
             }
         }
@@ -5754,8 +5751,8 @@ ARCH_DEP(present_io_interrupt) (REGS *regs, U32 *ioid,
 IOINT  *io, *io2;                       /* -> I/O interrupt entry    */
 DEVBLK *dev;                            /* -> Device control block   */
 int     icode = 0;                      /* Intercept code            */
-int	dotsch = 1;			/* perform TSCH after int    */
-					/* except for THININT	     */
+int     dotsch = 1;                     /* perform TSCH after int    */
+                                        /* except for THININT        */
 
     UNREFERENCED_370(ioparm);
     UNREFERENCED_370(iointid);
@@ -5890,7 +5887,7 @@ retry:
         && (dev->pciscsw.flag2 & SCSW2_Q) && dev->qdio.thinint) )
     {
         // *ioid = *ioparm = 0;
-	dotsch = 0;	/* Do not require TSCH after INT */
+        dotsch = 0;     /* Do not require TSCH after INT */
 
         *iointid = 0x80000000
              | (
